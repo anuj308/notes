@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Testing Notes</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--bg2);border-right:1px solid var(--bg4);overflow-y:auto;z-index:100;padding:1rem 0}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+.sidebar-header{padding:0 1rem .8rem;border-bottom:1px solid var(--bg4);margin-bottom:.5rem}
+.sidebar-header h2{color:var(--accent);font-size:1rem}.sidebar-header small{color:var(--text2);font-size:.7rem}
+.nav-link{display:block;padding:.3rem 1rem .3rem 1.5rem;color:var(--text2);text-decoration:none;font-size:.8rem;transition:all .15s;border-left:2px solid transparent}
+.nav-link:hover{background:rgba(88,166,255,.08);color:var(--accent);border-left-color:var(--accent)}
+.main{margin-left:260px;padding:2rem 3rem 4rem;max-width:900px}
+h1{font-size:2rem;font-weight:700;margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:2px solid var(--bg4)}
+h2{font-size:1.4rem;font-weight:700;margin:1.5rem 0 .8rem;color:var(--accent)}
+h3{font-size:1.1rem;font-weight:600;margin:1rem 0 .5rem;color:var(--green)}
+p{margin:.5rem 0;color:var(--text2)}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:1.2rem;margin:1rem 0;transition:border-color .2s}
+.card:hover{border-color:rgba(88,166,255,.3)}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border:1px solid var(--bg4)}
+th{background:rgba(88,166,255,.08);color:var(--accent);font-weight:600}
+tr:nth-child(even){background:var(--bg3)}
+blockquote{border-left:4px solid var(--accent);padding:.8rem 1rem;margin:1rem 0;background:rgba(88,166,255,.05);border-radius:0 var(--radius) var(--radius) 0}
+ul,ol{padding-left:1.5rem;margin:.5rem 0}
+li{margin:.3rem 0;color:var(--text2)}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:8px 30px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar input{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.8rem;width:250px;outline:none}
+.topbar input:focus{border-color:var(--accent)}
+.btn{padding:5px 10px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.breadcrumb{padding:6px 30px;font-size:.75rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:1rem}}
+@media print{.sidebar,.topbar,.breadcrumb{display:none!important}.main{margin-left:0;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+<div class="sidebar-header"><h2>🧪 Software Testing</h2><small>Converted from softwareTesting.md</small></div>
+<a href="#static" class="nav-link">Static Testing</a>
+<a href="#dynamic" class="nav-link">Dynamic Testing</a>
+<a href="#verification" class="nav-link">Verification & Validation</a>
+<a href="#levels" class="nav-link">Test Levels</a>
+<a href="#unit" class="nav-link">Unit Testing</a>
+<a href="#integration" class="nav-link">Integration Testing</a>
+<a href="#alpha-beta" class="nav-link">Alpha & Beta Testing</a>
+</nav>
+<header class="topbar">
+<div><input type="text" id="searchInput" placeholder="Search testing notes..." oninput="searchNotes(this.value)"></div>
+<div><button class="btn" onclick="toggleTheme()">🌙 Theme</button> <a class="btn" href="study-hub.html">🏠 Hub</a></div>
+</header>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>Software Testing Notes</span></div>
+<main class="main">
+
+<h1>Software Testing Notes</h1>
+
+<div class="card" id="static">
+<h2>Static Testing</h2>
+<p>Static testing is done <strong>without running the program</strong>. In static testing, we review documents, code, design, and requirements.</p>
+<h3>Examples</h3>
+<ul>
+<li>Requirement review</li>
+<li>SRS review</li>
+<li>Code review</li>
+<li>Design review</li>
+<li>Walkthrough</li>
+<li>Inspection</li>
+</ul>
+<h3>Advantages</h3>
+<ul>
+<li>Bugs are found early.</li>
+<li>Cost of fixing bugs is low.</li>
+<li>Improves requirement and code quality.</li>
+</ul>
+<blockquote>💡 Simple idea: <strong>Static testing checks the software without execution.</strong></blockquote>
+</div>
+
+<div class="card" id="dynamic">
+<h2>Dynamic Testing</h2>
+<p>Dynamic testing is done by <strong>running the program</strong>. Testers give input and check the actual output.</p>
+<h3>Examples</h3>
+<ul>
+<li>Unit testing</li>
+<li>Integration testing</li>
+<li>System testing</li>
+<li>Acceptance testing</li>
+</ul>
+<h3>Advantages</h3>
+<ul>
+<li>Checks real software behavior.</li>
+<li>Finds functional bugs.</li>
+<li>Confirms the application works as expected.</li>
+</ul>
+<blockquote>💡 Simple idea: <strong>Dynamic testing checks the software by executing it.</strong></blockquote>
+</div>
+
+<div class="card" id="verification">
+<h2>Verification and Validation</h2>
+<h3>Verification</h3>
+<p>Verification checks whether we are <strong>building the product correctly</strong>. It is done using documents like SRS, design documents, and code.</p>
+<p>Verification answers: <strong>"Are we building the product right?"</strong></p>
+<h3>Validation</h3>
+<p>Validation checks whether we <strong>built the correct product for the user</strong>. It is done by running and testing the actual software.</p>
+<p>Validation answers: <strong>"Are we building the right product?"</strong></p>
+<table>
+<tr><th>Point</th><th>Verification</th><th>Validation</th></tr>
+<tr><td>Meaning</td><td>Checks process/documents</td><td>Checks final software</td></tr>
+<tr><td>Execution</td><td>Software is not executed</td><td>Software is executed</td></tr>
+<tr><td>Type</td><td>Static testing</td><td>Dynamic testing</td></tr>
+<tr><td>Based on</td><td>SRS, design, code review</td><td>User needs and actual output</td></tr>
+<tr><td>Question</td><td>Are we building product right?</td><td>Are we building right product?</td></tr>
+</table>
+<blockquote>💡 Simple idea: <strong>Verification checks with SRS. Validation checks with user needs.</strong></blockquote>
+</div>
+
+<div class="card" id="levels">
+<h2>Test Levels</h2>
+<p>Main test levels: Component/Unit testing, Integration testing, System testing, Acceptance testing.</p>
+</div>
+
+<div class="card" id="unit">
+<h2>Component and Unit Testing</h2>
+<p>Unit testing checks a <strong>small part of the software</strong>. It is usually done by developers.</p>
+<ul>
+<li>Test one function, one class, or one module.</li>
+<li>Finds bugs early and makes debugging easy.</li>
+</ul>
+<blockquote>💡 Simple idea: <strong>Unit testing checks one small part at a time.</strong></blockquote>
+</div>
+
+<div class="card" id="integration">
+<h2>Integration Testing</h2>
+<p>Integration testing checks whether <strong>different modules work together</strong>. It is done after unit testing.</p>
+<ul>
+<li>Login module connected with database.</li>
+<li>Payment module connected with order module.</li>
+<li>Frontend connected with backend API.</li>
+</ul>
+<blockquote>💡 Simple idea: <strong>Integration testing checks connection between modules.</strong></blockquote>
+</div>
+
+<div class="card" id="alpha-beta">
+<h2>Alpha and Beta Testing</h2>
+<h3>Alpha Testing</h3>
+<p>Done <strong>before releasing</strong> software to outside users. Usually done by internal testers or developers in a controlled environment.</p>
+<h3>Beta Testing</h3>
+<p>Done by <strong>real users</strong> before final release. Done in a real user environment to get feedback.</p>
+<table>
+<tr><th>Point</th><th>Alpha Testing</th><th>Beta Testing</th></tr>
+<tr><td>Done by</td><td>Internal team</td><td>Real users</td></tr>
+<tr><td>Place</td><td>Company/testing environment</td><td>User environment</td></tr>
+<tr><td>Time</td><td>Before beta testing</td><td>Before final release</td></tr>
+<tr><td>Goal</td><td>Find major bugs internally</td><td>Get real user feedback</td></tr>
+</table>
+<blockquote>💡 Simple idea: <strong>Alpha is internal testing. Beta is real user testing before final release.</strong></blockquote>
+</div>
+
+</main>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('testing-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('testing-theme');if(s==='light')document.documentElement.setAttribute('data-theme','light')})();
+function searchNotes(q){q=q.toLowerCase();document.querySelectorAll('.card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(q)?'block':'none'})}
+</script>
+</body>
+</html>

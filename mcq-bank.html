@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MCQ Bank</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.stats{display:flex;gap:12px;font-size:.8rem;color:var(--text2)}
+.stats span{font-weight:700;color:var(--accent)}
+.filter{padding:8px 24px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--bg3)}
+.filter button{padding:4px 12px;border-radius:20px;border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.filter button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.main{max-width:800px;margin:0 auto;padding:24px}
+.mcq{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:18px;margin:12px 0;transition:border-color .2s}
+.mcq:hover{border-color:var(--accent)}
+.mcq-q{font-weight:700;margin-bottom:12px;font-size:.9rem}
+.mcq-opts{display:flex;flex-direction:column;gap:6px}
+.mcq-opt{padding:10px 14px;border:1px solid var(--bg4);border-radius:var(--radius);cursor:pointer;font-size:.85rem;transition:all .2s}
+.mcq-opt:hover{border-color:var(--accent);background:var(--bg3)}
+.mcq-opt.correct{border-color:var(--green);background:rgba(63,185,80,.1);color:var(--green)}
+.mcq-opt.wrong{border-color:var(--red);background:rgba(248,81,73,.1);color:var(--red)}
+.mcq-opt.disabled{cursor:not-allowed;opacity:.7}
+.mcq-explain{margin-top:10px;padding:10px;background:var(--bg3);border-radius:var(--radius);font-size:.8rem;color:var(--text2);display:none}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.6rem;font-weight:600;margin-left:6px}
+.tag-blue{background:rgba(88,166,255,.15);color:var(--accent)}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green)}
+.tag-orange{background:rgba(240,136,62,.15);color:var(--orange)}
+.hidden{display:none!important}
+@media print{.topbar,.filter{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>✅ MCQ Bank <span style="font-size:.8rem;color:var(--text2);font-weight:400">(DevOps, Cloud, AWS, Linux, Git)</span></h1>
+  <div class="topbar-right">
+    <div class="stats">Score: <span id="score">0</span>/<span id="total">0</span></div>
+    <button class="btn" onclick="resetQuiz()">🔄 Reset</button>
+    <button class="btn" onclick="toggleTheme()">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="filter" id="filterBar">
+  <button class="active" data-cat="all" onclick="filterCat('all',this)">All</button>
+  <button data-cat="devops" onclick="filterCat('devops',this)">DevOps</button>
+  <button data-cat="cloud" onclick="filterCat('cloud',this)">Cloud</button>
+  <button data-cat="aws" onclick="filterCat('aws',this)">AWS</button>
+  <button data-cat="linux" onclick="filterCat('linux',this)">Linux</button>
+  <button data-cat="git" onclick="filterCat('git',this)">Git</button>
+  <button data-cat="docker" onclick="filterCat('docker',this)">Docker</button>
+</div>
+<main class="main" id="mcqContainer"></main>
+
+<script>
+const questions = [
+  {cat:"devops",q:"What is DevOps?",opts:["A programming language","A culture of collaboration between Dev and Ops teams","A cloud provider","A database system"],ans:1,explain:"DevOps is a culture and set of practices that integrates software development and IT operations."},
+  {cat:"devops",q:"What does CI stand for in CI/CD?",opts:["Code Integration","Continuous Integration","Computer Infrastructure","Cloud Installation"],ans:1,explain:"CI = Continuous Integration — developers frequently merge code changes into a central repository, triggering automated builds and tests."},
+  {cat:"devops",q:"What is the difference between Continuous Delivery and Continuous Deployment?",opts:["They are the same thing","Delivery requires manual approval; Deployment is fully automated","Delivery is for frontend; Deployment is for backend","Delivery uses Jenkins; Deployment uses Git"],ans:1,explain:"Continuous Delivery requires manual approval before production. Continuous Deployment automatically deploys every passing change."},
+  {cat:"devops",q:"What is Infrastructure as Code (IaC)?",opts:["Writing application code on servers","Managing infrastructure through machine-readable configuration files","Manual server setup","Using Excel spreadsheets for servers"],ans:1,explain:"IaC manages and provisions infrastructure through code and version control rather than manual processes."},
+  {cat:"devops",q:"Which is NOT a phase in the DevOps lifecycle?",opts:["Plan","Code","Design","Monitor"],ans:2,explain:"The 7 phases are: Plan, Code, Build, Test, Release, Deploy, Monitor. Design is not a separate DevOps lifecycle phase."},
+  {cat:"cloud",q:"What are the 5 essential characteristics of cloud computing (NIST)?",opts:["On-demand, Broad access, Resource pooling, Rapid elasticity, Measured service","Fast, Cheap, Secure, Scalable, Reliable","Public, Private, Hybrid, Community, Multi-cloud","IaaS, PaaS, SaaS, FaaS, DaaS"],ans:0,explain:"NIST defines: On-demand self-service, Broad network access, Resource pooling, Rapid elasticity, and Measured service."},
+  {cat:"cloud",q:"What is the main difference between IaaS and PaaS?",opts:["IaaS is cheaper than PaaS","In IaaS you manage OS+apps; in PaaS you manage apps only","IaaS is for databases; PaaS is for servers","There is no difference"],ans:1,explain:"IaaS gives you virtual machines (you manage OS, runtime, apps). PaaS gives you a platform (you manage apps and data only)."},
+  {cat:"cloud",q:"What is a Hybrid Cloud?",opts:["Using only public cloud","Using only private cloud","Combination of public and private cloud","Using two public clouds"],ans:2,explain:"Hybrid cloud combines public and private cloud environments, allowing data and applications to move between them."},
+  {cat:"aws",q:"What does EC2 stand for?",opts:["Elastic Compute Cloud","Electronic Computing Engine","Enterprise Cloud Connector","Elastic Container Cluster"],ans:0,explain:"EC2 = Elastic Compute Cloud — provides virtual servers (instances) in the AWS cloud."},
+  {cat:"aws",q:"Which AWS service provides object storage?",opts:["EBS","EC2","S3","RDS"],ans:2,explain:"S3 (Simple Storage Service) provides object storage for files, images, videos, backups, and static websites."},
+  {cat:"aws",q:"What is IAM?",opts:["Internet Access Manager","Identity and Access Management","Infrastructure Automation Module","Internal Application Monitor"],ans:1,explain:"IAM (Identity and Access Management) controls who can access AWS resources and what actions they can perform."},
+  {cat:"aws",q:"What is the difference between Security Groups and NACLs?",opts:["They are the same thing","Security Groups are stateful (instance level); NACLs are stateless (subnet level)","Security Groups are for storage; NACLs are for compute","NACLs are faster than Security Groups"],ans:1,explain:"Security Groups are stateful and operate at instance level. NACLs are stateless and operate at subnet level."},
+  {cat:"linux",q:"What does chmod 755 mean?",opts:["Read for everyone","Owner: rwx, Group: r-x, Others: r-x","Owner: rwx, Group: rwx, Others: rwx","Owner: rw-, Group: r--, Others: r--"],ans:1,explain:"7=rwx (4+2+1), 5=r-x (4+0+1). Owner gets full access; group and others get read and execute."},
+  {cat:"linux",q:"What is the difference between kill and kill -9?",opts:["kill is slower than kill -9","kill sends SIGTERM (graceful); kill -9 sends SIGKILL (forced)","kill -9 is safer than kill","kill only works on root processes"],ans:1,explain:"kill sends SIGTERM allowing cleanup. kill -9 sends SIGKILL which forcefully terminates without cleanup."},
+  {cat:"linux",q:"What does 'grep' do?",opts:["Creates files","Searches for text patterns in files","Changes file permissions","Lists directory contents"],ans:1,explain:"grep (Global Regular Expression Print) searches for text patterns in files using regular expressions."},
+  {cat:"linux",q:"What is the purpose of /etc/shadow?",opts:["Stores user account info","Stores encrypted passwords and password aging","Stores system logs","Stores network configuration"],ans:1,explain:"/etc/shadow contains encrypted password hashes and password aging information. Only root can read it."},
+  {cat:"git",q:"What is the difference between git pull and git fetch?",opts:["They are the same","fetch downloads changes; pull downloads AND merges","pull is faster than fetch","fetch requires internet; pull does not"],ans:1,explain:"git fetch downloads remote changes without merging. git pull does both — fetches AND merges."},
+  {cat:"git",q:"What is a merge conflict?",opts:["When Git deletes your files","When Git cannot automatically combine changes from two branches","When you push to the wrong branch","When your computer runs out of memory"],ans:1,explain:"A merge conflict occurs when Git cannot automatically merge changes (same lines modified in both branches)."},
+  {cat:"git",q:"What does git stash do?",opts:["Deletes all changes","Temporarily saves uncommitted changes and reverts working directory","Creates a new branch","Merges all branches"],ans:1,explain:"git stash temporarily saves uncommitted changes. Use git stash pop to restore them later."},
+  {cat:"git",q:"What is the difference between git reset and git revert?",opts:["They are the same","reset moves HEAD (rewrites history); revert creates new commit (safe for shared)","revert is faster than reset","reset only works on main branch"],ans:1,explain:"git reset rewrites history (dangerous for shared branches). git revert creates a new commit that undoes changes (safe)."},
+  {cat:"docker",q:"What is the difference between a Docker image and container?",opts:["They are the same thing","Image is a read-only template; container is a running instance","Container is stored on Docker Hub; image is local","Image is for Windows; container is for Linux"],ans:1,explain:"An image is a read-only template. A container is a running (or stopped) instance of an image with a thin writable layer."},
+  {cat:"docker",q:"What does Dockerfile CMD do?",opts:["Runs a command during build","Sets the default command to run when container starts","Deletes the container","Creates a new image"],ans:1,explain:"CMD sets the default command/arguments that run when the container starts. It can be overridden."},
+  {cat:"docker",q:"What is Docker Compose used for?",opts:["Managing single containers","Defining and running multi-container applications using YAML","Building Docker images","Pushing images to Docker Hub"],ans:1,explain:"Docker Compose defines multi-container applications in a docker-compose.yml file and manages them together."},
+  {cat:"docker",q:"Why use Docker volumes?",opts:["To make containers faster","To persist data beyond container lifecycle","To increase container memory","To reduce image size"],ans:1,explain:"Volumes persist data independently of container lifecycle. Data in the container's writable layer is lost when the container is removed."},
+  {cat:"aws",q:"Which AWS service provides managed relational databases?",opts:["S3","DynamoDB","RDS","SQS"],ans:2,explain:"RDS (Relational Database Service) provides managed relational databases (MySQL, PostgreSQL, Oracle, SQL Server, Aurora)."},
+  {cat:"linux",q:"What does 'ls -ltr' do?",opts:["List files sorted by name","List files sorted by modification time (oldest first)","List only hidden files","List file sizes in bytes"],ans:1,explain:"-l=long format, -t=sort by time, -r=reverse order. So -ltr shows files sorted oldest to newest."},
+  {cat:"devops",q:"Which tool is used for configuration management with agent-based architecture?",opts:["Ansible","Docker","Puppet","Nginx"],ans:2,explain:"Puppet uses Master-Slave architecture with agents installed on each managed node. Ansible is agentless."},
+];
+
+let score=0,answered=0;
+const container=document.getElementById('mcqContainer');
+
+function render(filter='all'){
+  const filtered=filter==='all'?questions:questions.filter(q=>q.cat===filter);
+  container.innerHTML=filtered.map((q,i)=>`
+    <div class="mcq" data-cat="${q.cat}" id="mcq-${i}">
+      <div class="mcq-q">${i+1}. ${q.q} <span class="tag tag-${q.cat==='devops'?'blue':q.cat==='cloud'?'green':q.cat==='aws'?'orange':q.cat==='linux'?'red':q.cat==='git'?'purple':'cyan'}">${q.cat.toUpperCase()}</span></div>
+      <div class="mcq-opts">${q.opts.map((o,j)=>`<div class="mcq-opt" onclick="checkAnswer(${i},${j},this)">${String.fromCharCode(65+j)}. ${o}</div>`).join('')}</div>
+      <div class="mcq-explain" id="explain-${i}">${q.explain}</div>
+    </div>
+  `).join('');
+  document.getElementById('total').textContent=filtered.length;
+}
+
+function checkAnswer(qi,oi,el){
+  const mcq=el.closest('.mcq');
+  if(mcq.querySelector('.correct')||mcq.querySelector('.wrong'))return;
+  const q=questions[qi];
+  const opts=mcq.querySelectorAll('.mcq-opt');
+  opts.forEach((o,j)=>{o.classList.add('disabled');if(j===q.ans)o.classList.add('correct')});
+  if(oi===q.ans){score++;el.classList.add('correct')}
+  else{el.classList.add('wrong')}
+  document.getElementById('explain-'+qi).style.display='block';
+  document.getElementById('score').textContent=score;
+}
+
+function resetQuiz(){score=0;document.getElementById('score').textContent=0;render(currentCat)}
+let currentCat='all';
+function filterCat(cat,btn){currentCat=cat;score=0;document.getElementById('score').textContent=0;document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(cat)}
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+render();
+</script>
+</body>
+</html>

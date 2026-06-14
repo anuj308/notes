@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Searchable Cheat Sheets</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00;--cyan:#0891b2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.search-wrap{position:relative;width:350px}
+.search-wrap input{width:100%;padding:8px 12px 8px 36px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.85rem;outline:none}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap::before{content:"🔍";position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.breadcrumb{padding:8px 24px;font-size:.75rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+.main{max-width:1200px;margin:0 auto;padding:24px}
+.section{margin-bottom:28px}
+.section-title{font-size:1.2rem;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:8px;color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(500px,1fr));gap:14px}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:16px;transition:all .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+pre{background:var(--bg);border:1px solid var(--bg4);border-radius:8px;padding:12px;font-size:.8rem;line-height:1.6;overflow-x:auto;white-space:pre-wrap;font-family:'SF Mono',Consolas,monospace}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.65rem;font-weight:600;margin-right:4px}
+.tag-blue{background:rgba(88,166,255,.15);color:var(--accent)}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green)}
+.tag-purple{background:rgba(188,140,255,.15);color:var(--purple)}
+.tag-orange{background:rgba(240,136,62,.15);color:var(--orange)}
+.tag-cyan{background:rgba(57,210,192,.15);color:var(--cyan)}
+.tag-red{background:rgba(248,81,73,.15);color:var(--red)}
+.hidden{display:none!important}
+@media(max-width:768px){.grid{grid-template-columns:1fr}.search-wrap{width:100%}}
+@media print{.topbar,.breadcrumb{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>📋 Cheat Sheets</h1>
+  <div class="search-wrap"><input type="text" id="search" placeholder="Search commands... (Ctrl+K)" oninput="filterCards(this.value)"></div>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()" id="themeBtn">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>Cheat Sheets</span></div>
+<main class="main">
+
+<div class="grid" id="cheatGrid">
+
+<div class="card" data-tags="git version control">
+<h3>🔀 Git Commands <span class="tag tag-blue">Version Control</span></h3>
+<pre>git init                          # Initialize new repo
+git clone &lt;url&gt;                   # Clone remote repo
+git add .                         # Stage all changes
+git add &lt;file&gt;                    # Stage specific file
+git commit -m "message"           # Commit staged changes
+git push origin main              # Push to remote
+git pull origin main              # Pull from remote
+git status                        # Check working tree
+git log --oneline                 # Compact history
+git diff                          # Show unstaged changes
+git branch &lt;name&gt;                 # Create branch
+git checkout -b &lt;name&gt;            # Create & switch branch
+git merge &lt;branch&gt;                # Merge branch
+git stash                         # Save uncommitted changes
+git stash pop                     # Restore stashed changes
+git reset --soft HEAD~1           # Undo last commit (keep changes)
+git revert &lt;hash&gt;                 # Undo commit (safe for shared)</pre>
+</div>
+
+<div class="card" data-tags="docker container">
+<h3>🐳 Docker Commands <span class="tag tag-green">Containers</span></h3>
+<pre>docker --version                  # Check Docker version
+docker pull &lt;image&gt;               # Pull image from registry
+docker run -d --name &lt;n&gt; -p &lt;h&gt;:&lt;c&gt; &lt;img&gt;  # Run container
+docker ps                         # List running containers
+docker ps -a                      # List all containers
+docker logs &lt;container&gt;           # View container logs
+docker exec -it &lt;ctr&gt; bash        # Shell into container
+docker stop &lt;container&gt;           # Stop container
+docker rm &lt;container&gt;             # Remove container
+docker build -t &lt;name&gt; .          # Build image from Dockerfile
+docker images                     # List images
+docker rmi &lt;image&gt;                # Remove image
+docker volume create &lt;name&gt;       # Create volume
+docker volume ls                  # List volumes
+docker network ls                 # List networks
+docker compose up -d              # Start all services
+docker compose down               # Stop all services
+docker compose ps                 # List services
+docker cp &lt;ctr&gt;:/path ./host      # Copy file from container</pre>
+</div>
+
+<div class="card" data-tags="linux commands">
+<h3>🐧 Linux Commands <span class="tag tag-orange">System</span></h3>
+<pre>ls -la                            # List all files with details
+ls -ltr                           # Sort by date (oldest first)
+cd /path                          # Change directory
+pwd                               # Print working directory
+mkdir -p dir1/dir2                # Create directories
+rm -rf /dir                       # Force delete (careful!)
+cp -r src dest                    # Copy recursively
+mv old new                        # Move/rename
+cat file                          # Display file content
+grep -rn "pattern" dir/           # Search recursively
+find / -name "*.txt"              # Find files by pattern
+chmod 755 file                    # Set permissions (rwxr-xr-x)
+chown user:group file             # Change ownership
+sudo apt update                   # Refresh packages
+sudo apt install pkg              # Install package
+top                               # Process monitor
+ps aux | grep process             # Find process
+kill -9 PID                       # Force kill process
+ping host                         # Network test
+curl url                          # HTTP request</pre>
+</div>
+
+<div class="card" data-tags="sql database postgresql">
+<h3>🐘 SQL Commands <span class="tag tag-purple">Database</span></h3>
+<pre>-- DDL
+CREATE TABLE t (id INT PRIMARY KEY, name TEXT);
+ALTER TABLE t ADD col TYPE;
+DROP TABLE t;
+
+-- DML
+INSERT INTO t VALUES (1, 'name');
+UPDATE t SET name='new' WHERE id=1;
+DELETE FROM t WHERE id=1;
+
+-- DQL
+SELECT * FROM t WHERE id=1 ORDER BY name ASC LIMIT 10;
+SELECT col1, COUNT(*) FROM t GROUP BY col1 HAVING COUNT(*)>1;
+
+-- Joins
+SELECT * FROM a INNER JOIN b ON a.id=b.aid;
+SELECT * FROM a LEFT JOIN b ON a.id=b.aid;
+
+-- Aggregate
+SELECT COUNT(*), SUM(col), AVG(col), MIN(col), MAX(col) FROM t;
+
+-- Index
+CREATE INDEX idx ON t(col);
+
+-- Transaction
+BEGIN; UPDATE t SET col=val; COMMIT; -- or ROLLBACK;</pre>
+</div>
+
+<div class="card" data-tags="maven java build">
+<h3>📦 Maven Commands <span class="tag tag-cyan">Build Tool</span></h3>
+<pre>mvn archetype:generate             # Create new project
+mvn compile                        # Compile source code
+mvn test                           # Run unit tests
+mvn package                        # Package into JAR/WAR
+mvn clean package                  # Clean + Package
+mvn clean install                  # Clean + Install to local repo
+mvn package -DskipTests            # Skip tests
+mvn dependency:tree                # Show dependency tree
+mvn validate                       # Validate project
+mvn verify                         # Verify package quality
+mvn deploy                         # Deploy to remote repo
+
+# Lifecycle: validate → compile → test → package → verify → install → deploy</pre>
+</div>
+
+<div class="card" data-tags="laravel php artisan">
+<h3>🔵 Laravel Artisan <span class="tag tag-red">PHP Framework</span></h3>
+<pre>php artisan serve                  # Start dev server
+php artisan make:model User -m     # Create model + migration
+php artisan make:controller User   # Create controller
+php artisan make:controller User --resource  # Resource controller
+php artisan make:middleware Check   # Create middleware
+php artisan make:rule CapitalName  # Create validation rule
+php artisan make:mail WelcomeMail  # Create mailable
+php artisan migrate                # Run migrations
+php artisan migrate:rollback       # Rollback migration
+php artisan route:list             # List all routes
+php artisan cache:clear            # Clear cache
+php artisan config:cache           # Cache config
+php artisan queue:work             # Process queue jobs
+php artisan storage:link           # Create storage symlink
+php artisan lang:publish           # Publish language files</pre>
+</div>
+
+<div class="card" data-tags="aws cli cloud amazon">
+<h3>☁️ AWS CLI Commands <span class="tag tag-orange">Cloud</span></h3>
+<pre>aws sts get-caller-identity        # Check current identity
+aws ec2 describe-instances         # List EC2 instances
+aws ec2 describe-security-groups   # List security groups
+aws ec2 describe-regions           # List all regions
+aws s3 ls                          # List S3 buckets
+aws s3 cp file s3://bucket/        # Upload to S3
+aws iam list-users                 # List IAM users
+aws iam list-policies              # List IAM policies</pre>
+</div>
+
+<div class="card" data-tags="kubernetes k8s orchestration">
+<h3>☸️ Kubernetes Commands <span class="tag tag-green">Orchestration</span></h3>
+<pre>kubectl version --client           # Client version
+kubectl get pods                   # List pods
+kubectl get deployments            # List deployments
+kubectl get services               # List services
+kubectl get nodes                  # List nodes
+kubectl create deployment web --image=nginx  # Create deployment
+kubectl expose deployment web --type=NodePort --port=80  # Expose
+kubectl scale deployment web --replicas=3    # Scale
+kubectl logs &lt;pod&gt;                # View pod logs
+kubectl exec -it &lt;pod&gt; -- bash    # Shell into pod
+kubectl delete deployment web      # Delete deployment</pre>
+</div>
+
+<div class="card" data-tags="jenkins ci cd pipeline">
+<h3>🔧 Jenkins Pipeline <span class="tag tag-blue">CI/CD</span></h3>
+<pre>pipeline {
+  agent any
+  stages {
+    stage('Checkout') {
+      steps { git 'https://github.com/user/repo.git' }
+    }
+    stage('Build') {
+      steps { sh 'mvn clean package' }
+    }
+    stage('Test') {
+      steps { sh 'mvn test' }
+    }
+    stage('Docker Build') {
+      steps { sh 'docker build -t myapp .' }
+    }
+    stage('Deploy') {
+      steps { sh 'docker push myapp:latest' }
+    }
+  }
+  post {
+    always { echo 'Pipeline finished' }
+    success { echo 'Build succeeded!' }
+    failure { echo 'Build failed!' }
+  }
+}</pre>
+</div>
+
+</div>
+</main>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('cheat-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('cheat-theme');if(s==='light')document.documentElement.setAttribute('data-theme','light')})();
+function filterCards(q){q=q.toLowerCase();document.querySelectorAll('.card').forEach(c=>{const tags=(c.getAttribute('data-tags')||'').toLowerCase();const text=c.textContent.toLowerCase();c.classList.toggle('hidden',!(text.includes(q)||tags.includes(q)))})}
+document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='k'){e.preventDefault();document.getElementById('search').focus()}});
+</script>
+</body>
+</html>

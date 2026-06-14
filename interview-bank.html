@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Question Bank</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00;--cyan:#0891b2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.filter{padding:8px 24px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--bg3)}
+.filter button{padding:4px 12px;border-radius:20px;border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.filter button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.main{max-width:800px;margin:0 auto;padding:24px}
+.qa{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);margin:8px 0;overflow:hidden}
+.qa summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px;transition:background .2s}
+.qa summary:hover{background:var(--bg3)}
+.qa .answer{padding:0 16px 14px;color:var(--text2);font-size:.85rem;border-top:1px solid var(--bg4);padding-top:10px}
+.qa .answer strong{color:var(--green)}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.6rem;font-weight:600;margin-left:6px}
+.tag-blue{background:rgba(88,166,255,.15);color:var(--accent)}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green)}
+.tag-orange{background:rgba(240,136,62,.15);color:var(--orange)}
+.tag-purple{background:rgba(188,140,255,.15);color:var(--purple)}
+.tag-cyan{background:rgba(57,210,192,.15);color:var(--cyan)}
+.hidden{display:none!important}
+@media print{.topbar,.filter{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>🎤 Interview Question Bank <span style="font-size:.8rem;color:var(--text2);font-weight:400">28 Questions with Detailed Answers</span></h1>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="filter" id="filterBar">
+  <button class="active" data-cat="all" onclick="filterCat('all',this)">All</button>
+  <button data-cat="devops" onclick="filterCat('devops',this)">DevOps</button>
+  <button data-cat="aws" onclick="filterCat('aws',this)">AWS</button>
+  <button data-cat="docker" onclick="filterCat('docker',this)">Docker</button>
+  <button data-cat="k8s" onclick="filterCat('k8s',this)">Kubernetes</button>
+  <button data-cat="git" onclick="filterCat('git',this)">Git</button>
+  <button data-cat="jenkins" onclick="filterCat('jenkins',this)">Jenkins</button>
+  <button data-cat="laravel" onclick="filterCat('laravel',this)">Laravel</button>
+</div>
+<main class="main" id="qaContainer"></main>
+
+<script>
+const qas = [
+  {cat:"devops",q:"Explain the DevOps lifecycle with its phases and tools.",a:"7 phases: <strong>Plan</strong> (Jira) → <strong>Code</strong> (Git) → <strong>Build</strong> (Maven) → <strong>Test</strong> (Selenium) → <strong>Release</strong> (Jenkins) → <strong>Deploy</strong> (Docker/K8s) → <strong>Monitor</strong> (Nagios). Continuous feedback loops between each phase enable rapid, reliable delivery."},
+  {cat:"devops",q:"What is Infrastructure as Code and why is it important?",a:"IaC manages infrastructure through code files (Terraform, CloudFormation). Benefits: version-controlled infrastructure, reproducible environments, faster provisioning, reduced manual errors, and disaster recovery capability."},
+  {cat:"devops",q:"Compare Waterfall, Agile, and DevOps approaches.",a:"<strong>Waterfall:</strong> Sequential, months-long cycles, late feedback. <strong>Agile:</strong> Iterative sprints, working software focus. <strong>DevOps:</strong> Culture + automation, continuous delivery, Dev-Ops collaboration. DevOps is broader than Agile — it includes operations."},
+  {cat:"devops",q:"What are the 7 C's of DevOps?",a:"Continuous Planning, Integration, Development, Testing, Delivery, Deployment, and Monitoring. Each 'C' represents a phase where automation and collaboration reduce cycle time."},
+  {cat:"devops",q:"What is the difference between a DevOps Engineer and an SRE?",a:"DevOps Engineer focuses on automation, CI/CD pipelines, and tooling. SRE (Site Reliability Engineering) focuses on reliability using SLIs, SLOs, and error budgets. SRE is Google's specific implementation of DevOps practices."},
+  {cat:"aws",q:"Explain AWS EC2 instance types and pricing models.",a:"<strong>Types:</strong> General (t2/t3), Compute optimized (c5), Memory optimized (r5), Storage optimized (i3), Accelerated (p3). <strong>Pricing:</strong> On-Demand (pay per use), Reserved (1-3 years, 72% savings), Spot (up to 90% off, can be terminated), Savings Plans."},
+  {cat:"aws",q:"What is the difference between S3, EBS, and EFS?",a:"<strong>S3:</strong> Object storage (files, images) — HTTP access, unlimited. <strong>EBS:</strong> Block storage (hard drive) — attached to EC2, single AZ. <strong>EFS:</strong> File storage — shared across multiple EC2 instances, NFS protocol."},
+  {cat:"aws",q:"Design a secure VPC architecture for a web application.",a:"Create VPC with 2 public subnets (load balancer, bastion host) and 2 private subnets (app servers, databases) across 2 AZs. Internet Gateway for public subnets, NAT Gateway for private. Security groups at instance level, NACLs at subnet level."},
+  {cat:"aws",q:"What is IAM and what are the best practices?",a:"IAM manages AWS access. Best practices: least privilege principle, enable MFA, never use root for daily tasks, use IAM roles (not access keys) for services, rotate credentials, use groups for managing permissions."},
+  {cat:"aws",q:"When would you use Lambda vs EC2?",a:"<strong>Lambda:</strong> Event-driven, short tasks (<15min), no server management, pay per invocation. Good for APIs, file processing, automation. <strong>EC2:</strong> Long-running apps, full control, persistent workloads, specific OS requirements."},
+  {cat:"docker",q:"Explain Docker architecture and how containers work.",a:"Docker CLI sends commands to Docker daemon (dockerd). Daemon manages images, containers, networks, volumes. Containers share host OS kernel via namespaces (isolation) and cgroups (resource limits). Images are read-only layers; containers add a thin writable layer."},
+  {cat:"docker",q:"What is the difference between Docker containers and VMs?",a:"<strong>Containers:</strong> Share host OS kernel, MBs size, seconds to boot, process-level isolation. <strong>VMs:</strong> Full guest OS, GBs size, minutes to boot, hardware-level isolation. Containers are more portable and efficient; VMs provide stronger isolation."},
+  {cat:"docker",q:"Explain Dockerfile instructions: FROM, RUN, COPY, CMD, ENTRYPOINT.",a:"<strong>FROM:</strong> Sets base image. <strong>RUN:</strong> Executes commands during build. <strong>COPY:</strong> Copies files from build context. <strong>CMD:</strong> Default command (easily overridden). <strong>ENTRYPOINT:</strong> Main executable (hard to override). Use ENTRYPOINT + CMD for configurable defaults."},
+  {cat:"docker",q:"How do you persist data in Docker?",a:"<strong>Volumes:</strong> Docker-managed, portable, stored in /var/lib/docker. <strong>Bind mounts:</strong> Map exact host path. <strong>tmpfs:</strong> In-memory only. Named volumes survive container removal. Use -v volume:/path or --mount type=volume."},
+  {cat:"docker",q:"Explain Docker Compose and multi-container applications.",a:"Docker Compose defines multi-container apps in docker-compose.yml. Services define containers, volumes persist data, networks connect services. Commands: docker compose up -d, docker compose down. Services communicate by service name via Docker DNS."},
+  {cat:"k8s",q:"What is Kubernetes and why use it?",a:"Kubernetes (K8s) is a container orchestration platform. Manages deployment, scaling, and operations of containers across clusters. Key features: auto-scaling, self-healing, rolling updates, service discovery, load balancing, secret management."},
+  {cat:"k8s",q:"Explain Kubernetes architecture: Control Plane and Worker Nodes.",a:"<strong>Control Plane:</strong> API Server (entry point), etcd (key-value store), Scheduler (assigns pods), Controller Manager (maintains desired state). <strong>Worker Nodes:</strong> kubelet (runs pods), kube-proxy (networking), Container Runtime (Docker/containerd)."},
+  {cat:"k8s",q:"What is a Pod, Deployment, and Service?",a:"<strong>Pod:</strong> Smallest deployable unit (1+ containers). <strong>Deployment:</strong> Manages pod replicas, rolling updates, rollbacks. <strong>Service:</strong> Stable network endpoint for accessing pods (NodePort, LoadBalancer, ClusterIP)."},
+  {cat:"git",q:"Explain the Git lifecycle and key commands.",a:"Working Directory → <strong>git add</strong> → Staging Area → <strong>git commit</strong> → Local Repo → <strong>git push</strong> → Remote Repo. Reverse: <strong>git pull/fetch</strong> from remote. Key: init, clone, add, commit, push, pull, branch, merge, stash, rebase."},
+  {cat:"git",q:"What is the difference between git merge and git rebase?",a:"<strong>Merge:</strong> Creates merge commit, preserves full history, safe for shared branches. <strong>Rebase:</strong> Replays commits on new base, creates linear history, cleaner but rewrites history. Never rebase public/shared branches."},
+  {cat:"git",q:"How do you resolve a merge conflict?",a:"1) Open conflicted files. 2) Manually choose which changes to keep. 3) Remove conflict markers (<<<<<<<, =======, >>>>>>>). 4) git add the resolved files. 5) git commit. Use git mergetool for visual resolution."},
+  {cat:"git",q:"What is git cherry-pick and when to use it?",a:"git cherry-pick applies a specific commit from one branch to another without merging the entire branch. Useful for applying hotfixes to release branches or selectively applying changes."},
+  {cat:"jenkins",q:"Explain Jenkins architecture and how it works.",a:"<strong>Master-Slave architecture.</strong> Master schedules builds, dispatches to slaves, monitors results. Slaves execute build jobs. Connectivity: SSH (port 22) or JNLP (port 50000). Originally called Hudson, created by Kohsuke Kawaguchi at Sun Microsystems."},
+  {cat:"jenkins",q:"What is Pipeline as Code and Jenkinsfile?",a:"Pipeline as Code stores CI/CD steps in version-controlled code. Jenkinsfile defines pipeline stages declaratively: pipeline → agent → stages → stage → steps. Benefits: version control, code review, reproducibility."},
+  {cat:"jenkins",q:"What is the difference between Declarative and Scripted pipeline?",a:"<strong>Declarative:</strong> Structured, recommended for beginners, uses pipeline/agent/stages blocks. <strong>Scripted:</strong> Flexible, Groovy-based, uses node/stage blocks. Declarative is easier to read and maintain."},
+  {cat:"jenkins",q:"How does Jenkins integrate with Docker and Maven?",a:"<strong>Maven:</strong> Configure Maven tool in Jenkins, run mvn clean package/test. <strong>Docker:</strong> Install Docker plugin, use Docker Pipeline plugin, build/push images in pipeline stages. Jenkinsfile: sh 'mvn clean package', sh 'docker build -t myapp .'"},
+  {cat:"laravel",q:"Explain Laravel MVC architecture and request lifecycle.",a:"Request → index.php → Service Providers → Router → Middleware → Controller → View → Response. <strong>Model:</strong> Eloquent ORM for database. <strong>View:</strong> Blade templates. <strong>Controller:</strong> Handles request logic. Routes map URLs to controllers."},
+  {cat:"laravel",q:"What is Eloquent ORM and why use it?",a:"Eloquent is Laravel's ORM. Work with database records as PHP objects. Supports relationships (one-to-many, many-to-many), scopes, accessors/mutators. Reduces SQL injection, cleaner code, database-agnostic."},
+  {cat:"laravel",q:"Explain Laravel middleware and how to use it.",a:"Middleware filters HTTP requests (auth, logging, validation). Create: php artisan make:middleware Check. Register in bootstrap/app.php. Apply to routes: Route::get('/dashboard', ...)->middleware('auth'). Controller: $this->middleware('role')->only('dashboard')."},
+  {cat:"laravel",q:"What is Blade templating and template inheritance?",a:"Blade is Laravel's templating engine (.blade.php). Features: @extends('layouts.app') inherits layout, @section/@yield defines content, @include for partials, @if/@foreach for control. Template inheritance follows DRY principle."},
+  {cat:"laravel",q:"Explain CSRF protection and form handling in Laravel.",a:"CSRF (Cross-Site Request Forgery) protection: @csrf in forms generates token. @method('PUT') for PUT/DELETE. $request->validate() for server-side validation. old('field') repopulates forms. @error displays validation errors."},
+];
+
+const container=document.getElementById('qaContainer');
+let currentCat='all';
+
+function render(filter='all'){
+  const filtered=filter==='all'?qas:qas.filter(q=>q.cat===filter);
+  container.innerHTML=filtered.map((q,i)=>{
+    const catColors={devops:'blue',aws:'orange',docker:'cyan',k8s:'green',git:'purple',jenkins:'blue',laravel:'red',testing:'green',linux:'red',sql:'green'};
+    return `<details class="qa" data-cat="${q.cat}">
+      <summary>${q.q} <span class="tag tag-${catColors[q.cat]||'blue'}">${q.cat.toUpperCase()}</span></summary>
+      <div class="answer">${q.a}</div>
+    </details>`;
+  }).join('');
+}
+function filterCat(cat,btn){currentCat=cat;document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(cat)}
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+render();
+</script>
+</body>
+</html>

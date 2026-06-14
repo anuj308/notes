@@ -1,0 +1,435 @@
+﻿
+Array
+binary search
+two pointer
+sliding window
+
+
+
+https://leetcode.com/problems/find-the-duplicate-number/
+https://leetcode.com/problems/find-all-duplicates-in-an-array/
+https://leetcode.com/problems/remove-duplicates-from-sorted-array/description/
+https://www.geeksforgeeks.org/problems/common-elements1132/1
+https://leetcode.com/problems/minimize-maximum-pair-sum-in-array/description/
+
+https://www.geeksforgeeks.org/problems/max-sum-subarray-of-size-k5313/1
+https://www.geeksforgeeks.org/problems/first-negative-integer-in-every-window-of-size-k3345/1
+
+http://geeksforgeeks.org/problems/minimum-swaps-required-to-bring-all-elements-less-than-or-equal-to-k-together4847/1 todo
+
+https://www.geeksforgeeks.org/problems/subarray-with-given-sum-1587115621/1
+https://www.naukri.com/code360/problems/longest-subarray-with-sum-k_6682399
+
+https://www.geeksforgeeks.org/problems/maximum-of-all-subarrays-of-size-k3101/1 imp
+https://www.geeksforgeeks.org/problems/minimum-swaps-required-to-group-all-1s-together2451/1 todo
+
+https://www.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1
+
+https://www.geeksforgeeks.org/problems/longest-k-unique-characters-substring0853/1
+
+https://leetcode.com/problems/subarray-sum-equals-k/
+todo I	
+
+https://leetcode.com/problems/maximum-subarray/description/ todo
+https://leetcode.com/problems/minimum-cost-to-convert-string-i/description todo
+https://leetcode.com/problems/word-search/description/ todo
+
+
+https://leetcode.com/problems/search-in-rotated-sorted-array/description/
+https://leetcode.com/problems/two-sum/description/ 
+https://leetcode.com/problems/3sum/description/ todo
+
+github repo pratice questions
+
+
+https://leetcode.com/problems/sqrtx/
+https://leetcode.com/problems/koko-eating-bananas/description/
+https://leetcode.com/problems/guess-number-higher-or-lower/description/
+https://leetcode.com/problems/first-bad-version/
+
+
+
+
+in cpp
+char array vs string
+char array if end with \0 or null char at end cpp treat as a string
+char s[] = {'a','b'};
+char s[] = "ab"; // both are same and cppQuestions based on
+Array
+Binary search
+Two Pointers treat it as string
+sizeof(s); gives - 3 as 1 is a null char;
+
+#include <iostream>
+	using namespace std;
+	int main() {
+		char s1[] = {'a','v'};
+		char s2[] = "a";
+		char s3[] = {'a','v','\0'};
+		cout << s1 << endl;  // here in buffer memory it might have found the null char and ended
+		cout << s2 << s3 << endl;
+		return 0;
+	}
+
+in cpp we have cstring package which has
+strcat
+strcpy
+strlen
+
+string s1 = "anuj";
+char s2[] = "kumar";
+string s3 = strcat(s1,s2);
+    
+
+#include <iostream>
+	#include <cstring>
+	using namespace std;
+	int main() {
+		char s1[] = {'a','v'};
+		char s2[] = "a";
+		char s3[] = {'a','v','\0'};
+		cout << strcat(s2,s1) << endl;
+		cout << strcat(s1,s2); // undefined error might come    
+		return 0;
+	}
+
+if use new keyword in creating an object it - will be created in the heap
+and in string on size it depend where it will be stored if small size then in stack otherwise in heap
+which is know as small string optimization - chatgpt - Small String Optimization stores short strings directly inside the std::string object to avoid heap allocation, improving performance and cache locality.
+
+stack vs heap
+fast vs slow
+
+string also store metadata in which size etc are stored 
+string s1 = "a";
+cout << strlen(s1) ; // O(1) or s1.size()
+char s[] = {'a'} -> strlen(s) or s.size() -> // Tc - O(n)
+
+str1 +=str2 - Sc-O(sizeof(str2));
+str1 = str1 + str2 -> // Sc- O(sizeof(str1+str2));
+
+
+	// Online Free C++ compiler to run C++ program online
+	#include <iostream>
+	#include <vector>
+	#include <cstring>
+	using namespace std;
+	int main() {
+		string s1 = "bbbbaaaa";
+		// tc-O(n)
+		int n = s1.length();
+		vector<int> freq;
+		for(int i=0;i<26;i++){
+			freq.push_back(0);
+		}
+		for(int i=0;i<n;i++){
+			int v = abs('a'-s1[i]); // abs is very important
+			// cout << v << endl;
+			freq[v]+=1;
+			//cout << s1[i] << " " << freq[v] << endl;
+		}
+		int ind = 0;
+		for(int i=0;i<26;i++){
+			for(int j=0;j<freq[i];j++){
+				s1[ind]='a'+i;
+				ind++;
+			}
+		}
+		cout << s1 << endl;
+		return 0;
+	}
+
+https://leetcode.com/problems/valid-anagram/description/
+https://leetcode.com/problems/minimum-size-subarray-sum/
+
+when making a structure
+with new keyword
+student s1* = new student(2);
+s1 will be in stack a pointer which point to structure in heap
+and s1->name - use -> for accessing the values
+without new 
+everything is in stack
+s1.name and use . for accessing the values
+
+https://www.geeksforgeeks.org/problems/ceil-in-a-sorted-array/1
+https://www.geeksforgeeks.org/problems/key-pair5616/1
+https://leetcode.com/problems/move-zeroes/description/
+
+
+
+kmp - tc  n + m best pattern matching
+
+
+https://leetcode.com/problems/find-the-index-of-the-first-occurrence-in-a-string/description/
+https://leetcode.com/problems/remove-all-occurrences-of-a-substring/description/
+class Solution {
+public:
+    string removeOccurrences(string s, string part) {
+        int i = 0;
+        int j = 0;
+        int ind = -1;
+        int n = part.length();
+        while(i<s.length() && j<n){
+            if(s[i]==part[j]){
+                if(ind==-1) ind = i;
+                if(j==n-1){
+                    s.erase(ind,n);
+                    i=0;
+                    j=0;
+                    ind = -1;
+                }else{
+                    i++;
+                    j++;
+                }
+            }else{
+                if(j>0){
+                    i=ind+1;
+                    j=0;
+                    ind = -1;
+                }else i++;
+            }
+        }
+
+        return s;
+    }
+}; more better exist
+
+https://leetcode.com/problems/longest-substring-without-repeating-characters/
+
+https://leetcode.com/problems/nim-game/description/
+https://leetcode.com/problems/excel-sheet-column-title/description/
+
+
+// minimum in a sorted sorted array
+
+int findSmallest(vector<int>& gems) { 
+    int n = gems.size();
+    int low = 0;
+    int high = n-1;
+    while(high>low){
+        int mid = low + (high-low)/2;
+        if(gems[mid]>gems[high]){ // minimum in right side
+            low = mid+1;
+        }else{
+            high = mid;
+        }
+    }
+    return gems[low];
+}
+
+https://leetcode.com/problems/search-insert-position/
+
+https://leetcode.com/problems/search-in-rotated-sorted-array-ii/
+in this a condition if nums[low] = mid = high then low++ high-- and continue
+for duplicate
+
+https://leetcode.com/problems/find-peak-element/ todo
+https://leetcode.com/problems/capacity-to-ship-packages-within-d-days/description/ todo
+
+https://www.geeksforgeeks.org/problems/triplet-sum-in-array-1587115621/1
+
+
+https://leetcode.com/problems/3sum/
+class Solution {
+public:
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        int n = nums.size();
+        sort(nums.begin(),nums.end());
+        set<vector<int>> ans;
+        for(int i=0;i<n;i++){
+            int j=i+1; // left
+            int k=n-1; // right
+            while(k>j){
+                int sum = nums[i]+nums[j]+nums[k];
+                if(sum==0){
+                    ans.insert({nums[i],nums[j],nums[k]});
+                    j++;
+                    k--;
+                } 
+                else if(sum>0) k--;
+                else j++;
+            }
+        }
+
+        return vector(ans.begin(),ans.end());
+    }
+};
+
+https://www.geeksforgeeks.org/problems/print-diagonally4331/1
+
+
+https://www.geeksforgeeks.org/problems/print-matrix-in-snake-pattern-1587115621/1
+
+jagged array(2D array) the row col is pe defined
+
+remerit of array
+- continous fixed size
+
+https://leetcode.com/problems/merge-two-sorted-lists/
+https://leetcode.com/problems/remove-linked-list-elements/description/ 
+https://leetcode.com/problems/reverse-linked-list/ three pointer
+
+https://leetcode.com/problems/delete-node-in-a-linked-list/
+https://leetcode.com/problems/account-balance-after-rounded-purchase
+https://leetcode.com/problems/middle-of-the-linked-list/description/
+https://leetcode.com/problems/swap-nodes-in-pairs/description/
+
+https://www.geeksforgeeks.org/problems/sorted-insert-for-circular-linked-list/1
+https://www.geeksforgeeks.org/problems/deletion-and-reverse-in-linked-list/1
+https://www.geeksforgeeks.org/problems/deletion-and-reverse-in-linked-list/1
+
+if (i % k == 0) {
+    if (i == k) head = prev;          // first group → new head
+    first->next = curr;              // tail of this group → next node
+    if (second) second->next = prev; // previous tail → current head
+    second = first;                 // store current tail for next group
+    first = curr;                  // move tail pointer to next group's start
+    prev = NULL;
+
+    if (i == n - (n % k)) break;   // ✅ stop after last full group
+}
+
+
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* reverseKGroup(ListNode* head, int k) {
+        int i=0;
+        ListNode* mover = head;
+        while(mover!=NULL){
+            i++;
+            mover=mover->next;
+        }
+        if(k>i) return head;
+        int n = i;
+        i=0;
+        ListNode* second = NULL; // end of k node
+        ListNode* first = head; // start of k node
+        ListNode* prev = NULL;
+        ListNode* curr = head;
+        ListNode* next = NULL;
+        while(curr!=NULL){
+            i++;
+            next = curr->next;
+            curr->next=prev;
+            prev=curr;
+            curr=next;
+            if(i%k==0){
+                if(i==k) head = prev;
+                first->next=curr;
+                if(second!=NULL) second->next = prev;
+                second=first;
+                first=curr;
+                prev=NULL;
+                if(i==n-(n%k)) break;
+            }
+        }
+        return head;
+    }
+};
+
+https://leetcode.com/problems/reverse-nodes-in-k-group/
+
+
+
+Please try these problems before you solve this problem:
+https://leetcode.com/problems/number-of-zero-filled-subarrays/description/
+https://leetcode.com/problems/contiguous-array/
+https://leetcode.com/problems/binary-subarrays-with-sum/description/
+https://leetcode.com/problems/number-of-sub-arrays-with-odd-sum/
+https://leetcode.com/problems/number-of-substrings-with-only-1s/description/
+https://leetcode.com/problems/count-number-of-homogenous-substrings/
+https://leetcode.com/problems/subarray-sum-equals-k/
+https://leetcode.com/problems/design-circular-queue/description/
+https://leetcode.com/problems/valid-parentheses/description/
+https://www.geeksforgeeks.org/problems/delete-middle-element-of-a-stack/1
+https://leetcode.com/problems/asteroid-collision/
+https://www.geeksforgeeks.org/problems/next-larger-element-1587115620/1
+https://leetcode.com/problems/next-greater-element-ii/description/
+https://www.geeksforgeeks.org/problems/queue-reversal/1
+https://www.geeksforgeeks.org/problems/interleave-the-first-half-of-the-queue-with-second-half/1 todo
+https://leetcode.com/problems/largest-rectangle-in-histogram/description/
+https://leetcode.com/problems/online-stock-span/
+
+https://leetcode.com/problems/binary-tree-level-order-traversal/
+https://leetcode.com/problems/maximum-depth-of-binary-tree/description/
+https://www.geeksforgeeks.org/problems/count-leaves-in-binary-tree/1
+https://leetcode.com/problems/minimum-depth-of-binary-tree/
+https://leetcode.com/problems/count-complete-tree-nodes/
+https://leetcode.com/problems/diameter-of-binary-tree/
+https://leetcode.com/problems/binary-tree-right-side-view/
+  void preorder(TreeNode* root,vector<int>& arr,int level){
+        if(root==NULL) return;
+        int size = arr.size();
+        if(size==level){
+            arr.push_back(root->val);
+        }
+        preorder(root->right,arr,level+1);
+        preorder(root->left,arr,level+1);
+    }
+    vector<int> rightSideView(TreeNode* root) {
+        vector<int> arr;
+        preorder(root,arr,0);
+        return arr;
+    }
+    https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/
+
+    
+    https://leetcode.com/problems/insert-into-a-binary-search-tree/description/
+
+    https://leetcode.com/problems/delete-node-in-a-bst/description/
+     TreeNode* lastRightOfLeft(TreeNode* root){
+        if(root->right==NULL) return root;
+        return lastRightOfLeft(root->right);
+    }
+    TreeNode* deleteNode(TreeNode* root, int key) {
+        if(!root) return NULL;
+        if(root->val==key){
+            if(root->left && root->right){
+                TreeNode* rightChild = root->right;
+                TreeNode* lastRight = lastRightOfLeft(root->left);
+                lastRight->right = rightChild;
+                root = root->left;
+            }else if(root->left){
+                root = root->left;
+            }else if(root->right){
+                root = root->right;
+            }else root = NULL;
+        }else if(root->val<key){
+            root->right = deleteNode(root->right,key);
+        }
+        else root->left = deleteNode(root->left,key);
+        return root;
+    }
+
+
+    https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+    void in(TreeNode* root,int& i,int k,int& ans){
+        if(!root) return;
+        in(root->left,i,k,ans);
+        i++;
+        if(i==k) ans = root->val;
+        in(root->right,i,k,ans);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        int ans = 0;
+        int i=0;
+        in(root,i,k,ans);
+        return ans;
+    }
+
+
+https://leetcode.com/problems/range-sum-of-bst/
+https://leetcode.com/problems/construct-binary-search-tree-from-preorder-traversal/description/
+
+shalow vs deap copy
+

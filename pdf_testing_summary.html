@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Testing Summary</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.main{max-width:900px;margin:0 auto;padding:2rem}
+h1{font-size:2rem;font-weight:700;margin:1rem 0;padding-bottom:.5rem;border-bottom:2px solid var(--bg4)}
+h2{font-size:1.3rem;font-weight:700;margin:1.5rem 0 .8rem;color:var(--accent)}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:1.2rem;margin:1rem 0}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border:1px solid var(--bg4)}
+th{background:rgba(88,166,255,.08);color:var(--accent);font-weight:600}
+ul,ol{padding-left:1.5rem;margin:.5rem 0}
+li{margin:.3rem 0;color:var(--text2)}
+p{margin:.5rem 0;color:var(--text2)}
+.breadcrumb{padding:6px 0;font-size:.75rem;color:var(--text2)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:8px 0;display:flex;align-items:center;justify-content:flex-end;z-index:50}
+.btn{padding:5px 10px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+@media print{.topbar,.breadcrumb{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<div class="main">
+<div class="topbar"><button class="btn" onclick="toggleTheme()">🌙 Theme</button> <a class="btn" href="study-hub.html">🏠 Hub</a> <a class="btn" href="Software Testing Basics.pdf">📕 Open PDF</a></div>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>Software Testing Summary</span></div>
+
+<h1>Software Testing Basics — PDF Summary</h1>
+<p>Summary of key concepts from <a href="Software Testing Basics.pdf" style="color:var(--accent)">Software Testing Basics.pdf</a></p>
+
+<div class="card">
+<h2>What is Software Testing?</h2>
+<p>Software testing is the process of checking whether software works correctly and meets requirements. It helps find bugs, missing requirements, wrong output, performance issues, and security vulnerabilities.</p>
+</div>
+
+<div class="card">
+<h2>Testing Types</h2>
+<table>
+<tr><th>Type</th><th>Description</th><th>Examples</th></tr>
+<tr><td><strong>Static Testing</strong></td><td>Done without running the program</td><td>Code review, walkthrough, inspection, SRS review</td></tr>
+<tr><td><strong>Dynamic Testing</strong></td><td>Done by running the program</td><td>Unit testing, integration, system testing, acceptance</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Verification vs Validation</h2>
+<table>
+<tr><th>Aspect</th><th>Verification</th><th>Validation</th></tr>
+<tr><td>Question</td><td>Are we building the product right?</td><td>Are we building the right product?</td></tr>
+<tr><td>Based on</td><td>SRS, design documents</td><td>User needs, actual output</td></tr>
+<tr><td>Execution</td><td>Software not executed</td><td>Software executed</td></tr>
+<tr><td>Type</td><td>Static testing</td><td>Dynamic testing</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Test Levels</h2>
+<ol>
+<li><strong>Unit/Component Testing</strong> — Tests individual functions or modules (done by developers)</li>
+<li><strong>Integration Testing</strong> — Tests how modules work together</li>
+<li><strong>System Testing</strong> — Tests the complete application</li>
+<li><strong>Acceptance Testing</strong> — Validates against user requirements</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>Alpha vs Beta Testing</h2>
+<table>
+<tr><th>Aspect</th><th>Alpha Testing</th><th>Beta Testing</th></tr>
+<tr><td>Done by</td><td>Internal team</td><td>Real users</td></tr>
+<tr><td>Environment</td><td>Controlled/company</td><td>Real user environment</td></tr>
+<tr><td>Timing</td><td>Before beta</td><td>Before final release</td></tr>
+<tr><td>Goal</td><td>Find major bugs</td><td>Get real feedback</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h2>Key Definitions</h2>
+<ul>
+<li><strong>Test Case</strong> — A set of conditions to verify a specific feature</li>
+<li><strong>Test Suite</strong> — Collection of test cases</li>
+<li><strong>Defect/Bug</strong> — An error found during testing</li>
+<li><strong>Test Plan</strong> — Document describing testing strategy</li>
+<li><strong>Regression Testing</strong> — Re-testing after changes to ensure existing features still work</li>
+<li><strong>Smoke Testing</strong> — Quick check to verify basic functionality works</li>
+<li><strong>Sanity Testing</strong> — Focused testing on specific functionality after minor changes</li>
+</ul>
+</div>
+</div>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+</script>
+</body>
+</html>

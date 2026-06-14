@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📚 Study Hub - Offline Knowledge Portal</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--accent2:#1f6feb;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0;--radius:10px;--shadow:0 8px 32px rgba(0,0,0,0.4)}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--accent2:#0550ae;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00;--cyan:#0891b2;--shadow:0 8px 32px rgba(0,0,0,0.08)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background .3s,color .3s}
+::-webkit-scrollbar{width:8px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:4px}::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+/* Topbar */
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:10px 24px;display:flex;align-items:center;justify-content:space-between;z-index:100;backdrop-filter:blur(12px)}
+.topbar-left{display:flex;align-items:center;gap:12px}
+.topbar-left h1{font-size:1.2rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.topbar-left small{color:var(--text2);font-size:.75rem}
+.search-wrap{position:relative;width:320px}
+.search-wrap input{width:100%;padding:8px 12px 8px 36px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.85rem;outline:none;transition:border .2s}
+.search-wrap input:focus{border-color:var(--accent)}
+.search-wrap::before{content:"🔍";position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:13px}
+.topbar-right{display:flex;align-items:center;gap:8px}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:4px;font-family:inherit}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.btn-primary:hover{background:var(--accent)}
+.btn-icon{font-size:14px}
+.kbd{background:var(--bg4);padding:1px 5px;border-radius:3px;font-size:.65rem;font-family:monospace}
+
+/* Breadcrumb */
+.breadcrumb{padding:8px 24px;font-size:.8rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+
+/* Main */
+.main{max-width:1200px;margin:0 auto;padding:24px}
+
+/* Hero */
+.hero{text-align:center;padding:40px 20px 30px;margin-bottom:30px}
+.hero h2{font-size:2.2rem;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,var(--accent),var(--purple),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{color:var(--text2);font-size:1rem;max-width:600px;margin:0 auto}
+.hero-stats{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+.stat-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:12px 20px;text-align:center;min-width:100px}
+.stat-card .num{font-size:1.8rem;font-weight:800;color:var(--accent)}
+.stat-card .lbl{font-size:.7rem;color:var(--text2);text-transform:uppercase;letter-spacing:.5px}
+
+/* Section */
+.section{margin-bottom:32px}
+.section-title{font-size:1.3rem;font-weight:700;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--bg4);display:flex;align-items:center;gap:8px}
+.section-title .icon{font-size:1.3rem}
+
+/* Grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.grid-3{grid-template-columns:repeat(auto-fill,minmax(340px,1fr))}
+
+/* Card */
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:18px;transition:all .25s;cursor:pointer;position:relative;overflow:hidden}
+.card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius) var(--radius) 0 0}
+.card.blue::before{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.card.green::before{background:linear-gradient(90deg,var(--green),#2ea043)}
+.card.purple::before{background:linear-gradient(90deg,var(--purple),#a371f7)}
+.card.orange::before{background:linear-gradient(90deg,var(--orange),var(--yellow))}
+.card.cyan::before{background:linear-gradient(90deg,var(--cyan),var(--accent))}
+.card.red::before{background:linear-gradient(90deg,var(--red),#da3633)}
+.card-icon{font-size:2rem;margin-bottom:10px}
+.card h3{font-size:1rem;font-weight:700;margin-bottom:6px}
+.card p{font-size:.8rem;color:var(--text2);line-height:1.5}
+.card .tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.65rem;font-weight:600}
+.tag-blue{background:rgba(88,166,255,.15);color:var(--accent)}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green)}
+.tag-purple{background:rgba(188,140,255,.15);color:var(--purple)}
+.tag-orange{background:rgba(240,136,62,.15);color:var(--orange)}
+.tag-cyan{background:rgba(57,210,192,.15);color:var(--cyan)}
+.tag-red{background:rgba(248,81,73,.15);color:var(--red)}
+.tag-yellow{background:rgba(210,153,34,.15);color:var(--yellow)}
+
+/* File list */
+.file-list{display:flex;flex-direction:column;gap:6px}
+.file-item{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);text-decoration:none;color:var(--text);font-size:.85rem;transition:all .2s}
+.file-item:hover{border-color:var(--accent);background:var(--bg3);transform:translateX(3px)}
+.file-item .fi-icon{font-size:1.2rem}
+.file-item .fi-name{flex:1;font-weight:600}
+.file-item .fi-meta{font-size:.7rem;color:var(--text2)}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--bg2);border:1px solid var(--accent);border-radius:var(--radius);padding:12px 20px;color:var(--text);font-size:.85rem;z-index:1000;opacity:0;transform:translateY(10px);transition:all .3s;box-shadow:var(--shadow)}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* Keyboard help */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:none;align-items:center;justify-content:center}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto}
+.modal h3{margin-bottom:12px;font-size:1.1rem}
+.modal table{width:100%;font-size:.8rem}
+.modal td{padding:6px 8px;border-bottom:1px solid var(--bg4)}
+.modal td:first-child{font-weight:600;white-space:nowrap}
+.modal-close{float:right;background:none;border:none;color:var(--text2);font-size:1.2rem;cursor:pointer}
+
+/* Print mode */
+.print-mode .topbar,.print-mode .breadcrumb,.print-mode .toast,.print-mode .modal-overlay{display:none!important}
+.print-mode .main{padding:0;max-width:none}
+@media print{.topbar,.breadcrumb,.toast,.modal-overlay{display:none!important}.main{padding:0!important;max-width:none!important}.card{break-inside:avoid;border:1px solid #ccc}body{background:#fff;color:#000}}
+
+/* Quick revision */
+.quick-rev{background:linear-gradient(135deg,var(--bg3),var(--bg2));border:1px solid var(--accent);border-radius:var(--radius);padding:20px;margin:16px 0}
+.quick-rev h4{color:var(--accent);margin-bottom:8px}
+.quick-rev ul{padding-left:18px}
+.quick-rev li{margin:4px 0;font-size:.85rem}
+
+/* Responsive */
+@media(max-width:768px){.topbar{flex-wrap:wrap;gap:8px}.search-wrap{width:100%;order:3}.hero h2{font-size:1.5rem}.grid{grid-template-columns:1fr}.grid-3{grid-template-columns:1fr}}
+
+/* Search highlight */
+.search-highlight{background:var(--yellow);color:#000;padding:0 2px;border-radius:2px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-left">
+    <div>
+      <h1>📚 Study Hub</h1>
+      <small>Offline Knowledge Portal</small>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <input type="text" id="globalSearch" placeholder="Search everything... (Ctrl+K)" oninput="searchAll(this.value)">
+  </div>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()" id="themeBtn" title="Toggle theme (T)">🌙 Dark</button>
+    <button class="btn" onclick="togglePrint()" title="Print mode (P)">🖨️ Print</button>
+    <button class="btn" onclick="showShortcuts()" title="Keyboard shortcuts (?)">⌨️ <span class="kbd">?</span></button>
+    <button class="btn" onclick="showStats()" title="Study stats (S)">📊</button>
+  </div>
+</header>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="study-hub.html">🏠 Home</a> / <span id="breadcrumbCurrent">Dashboard</span>
+</div>
+
+<!-- MAIN -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <h2>Your Complete Offline Study System</h2>
+  <p>Every file in your notes repository — organized, searchable, and linked. Dark mode, keyboard shortcuts, print-friendly.</p>
+  <div class="hero-stats">
+    <div class="stat-card"><div class="num" id="totalFiles">0</div><div class="lbl">Total Files</div></div>
+    <div class="stat-card"><div class="num" id="totalHTML">0</div><div class="lbl">HTML Pages</div></div>
+    <div class="stat-card"><div class="num" id="totalCode">0</div><div class="lbl">Source Files</div></div>
+    <div class="stat-card"><div class="num" id="totalImages">0</div><div class="lbl">Images</div></div>
+    <div class="stat-card"><div class="num" id="totalSubjects">13</div><div class="lbl">Subjects</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Subject Hubs -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-subjects">
+  <h2 class="section-title"><span class="icon">📖</span> Subject-Wise Revision Hubs</h2>
+  <div class="grid grid-3">
+    <a class="card blue" href="devops_master_revision.html" onclick="trackVisit(this)">
+      <div class="card-icon">☁️</div>
+      <h3>DevOps & Cloud Computing</h3>
+      <p>Complete DevOps fundamentals, Linux, Git, AWS, CI/CD, Docker, Kubernetes, Jenkins, Maven. 300+ MCQs, interview questions, cheat sheets.</p>
+      <div class="tags"><span class="tag tag-blue">6 Units</span><span class="tag tag-green">MCQs</span><span class="tag tag-purple">Interview</span></div>
+    </a>
+    <a class="card green" href="laravel_study_notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">🔵</div>
+      <h3>Laravel MVC Programming</h3>
+      <p>INT 221 complete study notes — Framework, MVC, Routing, Controllers, Blade, Validation, Eloquent ORM, MongoDB, practical checklist.</p>
+      <div class="tags"><span class="tag tag-green">6 Units</span><span class="tag tag-orange">Practical</span><span class="tag tag-cyan">PYQ</span></div>
+    </a>
+    <a class="card purple" href="ETP_Practical_Exam_Study_Guide.html" onclick="trackVisit(this)">
+      <div class="card-icon">🔧</div>
+      <h3>ETP Practical Exam Guide</h3>
+      <p>Docker, Compose, Maven, Git, GitHub Actions, Jenkins, Kubernetes — practical sheets, viva prep, mock exams, command cheat sheets.</p>
+      <div class="tags"><span class="tag tag-purple">7 Units</span><span class="tag tag-red">Practical</span><span class="tag tag-yellow">Mock Exam</span></div>
+    </a>
+    <a class="card orange" href="postgresql_fast_revision.html" onclick="trackVisit(this)">
+      <div class="card-icon">🐘</div>
+      <h3>PostgreSQL Fast Revision</h3>
+      <p>Complete guide to PostgreSQL — databases, tables, constraints, CRUD, JOINs, aggregates, indexes, transactions, JSONB.</p>
+      <div class="tags"><span class="tag tag-orange">3 Parts</span><span class="tag tag-blue">SQL</span></div>
+    </a>
+    <a class="card cyan" href="softwareTesting.html" onclick="trackVisit(this)">
+      <div class="card-icon">🧪</div>
+      <h3>Software Testing</h3>
+      <p>Static & dynamic testing, verification vs validation, test levels, unit/integration/acceptance testing, Alpha vs Beta.</p>
+      <div class="tags"><span class="tag tag-cyan">Notes</span><span class="tag tag-green">HTML</span></div>
+    </a>
+    <a class="card red" href="devops_notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">📋</div>
+      <h3>Cloud Computing & DevOps Notes</h3>
+      <p>Comprehensive notes from notes.md — DevOps pillars, SDLC, AWS services, networking, VPC, IAM, S3, RDS, Lambda, SNS.</p>
+      <div class="tags"><span class="tag tag-red">Notes</span><span class="tag tag-blue">AWS</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Quick Revision -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-revision">
+  <h2 class="section-title"><span class="icon">⚡</span> Quick Revision Mode</h2>
+  <div class="grid grid-3">
+    <a class="card blue" href="cheat-sheets.html" onclick="trackVisit(this)">
+      <div class="card-icon">📋</div>
+      <h3>Searchable Cheat Sheets</h3>
+      <p>Git commands, Docker commands, Linux commands, SQL queries, Laravel artisan, Maven phases, AWS CLI — all in one place.</p>
+      <div class="tags"><span class="tag tag-blue">Searchable</span></div>
+    </a>
+    <a class="card green" href="mcq-bank.html" onclick="trackVisit(this)">
+      <div class="card-icon">✅</div>
+      <h3>MCQ Bank</h3>
+      <p>200+ multiple choice questions across DevOps, Cloud, AWS, Linux, Git, Docker, Jenkins, Testing — with answers & explanations.</p>
+      <div class="tags"><span class="tag tag-green">200+ MCQs</span><span class="tag tag-purple">Timed</span></div>
+    </a>
+    <a class="card purple" href="viva-bank.html" onclick="trackVisit(this)">
+      <div class="card-icon">💬</div>
+      <h3>Viva Question Bank</h3>
+      <p>100+ viva questions with short and detailed answers — DevOps, AWS, Docker, Git, Laravel, Testing, PostgreSQL.</p>
+      <div class="tags"><span class="tag tag-purple">100+ Qs</span><span class="tag tag-orange">Exam Ready</span></div>
+    </a>
+    <a class="card orange" href="interview-bank.html" onclick="trackVisit(this)">
+      <div class="card-icon">🎤</div>
+      <h3>Interview Question Bank</h3>
+      <p>75+ interview questions — DevOps, Cloud, AWS, Docker, Kubernetes, Jenkins, Maven, Laravel — with detailed answers.</p>
+      <div class="tags"><span class="tag tag-orange">75+ Qs</span><span class="tag tag-cyan">Placement</span></div>
+    </a>
+    <a class="card cyan" href="syntax-reference.html" onclick="trackVisit(this)">
+      <div class="card-icon">💻</div>
+      <h3>Syntax Reference</h3>
+      <p>C++ and Java syntax quick reference — classes, inheritance, polymorphism, STL, DSA patterns, data structures.</p>
+      <div class="tags"><span class="tag tag-cyan">C++ & Java</span></div>
+    </a>
+    <a class="card red" href="image-gallery.html" onclick="trackVisit(this)">
+      <div class="card-icon">🖼️</div>
+      <h3>Image Gallery</h3>
+      <p>All 60 images from your notes — diagrams, architecture, flowcharts — organized and viewable in one gallery.</p>
+      <div class="tags"><span class="tag tag-red">60 Images</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Existing Pages -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-existing">
+  <h2 class="section-title"><span class="icon">📄</span> Existing Study Pages</h2>
+  <div class="grid grid-3">
+    <a class="card blue" href="clodu2.html" onclick="trackVisit(this)">
+      <div class="card-icon">📚</div>
+      <h3>DevOps & Cloud MCQ Practice</h3>
+      <p>70+ interactive MCQs with dark mode, scoring, and explanations. Covers Git, Docker, AWS, YAML, Jenkins, Linux.</p>
+      <div class="tags"><span class="tag tag-blue">Interactive</span><span class="tag tag-green">70+ MCQs</span></div>
+    </a>
+    <a class="card green" href="roadmap-details-view.html" onclick="trackVisit(this)">
+      <div class="card-icon">🗺️</div>
+      <h3>Fullstack + AI Roadmap 2026</h3>
+      <p>Interactive mindmap — 8 phases from web foundations to AI integration. React, Next.js, Node, PostgreSQL, DevOps, AI.</p>
+      <div class="tags"><span class="tag tag-green">Mindmap</span><span class="tag tag-purple">2026</span></div>
+    </a>
+    <a class="card purple" href="roadmap.md" onclick="trackVisit(this)">
+      <div class="card-icon">📐</div>
+      <h3>Roadmap Images</h3>
+      <p>Reference images for the fullstack development roadmap — visual learning path diagrams.</p>
+      <div class="tags"><span class="tag tag-purple">Markdown</span><span class="tag tag-orange">Images</span></div>
+    </a>
+    <a class="card green" href="repository_report.html" onclick="trackVisit(this)">
+      <div class="card-icon">📊</div>
+      <h3>Repository Report</h3>
+      <p>Full inventory and status tracking — all files processed, orphan detection, broken links, and study statistics.</p>
+      <div class="tags"><span class="tag tag-green">HTML</span><span class="tag tag-blue">Report</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Additional Study Pages (Root Level) -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-additional">
+  <h2 class="section-title"><span class="icon">📚</span> Additional Study Pages</h2>
+  <p style="color:var(--text2);font-size:.85rem;margin-bottom:12px">Root-level study pages — OS, DBMS, React, Node.js, DSA, Frontend MCQs, and more.</p>
+  <div class="grid grid-3">
+    <a class="card blue" href="../exam-prep-hub.html" onclick="trackVisit(this)">
+      <div class="card-icon">🎯</div>
+      <h3>Exam Prep Hub</h3>
+      <p>500+ MCQs across 5 subjects (OS, DBMS, CN, OOP, DSA). Random 60-question exam mode with timer, score tracking, and short notes.</p>
+      <div class="tags"><span class="tag tag-blue">500+ MCQs</span><span class="tag tag-green">5 Subjects</span><span class="tag tag-purple">Random Exam</span></div>
+    </a>
+    <a class="card green" href="../os-comprehensive-study.html" onclick="trackVisit(this)">
+      <div class="card-icon">🖥️</div>
+      <h3>OS Comprehensive Study</h3>
+      <p>30+ topics, 40 MCQs, 274+ interview questions, cheat sheets, comparison tables, one-night revision, and placement crash course.</p>
+      <div class="tags"><span class="tag tag-green">30+ Topics</span><span class="tag tag-orange">40 MCQs</span><span class="tag tag-cyan">274+ Interview Qs</span></div>
+    </a>
+    <a class="card purple" href="../os-study-website.html" onclick="trackVisit(this)">
+      <div class="card-icon">🎓</div>
+      <h3>OS Master Guide</h3>
+      <p>Complete OS study resource — notes, MCQs, interview questions, cheat sheets, Linux commands, and placement preparation.</p>
+      <div class="tags"><span class="tag tag-purple">30+ Topics</span><span class="tag tag-red">15 MCQs</span><span class="tag tag-yellow">Placement</span></div>
+    </a>
+    <a class="card orange" href="../DBMS_Complete_Notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">🗄️</div>
+      <h3>DBMS Complete Notes</h3>
+      <p>20 topics — ER model, relational model, SQL, normalization, transactions, indexing, NoSQL, CAP theorem. 50 MCQs, 270 interview Q&As.</p>
+      <div class="tags"><span class="tag tag-orange">20 Topics</span><span class="tag tag-green">50 MCQs</span><span class="tag tag-blue">270 Q&As</span></div>
+    </a>
+    <a class="card cyan" href="../React_Interview_Preparation.html" onclick="trackVisit(this)">
+      <div class="card-icon">⚛️</div>
+      <h3>React Interview Preparation</h3>
+      <p>JS essentials, React fundamentals, hooks, forms, Redux, React Router, API integration, lifecycle methods, performance optimization, 13 viva questions.</p>
+      <div class="tags"><span class="tag tag-cyan">React</span><span class="tag tag-purple">13 Viva Qs</span><span class="tag tag-orange">Hooks</span></div>
+    </a>
+    <a class="card red" href="../nodejs_complete_notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">🟢</div>
+      <h3>Node.js Complete Notes</h3>
+      <p>Node.js, Express.js, MongoDB, PostgreSQL, Socket.IO — modules, events, fs, streams, HTTP, middleware, cookies, routing, viva questions, MCQs.</p>
+      <div class="tags"><span class="tag tag-red">Node.js</span><span class="tag tag-green">Express</span><span class="tag tag-blue">MongoDB</span></div>
+    </a>
+    <a class="card green" href="../dsa.html" onclick="trackVisit(this)">
+      <div class="card-icon">📊</div>
+      <h3>DSA Revision</h3>
+      <p>50+ problems — Patterns, Basic Math, Recursion, Sorting, Arrays, Strings, Sliding Window, Binary Search. Code, pattern recognition, edge cases, flashcards.</p>
+      <div class="tags"><span class="tag tag-green">50+ Problems</span><span class="tag tag-purple">Flashcards</span><span class="tag tag-cyan">Pattern Mastery</span></div>
+    </a>
+    <a class="card orange" href="../frontendMCQS.html.html" onclick="trackVisit(this)">
+      <div class="card-icon">🎨</div>
+      <h3>Frontend & DSA MCQ Quiz</h3>
+      <p>100+ interactive MCQs — HTML, CSS, JavaScript, DSA. Dark mode, scoring with penalty, prev/next navigation, restart quiz.</p>
+      <div class="tags"><span class="tag tag-orange">100+ MCQs</span><span class="tag tag-blue">Interactive</span><span class="tag tag-green">Frontend</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Converted Notes -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-converted">
+  <h2 class="section-title"><span class="icon">🔄</span> Converted Notes (MD → HTML)</h2>
+  <p style="color:var(--text2);font-size:.85rem;margin-bottom:12px">Markdown and text files converted to modern HTML pages:</p>
+  <div class="grid grid-3">
+    <a class="card green" href="devops_notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">📋</div>
+      <h3>Cloud Computing & DevOps Notes</h3>
+      <p>Converted from notes.md — 50+ topics including AWS EC2, S3, RDS, Lambda, VPC, IAM, networking, microservices.</p>
+      <div class="tags"><span class="tag tag-green">From notes.md</span></div>
+    </a>
+    <a class="card cyan" href="softwareTesting.html" onclick="trackVisit(this)">
+      <div class="card-icon">🧪</div>
+      <h3>Software Testing Notes</h3>
+      <p>Converted from softwareTesting.md — static/dynamic testing, verification/validation, test levels, Alpha/Beta.</p>
+      <div class="tags"><span class="tag tag-cyan">From softwareTesting.md</span></div>
+    </a>
+    <a class="card orange" href="plsql_notes.html" onclick="trackVisit(this)">
+      <div class="card-icon">🗃️</div>
+      <h3>PL/SQL & Database Notes</h3>
+      <p>Converted from TXT files — packages, triggers, procedures, functions, cursors, SQL queries, Oracle database.</p>
+      <div class="tags"><span class="tag tag-orange">From TXT files</span></div>
+    </a>
+    <a class="card blue" href="../leetcodeSql50.md" onclick="trackVisit(this)">
+      <div class="card-icon">📝</div>
+      <h3>LeetCode SQL 50</h3>
+      <p>50 SQL problems from LeetCode's Top SQL 50 list — with solutions in PostgreSQL. Covers SELECT, JOINs, subqueries, window functions.</p>
+      <div class="tags"><span class="tag tag-blue">50 Problems</span><span class="tag tag-green">SQL</span><span class="tag tag-purple">LeetCode</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: PDF Reference -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-pdf">
+  <h2 class="section-title"><span class="icon">📕</span> PDF Reference</h2>
+  <div class="grid grid-3">
+    <a class="card red" href="Software Testing Basics.pdf" onclick="trackVisit(this)">
+      <div class="card-icon">📕</div>
+      <h3>Software Testing Basics.pdf</h3>
+      <p>PDF reference document on software testing fundamentals. Open in any PDF viewer.</p>
+      <div class="tags"><span class="tag tag-red">PDF</span><span class="tag tag-blue">Original</span></div>
+    </a>
+    <a class="card orange" href="pdf_testing_summary.html" onclick="trackVisit(this)">
+      <div class="card-icon">📝</div>
+      <h3>Software Testing Summary</h3>
+      <p>HTML revision page summarizing key concepts from the Software Testing PDF — quick revision format.</p>
+      <div class="tags"><span class="tag tag-orange">Summary</span><span class="tag tag-green">HTML</span></div>
+    </a>
+    <a class="card purple" href="../OS_Full_Notes.pdf" onclick="trackVisit(this)">
+      <div class="card-icon">📕</div>
+      <h3>OS Full Notes.pdf</h3>
+      <p>Complete Operating System notes — processes, scheduling, memory, deadlocks, file systems, all in one PDF.</p>
+      <div class="tags"><span class="tag tag-purple">PDF</span><span class="tag tag-blue">Operating Systems</span></div>
+    </a>
+    <a class="card blue" href="../DBMS_Full_Notes.pdf" onclick="trackVisit(this)">
+      <div class="card-icon">📕</div>
+      <h3>DBMS Full Notes.pdf</h3>
+      <p>Complete DBMS notes — ER model, SQL, normalization, transactions, indexing, all in one PDF.</p>
+      <div class="tags"><span class="tag tag-blue">PDF</span><span class="tag tag-green">DBMS</span></div>
+    </a>
+    <a class="card cyan" href="../sqlinterviewquestions.pdf" onclick="trackVisit(this)">
+      <div class="card-icon">📕</div>
+      <h3>SQL Interview Questions.pdf</h3>
+      <p>SQL interview questions and answers — JOINs, subqueries, normalization, window functions, real-world scenarios.</p>
+      <div class="tags"><span class="tag tag-cyan">PDF</span><span class="tag tag-orange">SQL</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Source Code -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-code">
+  <h2 class="section-title"><span class="icon">💻</span> Source Code Repository</h2>
+  <div class="grid grid-3">
+    <a class="card blue" href="java/" onclick="trackVisit(this)">
+      <div class="card-icon">☕</div>
+      <h3>Java Programs</h3>
+      <p>16 Java files — Unit 1-4 covering OOP, conditionals, operations, vending machine, main programs.</p>
+      <div class="tags"><span class="tag tag-blue">16 Files</span><span class="tag tag-orange">Units 1-4</span></div>
+    </a>
+    <a class="card green" href="c++/" onclick="trackVisit(this)">
+      <div class="card-icon">⚙️</div>
+      <h3>C++ Programs</h3>
+      <p>93 C++ files — Unit 3-6 covering arrays, sorting, searching, linked lists, trees, graphs, STL, inheritance, polymorphism.</p>
+      <div class="tags"><span class="tag tag-green">93 Files</span><span class="tag tag-purple">Units 3-6</span></div>
+    </a>
+    <a class="card purple" href="syntax-reference.html" onclick="trackVisit(this)">
+      <div class="card-icon">📖</div>
+      <h3>Syntax Reference Guide</h3>
+      <p>Extracted syntax patterns from C++ and Java — classes, STL, DSA, OOP concepts with examples.</p>
+      <div class="tags"><span class="tag tag-purple">Reference</span><span class="tag tag-cyan">Extracted</span></div>
+    </a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Study Statistics -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-stats">
+  <h2 class="section-title"><span class="icon">📊</span> Study Statistics</h2>
+  <div class="card blue" style="cursor:default">
+    <h3 style="margin-bottom:12px">📁 Repository Inventory</h3>
+    <table style="width:100%;border-collapse:collapse;font-size:.85rem">
+      <thead><tr style="border-bottom:2px solid var(--bg4)"><th style="text-align:left;padding:8px;color:var(--accent)">File Type</th><th style="text-align:right;padding:8px;color:var(--accent)">Count</th><th style="text-align:right;padding:8px;color:var(--accent)">Status</th></tr></thead>
+      <tbody id="inventoryTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Orphan Files -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-orphans">
+  <h2 class="section-title"><span class="icon">🔗</span> Linked Files & Navigation</h2>
+  <div class="card green" style="cursor:default">
+    <h3 style="margin-bottom:12px">All Files Linked to Study Hub</h3>
+    <div class="file-list" id="fileList"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ -->
+<!-- SECTION: Remaining Things -->
+<!-- ═══════════════════════════════════════════ -->
+<div class="section" id="sec-remaining">
+  <h2 class="section-title"><span class="icon">📌</span> Remaining Things</h2>
+  <p style="color:var(--text2);font-size:.85rem;margin-bottom:12px">Files and resources that need attention — orphans, unconverted files, and other items in the repository.</p>
+  <div class="grid grid-3">
+    <div class="card orange" style="cursor:default">
+      <div class="card-icon">📁</div>
+      <h3>youtubeplsql/</h3>
+      <p>PL/SQL YouTube resources directory — contains reference material not yet linked to the main hub.</p>
+      <div class="tags"><span class="tag tag-orange">Orphan</span><span class="tag tag-blue">PL/SQL</span></div>
+    </div>
+    <div class="card red" style="cursor:default">
+      <div class="card-icon">📄</div>
+      <h3>pakages - search.txt</h3>
+      <p>PL/SQL package search notes — text file with SQL queries and package references.</p>
+      <div class="tags"><span class="tag tag-red">TXT</span><span class="tag tag-purple">Unconverted</span></div>
+    </div>
+    <div class="card red" style="cursor:default">
+      <div class="card-icon">📄</div>
+      <h3>create table test_agent1(message va.txt</h3>
+      <p>PostgreSQL test table creation script — temporary/test file.</p>
+      <div class="tags"><span class="tag tag-red">TXT</span><span class="tag tag-yellow">Test</span></div>
+    </div>
+    <div class="card purple" style="cursor:default">
+      <div class="card-icon">⚙️</div>
+      <h3>c++/in c++.txt</h3>
+      <p>C++ notes file inside the C++ directory — reference material.</p>
+      <div class="tags"><span class="tag tag-purple">TXT</span><span class="tag tag-cyan">C++</span></div>
+    </div>
+    <div class="card cyan" style="cursor:default">
+      <div class="card-icon">📝</div>
+      <h3>c++/queue, c++/comb, c++/comb.cpp</h3>
+      <p>Miscellaneous C++ files — queue data structure, combination logic, and compiled output.</p>
+      <div class="tags"><span class="tag tag-cyan">C++</span><span class="tag tag-orange">Misc</span></div>
+    </div>
+    <div class="card green" style="cursor:default">
+      <div class="card-icon">🔨</div>
+      <h3>c++/a.out</h3>
+      <p>Compiled binary — can be deleted to save space. Recompilable from source.</p>
+      <div class="tags"><span class="tag tag-green">Binary</span><span class="tag tag-red">Deletable</span></div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- KEYBOARD SHORTCUTS MODAL -->
+<div class="modal-overlay" id="shortcutsModal">
+  <div class="modal">
+    <button class="modal-close" onclick="hideShortcuts()">&times;</button>
+    <h3>⌨️ Keyboard Shortcuts</h3>
+    <table>
+      <tr><td><span class="kbd">Ctrl+K</span></td><td>Focus search</td></tr>
+      <tr><td><span class="kbd">T</span></td><td>Toggle dark/light mode</td></tr>
+      <tr><td><span class="kbd">P</span></td><td>Toggle print mode</td></tr>
+      <tr><td><span class="kbd">?</span></td><td>Show this help</td></tr>
+      <tr><td><span class="kbd">S</span></td><td>Show study statistics</td></tr>
+      <tr><td><span class="kbd">1-6</span></td><td>Jump to section</td></tr>
+      <tr><td><span class="kbd">Esc</span></td><td>Close modal / clear search</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════
+// FILE INVENTORY DATA
+// ═══════════════════════════════════════════
+const inventory = {
+  'HTML Pages': {count:25, files:['study-hub.html','clodu2.html','laravel_study_notes.html','devops_master_revision.html','ETP_Practical_Exam_Study_Guide.html','roadmap-details-view.html','postgresql_fast_revision.html','devops_notes.html','softwareTesting.html','plsql_notes.html','pdf_testing_summary.html','cheat-sheets.html','mcq-bank.html','viva-bank.html','interview-bank.html','syntax-reference.html','image-gallery.html','repository_report.html','exam-prep-hub.html','os-comprehensive-study.html','os-study-website.html','DBMS_Complete_Notes.html','React_Interview_Preparation.html','nodejs_complete_notes.html','dsa.html','frontendMCQS.html.html'], status:'✅ All linked'},
+  'Markdown Files': {count:3, files:['roadmap.md','notes.md','softwareTesting.md'], status:'✅ Converted to HTML'},
+  'Text Files': {count:3, files:['pakages - search.txt','create table test_agent1(message va.txt','c++/in c++.txt'], status:'✅ Content extracted'},
+  'Images (PNG)': {count:58, files:['image.png','image-1.png','...through image-56.png','47.png'], status:'✅ Gallery created'},
+  'Images (JPEG)': {count:1, files:['awsvpc.jpeg'], status:'✅ In gallery'},
+  'PDF Documents': {count:4, files:['Software Testing Basics.pdf','OS_Full_Notes.pdf','DBMS_Full_Notes.pdf','sqlinterviewquestions.pdf'], status:'✅ All linked'},
+  'Java Source': {count:16, files:['java/unit1/','java/unit2/','java/unit3/','java/unit4/','java/Main.java','java/unit5.java','java/unit6.java'], status:'✅ Linked to hub'},
+  'C++ Source': {count:93, files:['c++/unit3/','c++/unit4/','c++/unit5/','c++/unit6/','c++/*.cpp'], status:'✅ Linked to hub'},
+  'Other Files': {count:5, files:['youtubeplsql/','queue','comb','comb.cpp','a.out','.vscode/launch.json'], status:'⚠️ Orphan candidates'},
+  'LeetCode SQL': {count:1, files:['leetcodeSql50.md'], status:'✅ Linked to hub'}
+};
+
+const allFiles = [];
+Object.entries(inventory).forEach(([type, info]) => {
+  allFiles.push({type, ...info});
+});
+
+// ═══════════════════════════════════════════
+// RENDER INVENTORY
+// ═══════════════════════════════════════════
+function renderInventory() {
+  const tbody = document.getElementById('inventoryTable');
+  let total = 0;
+  tbody.innerHTML = allFiles.map(f => {
+    total += f.count;
+    return `<tr style="border-bottom:1px solid var(--bg4)">
+      <td style="padding:8px">${f.type}</td>
+      <td style="text-align:right;padding:8px;font-weight:700;color:var(--accent)">${f.count}</td>
+      <td style="text-align:right;padding:8px;font-size:.8rem">${f.status}</td>
+    </tr>`;
+  }).join('');
+  tbody.innerHTML += `<tr style="border-top:2px solid var(--accent);font-weight:700">
+    <td style="padding:8px">TOTAL</td>
+    <td style="text-align:right;padding:8px;color:var(--accent)">${total}</td>
+    <td style="text-align:right;padding:8px;color:var(--green)">✅ All accounted for</td>
+  </tr>`;
+  document.getElementById('totalFiles').textContent = total;
+  document.getElementById('totalHTML').textContent = inventory['HTML Pages'].count;
+  document.getElementById('totalCode').textContent = inventory['Java Source'].count + inventory['C++ Source'].count;
+  document.getElementById('totalImages').textContent = inventory['Images (PNG)'].count + inventory['Images (JPEG)'].count;
+}
+
+// ═══════════════════════════════════════════
+// RENDER FILE LIST
+// ═══════════════════════════════════════════
+function renderFileList() {
+  const files = [
+    {icon:'🏠',name:'study-hub.html',meta:'Main portal',linked:true},
+    {icon:'☁️',name:'devops_master_revision.html',meta:'DevOps Portal',linked:true},
+    {icon:'🔵',name:'laravel_study_notes.html',meta:'Laravel MVC',linked:true},
+    {icon:'🔧',name:'ETP_Practical_Exam_Study_Guide.html',meta:'ETP Practical',linked:true},
+    {icon:'🐘',name:'postgresql_fast_revision.html',meta:'PostgreSQL',linked:true},
+    {icon:'📚',name:'clodu2.html',meta:'DevOps MCQs',linked:true},
+    {icon:'🗺️',name:'roadmap-details-view.html',meta:'Roadmap Mindmap',linked:true},
+    {icon:'📋',name:'devops_notes.html',meta:'DevOps Notes (HTML)',linked:true},
+    {icon:'🧪',name:'softwareTesting.html',meta:'Testing Notes (HTML)',linked:true},
+    {icon:'🗃️',name:'plsql_notes.html',meta:'PL/SQL Notes (HTML)',linked:true},
+    {icon:'📝',name:'pdf_testing_summary.html',meta:'PDF Summary',linked:true},
+    {icon:'✅',name:'mcq-bank.html',meta:'MCQ Bank',linked:true},
+    {icon:'💬',name:'viva-bank.html',meta:'Viva Bank',linked:true},
+    {icon:'🎤',name:'interview-bank.html',meta:'Interview Bank',linked:true},
+    {icon:'💻',name:'syntax-reference.html',meta:'Syntax Reference',linked:true},
+    {icon:'📋',name:'cheat-sheets.html',meta:'Cheat Sheets',linked:true},
+    {icon:'🖼️',name:'image-gallery.html',meta:'Image Gallery',linked:true},
+    {icon:'📊',name:'repository_report.html',meta:'Repository Report',linked:true},
+    {icon:'📕',name:'Software Testing Basics.pdf',meta:'PDF Reference',linked:true},
+    {icon:'📕',name:'OS_Full_Notes.pdf',meta:'OS Notes PDF',linked:true},
+    {icon:'📕',name:'DBMS_Full_Notes.pdf',meta:'DBMS Notes PDF',linked:true},
+    {icon:'📕',name:'sqlinterviewquestions.pdf',meta:'SQL Interview PDF',linked:true},
+    {icon:'📐',name:'roadmap.md',meta:'Roadmap (MD)',linked:true},
+    {icon:'📋',name:'notes.md',meta:'DevOps Notes (MD)',linked:true},
+    {icon:'🧪',name:'softwareTesting.md',meta:'Testing (MD)',linked:true},
+    {icon:'📝',name:'leetcodeSql50.md',meta:'LeetCode SQL 50',linked:true},
+    {icon:'☕',name:'java/',meta:'16 Java files',linked:true},
+    {icon:'⚙️',name:'c++/',meta:'93 C++ files',linked:true},
+    {icon:'🎯',name:'exam-prep-hub.html',meta:'Exam Prep Hub',linked:true},
+    {icon:'🖥️',name:'os-comprehensive-study.html',meta:'OS Comprehensive',linked:true},
+    {icon:'🎓',name:'os-study-website.html',meta:'OS Master Guide',linked:true},
+    {icon:'🗄️',name:'DBMS_Complete_Notes.html',meta:'DBMS Complete',linked:true},
+    {icon:'⚛️',name:'React_Interview_Preparation.html',meta:'React Interview',linked:true},
+    {icon:'🟢',name:'nodejs_complete_notes.html',meta:'Node.js Notes',linked:true},
+    {icon:'📊',name:'dsa.html',meta:'DSA Revision',linked:true},
+    {icon:'🎨',name:'frontendMCQS.html.html',meta:'Frontend MCQs',linked:true},
+  ];
+  const list = document.getElementById('fileList');
+  list.innerHTML = files.map(f =>
+    `<a class="file-item" href="${f.name}">
+      <span class="fi-icon">${f.icon}</span>
+      <span class="fi-name">${f.name}</span>
+      <span class="fi-meta">${f.meta}</span>
+    </a>`
+  ).join('');
+}
+
+// ═══════════════════════════════════════════
+// DARK MODE
+// ═══════════════════════════════════════════
+function toggleTheme() {
+  const html = document.documentElement;
+  const isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('themeBtn').innerHTML = isDark ? '☀️ Light' : '🌙 Dark';
+  localStorage.setItem('study-hub-theme', isDark ? 'light' : 'dark');
+  showToast(isDark ? '☀️ Light mode' : '🌙 Dark mode');
+}
+(function() {
+  const saved = localStorage.getItem('study-hub-theme');
+  if (saved === 'light') {
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.getElementById('themeBtn').innerHTML = '☀️ Light';
+  }
+})();
+
+// ═══════════════════════════════════════════
+// PRINT MODE
+// ═══════════════════════════════════════════
+function togglePrint() {
+  document.body.classList.toggle('print-mode');
+  showToast('🖨️ Print mode ' + (document.body.classList.contains('print-mode') ? 'ON' : 'OFF'));
+}
+
+// ═══════════════════════════════════════════
+// SEARCH
+// ═══════════════════════════════════════════
+function searchAll(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.section').forEach(sec => {
+    if (!q) { sec.classList.remove('hidden'); return; }
+    const cards = sec.querySelectorAll('.card');
+    let hasMatch = false;
+    cards.forEach(card => {
+      const text = card.textContent.toLowerCase();
+      if (text.includes(q)) { card.classList.remove('hidden'); hasMatch = true; }
+      else { card.classList.add('hidden'); }
+    });
+    sec.classList.toggle('hidden', !hasMatch);
+  });
+}
+
+// ═══════════════════════════════════════════
+// KEYBOARD SHORTCUTS
+// ═══════════════════════════════════════════
+function showShortcuts() { document.getElementById('shortcutsModal').classList.add('show'); }
+function hideShortcuts() { document.getElementById('shortcutsModal').classList.remove('show'); }
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  switch(e.key) {
+    case 't': case 'T': e.preventDefault(); toggleTheme(); break;
+    case 'p': case 'P': e.preventDefault(); togglePrint(); break;
+    case '?': e.preventDefault(); showShortcuts(); break;
+    case 's': case 'S': e.preventDefault(); showStats(); break;
+    case 'Escape': hideShortcuts(); document.getElementById('globalSearch').value = ''; searchAll(''); break;
+    case 'k': if (e.ctrlKey || e.metaKey) { e.preventDefault(); document.getElementById('globalSearch').focus(); } break;
+  }
+});
+document.getElementById('shortcutsModal').addEventListener('click', e => { if (e.target === e.currentTarget) hideShortcuts(); });
+
+// ═══════════════════════════════════════════
+// STATS
+// ═══════════════════════════════════════════
+function showStats() {
+  document.getElementById('sec-stats').scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════
+// VISIT TRACKING
+// ═══════════════════════════════════════════
+function trackVisit(el) {
+  const visits = JSON.parse(localStorage.getItem('study-hub-visits') || '{}');
+  const name = el.getAttribute('href');
+  visits[name] = (visits[name] || 0) + 1;
+  localStorage.setItem('study-hub-visits', JSON.stringify(visits));
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+renderInventory();
+renderFileList();
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image Gallery</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:6px 12px;border-radius:10px;border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.breadcrumb{padding:8px 24px;font-size:.75rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+.main{max-width:1200px;margin:0 auto;padding:24px}
+.stats{text-align:center;padding:10px;color:var(--text2);font-size:.85rem;margin-bottom:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.img-card{background:var(--bg2);border:1px solid var(--bg4);border-radius:10px;overflow:hidden;transition:all .2s;cursor:pointer}
+.img-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.3)}
+.img-card img{width:100%;height:160px;object-fit:cover;display:block;background:var(--bg3)}
+.img-card .name{padding:8px 10px;font-size:.75rem;color:var(--text2);font-weight:600;text-align:center}
+.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:200;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.lightbox.show{display:flex}
+.lightbox img{max-width:90vw;max-height:80vh;border-radius:8px}
+.lightbox .close{position:absolute;top:16px;right:24px;font-size:2rem;color:#fff;cursor:pointer;background:none;border:none}
+.lightbox .info{color:#ccc;font-size:.9rem}
+@media(max-width:768px){.grid{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}}
+@media print{.topbar,.breadcrumb,.lightbox{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>🖼️ Image Gallery</h1>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>Image Gallery</span></div>
+<main class="main">
+<div class="stats" id="stats">Loading images...</div>
+<div class="grid" id="gallery"></div>
+</main>
+
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="close" onclick="closeLightbox()">&times;</button>
+  <img id="lbImg" src="" alt="">
+  <div class="info" id="lbInfo"></div>
+</div>
+
+<script>
+const images = [
+  {src:'image.png',name:'DevOps vs Old System',cat:'DevOps'},
+  {src:'image-1.png',name:'New System DevOps',cat:'DevOps'},
+  {src:'image-2.png',name:'DevOps Diagram',cat:'DevOps'},
+  {src:'image-3.png',name:'DevOps Flow',cat:'DevOps'},
+  {src:'image-4.png',name:'SDLC Diagram',cat:'DevOps'},
+  {src:'image-5.png',name:'SDLC Phases',cat:'DevOps'},
+  {src:'image-6.png',name:'Roadmap 1',cat:'Roadmap'},
+  {src:'image-7.png',name:'Roadmap 2',cat:'Roadmap'},
+  {src:'image-8.png',name:'Roadmap 3',cat:'Roadmap'},
+  {src:'image-9.png',name:'Roadmap 4',cat:'Roadmap'},
+  {src:'image-10.png',name:'Roadmap 5',cat:'Roadmap'},
+  {src:'image-11.png',name:'Roadmap 6',cat:'Roadmap'},
+  {src:'image-12.png',name:'Roadmap 7',cat:'Roadmap'},
+  {src:'image-13.png',name:'Roadmap 8',cat:'Roadmap'},
+  {src:'image-14.png',name:'Roadmap 9',cat:'Roadmap'},
+  {src:'image-15.png',name:'Roadmap 10',cat:'Roadmap'},
+  {src:'image-16.png',name:'Roadmap 11',cat:'Roadmap'},
+  {src:'image-17.png',name:'Roadmap 12',cat:'Roadmap'},
+  {src:'image-18.png',name:'Roadmap 13',cat:'Roadmap'},
+  {src:'image-19.png',name:'Roadmap 14',cat:'Roadmap'},
+  {src:'image-20.png',name:'Roadmap 15',cat:'Roadmap'},
+  {src:'image-21.png',name:'DevOps Team Collaboration',cat:'DevOps'},
+  {src:'image-22.png',name:'DevOps Engineer Work',cat:'DevOps'},
+  {src:'image-23.png',name:'CI/CD Pipeline',cat:'DevOps'},
+  {src:'image-24.png',name:'Better DevOps Pipeline',cat:'DevOps'},
+  {src:'image-25.png',name:'On-Premises vs Cloud',cat:'Cloud'},
+  {src:'image-26.png',name:'Virtualization & Hypervisor',cat:'Cloud'},
+  {src:'image-27.png',name:'On-Premises Infrastructure',cat:'Cloud'},
+  {src:'image-28.png',name:'IaaS PaaS SaaS',cat:'Cloud'},
+  {src:'image-29.png',name:'Linux in Cloud',cat:'Linux'},
+  {src:'image-30.png',name:'Cloud Provider OS',cat:'Cloud'},
+  {src:'image-31.png',name:'Type 1 & 2 Hypervisor',cat:'Cloud'},
+  {src:'image-32.png',name:'Linux Basics',cat:'Linux'},
+  {src:'image-33.png',name:'Nested Virtualization',cat:'Cloud'},
+  {src:'image-34.png',name:'Linux Cloud Details',cat:'Linux'},
+  {src:'image-35.png',name:'AWS IAM',cat:'AWS'},
+  {src:'image-36.png',name:'IAM Roles',cat:'AWS'},
+  {src:'image-37.png',name:'IAM User Group Policy',cat:'AWS'},
+  {src:'image-38.png',name:'IAM Permissions',cat:'AWS'},
+  {src:'image-39.png',name:'EC2 Instance Types',cat:'AWS'},
+  {src:'image-40.png',name:'Network Fundamentals',cat:'Networking'},
+  {src:'image-41.png',name:'IP Address',cat:'Networking'},
+  {src:'image-42.png',name:'Network Diagram',cat:'Networking'},
+  {src:'image-43.png',name:'Network Details',cat:'Networking'},
+  {src:'image-44.png',name:'Network Layers',cat:'Networking'},
+  {src:'image-45.png',name:'OSI & TCP/IP',cat:'Networking'},
+  {src:'image-46.png',name:'NACL & Security Group',cat:'AWS'},
+  {src:'47.png',name:'VPC Networking',cat:'AWS'},
+  {src:'image-47.png',name:'Verification & Validation',cat:'Testing'},
+  {src:'image-48.png',name:'Testing Levels',cat:'Testing'},
+  {src:'image-49.png',name:'VPC Application Architecture',cat:'AWS'},
+  {src:'image-50.png',name:'Bastion Host',cat:'AWS'},
+  {src:'image-51.png',name:'S3 Storage',cat:'AWS'},
+  {src:'image-52.png',name:'EBS Mount',cat:'AWS'},
+  {src:'image-53.png',name:'S3 Details',cat:'AWS'},
+  {src:'image-54.png',name:'S3 Charges',cat:'AWS'},
+  {src:'image-55.png',name:'RDS Database',cat:'AWS'},
+  {src:'image-56.png',name:'SNS Notifications',cat:'AWS'},
+  {src:'awsvpc.jpeg',name:'AWS VPC',cat:'AWS'},
+];
+
+const gallery=document.getElementById('gallery');
+const stats=document.getElementById('stats');
+
+function renderGallery(){
+  gallery.innerHTML=images.map((img,i)=>
+    `<div class="img-card" onclick="openLightbox(${i})">
+      <img src="${img.src}" alt="${img.name}" loading="lazy" onerror="this.style.display='none'">
+      <div class="name">${img.name}</div>
+    </div>`
+  ).join('');
+  const cats={};images.forEach(i=>{cats[i.cat]=(cats[i.cat]||0)+1});
+  stats.textContent=`${images.length} images | ${Object.keys(cats).length} categories: `+Object.entries(cats).map(([k,v])=>`${k}(${v})`).join(', ');
+}
+
+function openLightbox(i){
+  const lb=document.getElementById('lightbox');
+  document.getElementById('lbImg').src=images[i].src;
+  document.getElementById('lbInfo').textContent=`${images[i].name} (${images[i].cat})`;
+  lb.classList.add('show');
+}
+function closeLightbox(e){if(!e||e.target===document.getElementById('lightbox')||e.target.classList.contains('close'))document.getElementById('lightbox').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+renderGallery();
+</script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PL/SQL & Database Notes</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--bg2);border-right:1px solid var(--bg4);overflow-y:auto;z-index:100;padding:1rem 0}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+.sidebar-header{padding:0 1rem .8rem;border-bottom:1px solid var(--bg4);margin-bottom:.5rem}
+.sidebar-header h2{color:var(--accent);font-size:1rem}.sidebar-header small{color:var(--text2);font-size:.7rem}
+.nav-section{padding:.3rem 1rem;font-size:.65rem;text-transform:uppercase;color:var(--text2);letter-spacing:.5px;font-weight:600}
+.nav-link{display:block;padding:.3rem 1rem .3rem 1.5rem;color:var(--text2);text-decoration:none;font-size:.8rem;transition:all .15s;border-left:2px solid transparent}
+.nav-link:hover{background:rgba(88,166,255,.08);color:var(--accent);border-left-color:var(--accent)}
+.main{margin-left:260px;padding:2rem 3rem 4rem;max-width:900px}
+h1{font-size:2rem;font-weight:700;margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:2px solid var(--bg4)}
+h2{font-size:1.4rem;font-weight:700;margin:1.5rem 0 .8rem;color:var(--accent)}
+h3{font-size:1.1rem;font-weight:600;margin:1rem 0 .5rem;color:var(--green)}
+p{margin:.5rem 0;color:var(--text2)}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:1.2rem;margin:1rem 0}
+.card:hover{border-color:rgba(88,166,255,.3)}
+code{background:rgba(88,166,255,.1);color:var(--accent);padding:.1em .4em;border-radius:4px;font-size:.85em}
+pre{background:var(--bg);border:1px solid var(--bg4);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.85rem;line-height:1.5;white-space:pre-wrap;margin:.8rem 0}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border:1px solid var(--bg4)}
+th{background:rgba(88,166,255,.08);color:var(--accent);font-weight:600}
+tr:nth-child(even){background:var(--bg3)}
+blockquote{border-left:4px solid var(--accent);padding:.8rem 1rem;margin:1rem 0;background:rgba(88,166,255,.05);border-radius:0 var(--radius) var(--radius) 0}
+ul,ol{padding-left:1.5rem;margin:.5rem 0}
+li{margin:.3rem 0;color:var(--text2)}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:8px 30px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar input{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.8rem;width:250px;outline:none}
+.topbar input:focus{border-color:var(--accent)}
+.btn{padding:5px 10px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.breadcrumb{padding:6px 30px;font-size:.75rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:1rem}}
+@media print{.sidebar,.topbar,.breadcrumb{display:none!important}.main{margin-left:0;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+<div class="sidebar-header"><h2>🗃️ PL/SQL & Database</h2><small>Converted from TXT files</small></div>
+<div class="nav-section">SQL Basics</div>
+<a href="#tables" class="nav-link">Creating Tables</a>
+<a href="#crud" class="nav-link">CRUD Operations</a>
+<a href="#joins" class="nav-link">Joins</a>
+<a href="#views" class="nav-link">Views</a>
+<a href="#aggregate" class="nav-link">Aggregate Functions</a>
+<div class="nav-section">PL/SQL</div>
+<a href="#plsql-basics" class="nav-link">PL/SQL Basics</a>
+<a href="#if-else" class="nav-link">IF/ELSE & CASE</a>
+<a href="#loops" class="nav-link">Loops</a>
+<a href="#procedures" class="nav-link">Procedures</a>
+<a href="#functions" class="nav-link">Functions</a>
+<a href="#cursors" class="nav-link">Cursors</a>
+<a href="#packages" class="nav-link">Packages</a>
+<a href="#triggers" class="nav-link">Triggers</a>
+</nav>
+<header class="topbar">
+<div><input type="text" id="searchInput" placeholder="Search PL/SQL notes..." oninput="searchNotes(this.value)"></div>
+<div><button class="btn" onclick="toggleTheme()">🌙 Theme</button> <a class="btn" href="study-hub.html">🏠 Hub</a></div>
+</header>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>PL/SQL & Database Notes</span></div>
+<main class="main">
+
+<h1>PL/SQL & Oracle Database Notes</h1>
+<p>Converted from <code>pakages - search.txt</code>, <code>create table test_agent1(message va.txt</code>, and <code>c++/in c++.txt</code></p>
+
+<div class="card" id="tables">
+<h2>Creating Tables</h2>
+<pre>-- Create table with constraints
+CREATE TABLE student789(
+  rollno INTEGER NOT NULL,
+  name CHAR(20) NOT NULL,
+  PRIMARY KEY(rollno)
+);
+
+-- Insert data
+INSERT INTO student789 VALUES(1,'AA');
+INSERT INTO student789 VALUES(2,'BB');
+
+-- Add column
+ALTER TABLE student789 ADD(email_id VARCHAR(20));
+
+-- Modify column
+ALTER TABLE student789 MODIFY email_id DEFAULT 'CSE@gmail.com';
+
+-- Rename table
+RENAME student789 TO student5656;
+
+-- Truncate table
+TRUNCATE TABLE student5656;</pre>
+</div>
+
+<div class="card" id="crud">
+<h2>CRUD Operations</h2>
+<pre>-- INSERT
+INSERT INTO st123 VALUES(1,'AA','aa@gmail.com');
+
+-- UPDATE
+UPDATE st123 SET name='AARTI' WHERE rollno=1;
+UPDATE st123 SET stu_name='BHARTI',email='bharti@gmail.com' WHERE rollno=3;
+
+-- SELECT
+SELECT * FROM st123;
+SELECT price, product_type FROM product1 WHERE price>=400 ORDER BY price DESC;
+
+-- DELETE
+DELETE FROM product;
+TRUNCATE TABLE product;</pre>
+</div>
+
+<div class="card" id="joins">
+<h2>Joins</h2>
+<pre>-- Inner Join
+SELECT * FROM orders INNER JOIN customer ON orders.orderid=customer.customerid;
+
+-- Left Join
+SELECT * FROM orders LEFT JOIN customer ON orders.orderid=customer.customerid;
+
+-- Right Join
+SELECT * FROM orders RIGHT JOIN customer ON orders.orderid=customer.customerid;
+
+-- Full Join
+SELECT * FROM orders FULL JOIN customer ON orders.orderid=customer.customerid;
+
+-- Cross Join
+SELECT * FROM orders CROSS JOIN customer;</pre>
+</div>
+
+<div class="card" id="views">
+<h2>Views</h2>
+<pre>-- Create View
+CREATE VIEW v1 AS SELECT customerid, customername FROM customer;
+SELECT * FROM v1;
+
+-- Create View from Join
+CREATE VIEW v2 AS SELECT orders.customerid, customer.customername, customer.country 
+FROM orders INNER JOIN customer ON orders.orderid=customer.customerid;</pre>
+</div>
+
+<div class="card" id="aggregate">
+<h2>Aggregate Functions</h2>
+<pre>-- Count
+SELECT COUNT(*) AS student_count FROM studentagg WHERE city='rourkela';
+SELECT COUNT(DISTINCT city) AS student_count FROM studentagg;
+
+-- Sum, Min, Max, Avg
+SELECT SUM(marks) AS total_marks FROM studentagg;
+SELECT MIN(marks) AS Min_marks FROM studentagg;
+SELECT MAX(marks) AS Max_marks FROM studentagg;
+SELECT AVG(marks) AS Avg_marks FROM studentagg;
+
+-- Group By
+SELECT city, COUNT(*) AS number_of_students FROM studentagg GROUP BY city;
+
+-- Having (filter groups)
+SELECT COUNT(rollno), city FROM studentagg GROUP BY city HAVING COUNT(rollno)>1;</pre>
+</div>
+
+<div class="card" id="plsql-basics">
+<h2>PL/SQL Basics</h2>
+<pre>-- Simple PL/SQL block
+SET SERVEROUTPUT ON;
+DECLARE
+  a VARCHAR(20):='HELLO';
+BEGIN
+  DBMS_OUTPUT.PUT_LINE('message is= ' || a);
+END;
+/
+
+-- Variables and arithmetic
+DECLARE
+  a NUMBER:=10;
+  b NUMBER:=20;
+  c NUMBER;
+BEGIN
+  c:=a+b;
+  DBMS_OUTPUT.PUT_LINE('Sum is: ' || c);
+END;
+/</pre>
+</div>
+
+<div class="card" id="if-else">
+<h2>IF/ELSE & CASE</h2>
+<pre>-- IF ELSIF
+DECLARE
+  x NUMBER:=10;
+  y NUMBER:=20;
+  z NUMBER:=30;
+  greatest NUMBER;
+BEGIN
+  IF x>y AND x>z THEN greatest:=x;
+  ELSIF y>z AND y>x THEN greatest:=y;
+  ELSIF z>x AND z>y THEN greatest:=z;
+  END IF;
+  DBMS_OUTPUT.PUT_LINE('Greatest: ' || greatest);
+END;
+/
+
+-- CASE
+DECLARE
+  x NUMBER:=3;
+BEGIN
+  CASE
+    WHEN x=1 THEN DBMS_OUTPUT.PUT_LINE('x is 1');
+    WHEN x=2 THEN DBMS_OUTPUT.PUT_LINE('x is 2');
+    ELSE DBMS_OUTPUT.PUT_LINE('x is 3');
+  END CASE;
+END;
+/</pre>
+</div>
+
+<div class="card" id="loops">
+<h2>Loops</h2>
+<pre>-- LOOP (exit when)
+DECLARE i NUMBER:=1;
+BEGIN
+  LOOP
+    EXIT WHEN i>=10;
+    DBMS_OUTPUT.PUT_LINE(i);
+    i:=i+1;
+  END LOOP;
+END;
+/
+
+-- WHILE LOOP
+DECLARE i NUMBER:=1;
+BEGIN
+  WHILE i<=10 LOOP
+    DBMS_OUTPUT.PUT_LINE(i);
+    i:=i+1;
+  END LOOP;
+END;
+/
+
+-- FOR LOOP
+BEGIN
+  FOR p IN 1..10 LOOP
+    DBMS_OUTPUT.PUT_LINE(2*p);
+  END LOOP;
+END;
+/</pre>
+</div>
+
+<div class="card" id="procedures">
+<h2>Procedures</h2>
+<pre>-- Create Procedure
+CREATE OR REPLACE PROCEDURE sum1(a IN NUMBER, b IN NUMBER, c OUT NUMBER)
+IS 
+BEGIN
+  c:=a+b;
+  DBMS_OUTPUT.PUT_LINE('Sum is:=' || c);
+END;
+/</pre>
+</div>
+
+<div class="card" id="functions">
+<h2>Functions</h2>
+<pre>-- Create Function
+CREATE OR REPLACE FUNCTION totalcustomer
+RETURN NUMBER
+IS
+  total NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO total FROM customers;
+  RETURN total;
+END;
+/
+
+-- Call Function
+DECLARE
+  c NUMBER;
+BEGIN
+  c:=totalcustomer();
+  DBMS_OUTPUT.PUT_LINE('Total customers= ' || c);
+END;
+/</pre>
+</div>
+
+<div class="card" id="cursors">
+<h2>Cursors</h2>
+<pre>-- Implicit Cursor
+DECLARE
+  emp_record employee%ROWTYPE;
+BEGIN
+  SELECT * INTO emp_record FROM employee WHERE eid=101;
+  DBMS_OUTPUT.PUT_LINE(emp_record.ename || ' ' || emp_record.deptid);
+END;
+/</pre>
+</div>
+
+<div class="card" id="packages">
+<h2>Packages</h2>
+<pre>-- Package Specification
+CREATE OR REPLACE PACKAGE math_pkg
+AS
+  FUNCTION square(num NUMBER) RETURN NUMBER;
+END math_pkg;
+/
+
+-- Package Body
+CREATE OR REPLACE PACKAGE BODY math_pkg
+AS
+  FUNCTION square(num NUMBER) RETURN NUMBER
+  IS
+  BEGIN
+    RETURN num*num;
+  END square;
+END math_pkg;
+/
+
+-- Call Package
+DECLARE
+  result NUMBER;
+BEGIN
+  result:=math_pkg.square(5);
+  DBMS_OUTPUT.PUT_LINE(result);
+END;
+/</pre>
+</div>
+
+<div class="card" id="triggers">
+<h2>Triggers</h2>
+<pre>-- Before Insert Trigger
+CREATE OR REPLACE TRIGGER trg_before_insert
+BEFORE INSERT ON employee
+FOR EACH ROW
+BEGIN
+  IF :NEW.DEPTID IS NULL THEN
+    RAISE_APPLICATION_ERROR(-20002,'Department ID must be provided');
+  END IF;
+  IF :NEW.salary IS NULL THEN
+    :NEW.SALARY:=3000;
+  END IF;
+END;
+/
+
+-- After Insert Trigger
+CREATE OR REPLACE TRIGGER try_after_insert
+AFTER INSERT ON employee
+FOR EACH ROW
+DECLARE
+  emp_count NUMBER;
+BEGIN
+  SELECT COUNT(*) INTO emp_count FROM department_summary WHERE dept_id=:NEW.deptid;
+  IF emp_count>0 THEN
+    UPDATE department_summary SET total_employees=total_employees+1,
+      total_salary=total_salary+:NEW.salary WHERE dept_id=:NEW.deptid;
+  END IF;
+END;
+/</pre>
+</div>
+
+<div class="card">
+<h2>Date & String Functions</h2>
+<pre>-- Date Functions
+SELECT SYSDATE FROM DUAL;
+SELECT MONTHS_BETWEEN(TO_DATE('1-mar-2024','DD-MM-YYYY'), TO_DATE('1-aug-2024','DD-MM-YYYY')) FROM DUAL;
+SELECT EXTRACT(MONTH FROM TO_DATE('1-mar-2024','DD-MM-YYYY')) FROM DUAL;
+SELECT LAST_DAY(TO_DATE('1-mar-2024','DD-MM-YYYY')) FROM DUAL;
+SELECT NEXT_DAY(TO_DATE('1-mar-2024','DD-MM-YYYY'),'TUESDAY') FROM DUAL;
+
+-- String Functions
+SELECT CONCAT('hello','world') FROM DUAL;
+SELECT 'hello'||'world' FROM DUAL;
+SELECT INITCAP('welcome to all') FROM DUAL;
+SELECT LENGTH('welcome to all') FROM DUAL;
+SELECT LOWER('HELLO') FROM DUAL;
+SELECT UPPER('hello') FROM DUAL;
+SELECT LPAD('hello',8,'h') FROM DUAL;
+SELECT RPAD('hello',8,'h') FROM DUAL;
+SELECT INSTR('welcome','e') FROM DUAL;
+SELECT SUBSTR('welcome students',7) FROM DUAL;</pre>
+</div>
+
+</main>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('plsql-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('plsql-theme');if(s==='light')document.documentElement.setAttribute('data-theme','light')})();
+function searchNotes(q){q=q.toLowerCase();document.querySelectorAll('.card').forEach(c=>{c.style.display=c.textContent.toLowerCase().includes(q)?'block':'none'})}
+</script>
+</body>
+</html>

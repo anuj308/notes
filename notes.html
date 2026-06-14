@@ -1,0 +1,4588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud Computing & DevOps - Revision Notes</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.7;
+            color: #2d3748;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            padding: 3rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: #1a202c;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 4px solid #667eea;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin: 2rem 0 1rem;
+            padding-left: 1rem;
+            border-left: 5px solid #667eea;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #4a5568;
+            margin: 1.5rem 0 0.75rem;
+        }
+
+        h4 {
+            font-size: 1.2rem;
+            color: #718096;
+            margin: 1rem 0 0.5rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+
+        strong {
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 1.5rem;
+            border-radius: 12px;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        code {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        pre code {
+            background: transparent;
+            padding: 0;
+            color: inherit;
+        }
+
+        :not(pre) > code {
+            background: #edf2f7;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            color: #e53e3e;
+            font-size: 0.9rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        thead {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        th {
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tbody tr:hover {
+            background: #f7fafc;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        blockquote {
+            border-left: 5px solid #667eea;
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: #4a5568;
+        }
+
+        blockquote p {
+            margin: 0;
+        }
+
+        ul, ol {
+            margin: 1rem 0;
+            padding-left: 2rem;
+            color: #4a5568;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        hr {
+            border: none;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            margin: 2rem 0;
+            border-radius: 2px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .emoji {
+            font-style: normal;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.4rem;
+            }
+
+            img {
+                border-radius: 8px;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+
+            img {
+                max-width: 100%;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cloud Computing &amp; DevOps – Revision Notes</h1>
+<h2>What is DevOps?</h2>
+<p>DevOps is a set of practices that combines <strong>software development (Dev)</strong> and <strong>IT operations (Ops)</strong>. Its goal is to shorten the development life cycle and provide continuous delivery of high‑quality software.</p>
+<h3>Key pillars of DevOps</h3>
+<ol>
+<li><strong>Continuous Deployment</strong> – Automatically deploy every code change that passes automated tests to production.</li>
+<li><strong>Automation</strong> – Automate repetitive tasks (building, testing, deploying, infrastructure provisioning).</li>
+<li><strong>Code Quality</strong> – Enforce standards, static analysis, peer reviews, and automated testing to catch bugs early.</li>
+<li><strong>Monitoring &amp; Observability</strong> – Track application performance, logs, metrics, and alerts to detect and fix issues in real time.</li>
+</ol>
+<blockquote>
+<p>💡 <strong>Why DevOps exists</strong> – Traditional silos between developers and operations led to slow releases, finger‑pointing, and manual errors. DevOps aligns people, processes, and tools to deliver value faster and more reliably.</p>
+</blockquote>
+<hr>
+<h2>DevOps vs Old (Traditional) System</h2>
+<h3>Old System (Waterfall / Siloed)</h3>
+<img src="image.png" alt="diagram" width="720">  
+*Characteristics:*  
+- Dev writes code → throws it over the wall to Ops.  
+- Manual deployment, long release cycles (months).  
+- Error‑prone, hard to roll back.  
+- Ops often discovers environment issues too late.<h3>New System (DevOps)</h3>
+<img src="image-1.png" alt="diagram" width="720">  
+<img src="image-2.png" alt="diagram" width="720">  
+<img src="image-3.png" alt="diagram" width="720">  
+*Characteristics:*  
+- Shared responsibility, continuous integration & delivery (CI/CD).  
+- Infrastructure as Code (IaC) – servers, networks, and storage are defined in code.  
+- Automated testing, deployment, and monitoring.  
+- Faster feedback loops and higher stability.<hr>
+<h2>What is Cloud Computing?</h2>
+<p><strong>Cloud computing</strong> is the on‑demand delivery of IT resources (compute, storage, databases, networking) over the internet with pay‑as‑you‑go pricing. You don’t own the physical hardware; you rent it from a cloud provider.</p>
+<h3>Main deployment models</h3>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Public cloud</strong></td>
+<td>Services offered over the public internet by providers like AWS, Azure, GCP. Shared infrastructure, but your data/logic is isolated.</td>
+</tr>
+<tr>
+<td><strong>Private cloud</strong></td>
+<td>Cloud environment dedicated solely to one organisation (on‑premises or hosted by a third party). More control, less scalability.</td>
+</tr>
+<tr>
+<td><strong>Hybrid cloud</strong></td>
+<td>Combination of public + private clouds, allowing data and apps to move between them (e.g., burst to public cloud for extra capacity).</td>
+</tr>
+<tr>
+<td><strong>Multi‑cloud</strong></td>
+<td>Using two or more public cloud providers simultaneously to avoid vendor lock‑in or for best‑of‑breed services.</td>
+</tr>
+</tbody></table>
+<h3>Why cloud computing exists</h3>
+<ul>
+<li><strong>Eliminate upfront infrastructure costs</strong> – no need to buy servers.  </li>
+<li><strong>Elasticity</strong> – scale up/down automatically based on demand.  </li>
+<li><strong>Global reach</strong> – deploy near users anywhere.  </li>
+<li><strong>Reliability</strong> – built‑in redundancy and disaster recovery.  </li>
+<li><strong>Focus on code</strong> – operators manage the hardware, you focus on applications.</li>
+</ul>
+<hr>
+<h2>The Relationship Between DevOps and Cloud Computing</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>How they work together</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Automation</strong></td>
+<td>Cloud APIs enable scripted provisioning (Terraform, CloudFormation). DevOps pipelines call these APIs to create/destroy environments on the fly.</td>
+</tr>
+<tr>
+<td><strong>Continuous Deployment</strong></td>
+<td>Cloud provides managed CI/CD services (AWS CodePipeline, Azure DevOps, GitHub Actions) and deployment targets (Kubernetes, serverless).</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Cloud services (CloudWatch, Azure Monitor, GCP Operations) feed logs/metrics directly into DevOps dashboards (Prometheus, Grafana, Datadog).</td>
+</tr>
+<tr>
+<td><strong>Scalability</strong></td>
+<td>Cloud auto‑scaling groups ensure apps handle load without manual ops intervention – a core DevOps goal.</td>
+</tr>
+<tr>
+<td><strong>Infrastructure as Code (IaC)</strong></td>
+<td>Cloud resources are defined in declarative files (e.g., YAML) and versioned alongside application code. The same DevOps tooling (Git, CI) manages both.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>🔁 <strong>Why both exist together</strong> – Cloud provides the <strong>on‑demand, programmable infrastructure</strong> that makes DevOps practices (like automated deployment and dynamic scaling) truly effective. Conversely, DevOps provides the <strong>automation and culture</strong> needed to manage cloud environments at scale. They reinforce each other.</p>
+</blockquote>
+<hr>
+<h2>Quick Revision Table – Key Terms</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>One‑line definition</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>DevOps</td>
+<td>Dev + Ops collaboration using automation and monitoring to deliver software continuously.</td>
+</tr>
+<tr>
+<td>Continuous Deployment</td>
+<td>Every code change that passes tests is automatically released to production.</td>
+</tr>
+<tr>
+<td>Infrastructure as Code</td>
+<td>Managing infrastructure (networks, VMs, load balancers) using code and version control.</td>
+</tr>
+<tr>
+<td>Public Cloud</td>
+<td>Third‑party provider delivers services over the internet, shared but isolated.</td>
+</tr>
+<tr>
+<td>Hybrid Cloud</td>
+<td>Mix of on‑premises (private) and public cloud.</td>
+</tr>
+<tr>
+<td>Multi‑cloud</td>
+<td>Using multiple public cloud providers (e.g., AWS + Azure).</td>
+</tr>
+</tbody></table>
+<h1>Cloud Computing &amp; DevOps – Revision Notes</h1>
+<h2>What is DevOps?</h2>
+<p>DevOps is a set of practices that combines <strong>software development (Dev)</strong> and <strong>IT operations (Ops)</strong>. Its goal is to shorten the development life cycle and provide continuous delivery of high‑quality software.</p>
+<h3>Key pillars of DevOps</h3>
+<ol>
+<li><strong>Continuous Deployment</strong> – Automatically deploy every code change that passes automated tests to production.</li>
+<li><strong>Automation</strong> – Automate repetitive tasks (building, testing, deploying, infrastructure provisioning).</li>
+<li><strong>Code Quality</strong> – Enforce standards, static analysis, peer reviews, and automated testing to catch bugs early.</li>
+<li><strong>Monitoring &amp; Observability</strong> – Track application performance, logs, metrics, and alerts to detect and fix issues in real time.</li>
+</ol>
+<blockquote>
+<p>💡 <strong>Why DevOps exists</strong> – Traditional silos between developers and operations led to slow releases, finger‑pointing, and manual errors. DevOps aligns people, processes, and tools to deliver value faster and more reliably.</p>
+</blockquote>
+<hr>
+<h2>What does a DevOps Engineer work on? (Day‑to‑day)</h2>
+<table>
+<thead>
+<tr>
+<th>Responsibility</th>
+<th>What they actually do</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CI/CD Pipelines</strong></td>
+<td>Build &amp; maintain pipelines (Jenkins, GitLab CI, GitHub Actions) that automatically build, test, and deploy code.</td>
+</tr>
+<tr>
+<td><strong>Infrastructure as Code (IaC)</strong></td>
+<td>Write Terraform, CloudFormation, or Pulumi scripts to provision servers, networks, databases.</td>
+</tr>
+<tr>
+<td><strong>Configuration Management</strong></td>
+<td>Use Ansible, Puppet, Chef to keep servers in a desired state (e.g., installed packages, config files).</td>
+</tr>
+<tr>
+<td><strong>Containerisation &amp; Orchestration</strong></td>
+<td>Create Dockerfiles, manage Kubernetes clusters (EKS, AKS, GKE) for scaling microservices.</td>
+</tr>
+<tr>
+<td><strong>Monitoring &amp; Logging</strong></td>
+<td>Set up Prometheus, Grafana, ELK stack, CloudWatch – create dashboards and alerts.</td>
+</tr>
+<tr>
+<td><strong>Security &amp; Compliance</strong></td>
+<td>Implement secrets management (Vault, AWS Secrets Manager), scan images for vulnerabilities, enforce IAM roles.</td>
+</tr>
+<tr>
+<td><strong>Collaboration</strong></td>
+<td>Work with developers to optimise builds, with QA to automate tests, with security to embed “shift‑left” practices.</td>
+</tr>
+<tr>
+<td><strong>Cloud Cost Optimisation</strong></td>
+<td>Analyse cloud spend, right‑size instances, use spot instances, set budgets.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>SDLC Concepts</h2>
+<h3>What is the Software Development Life Cycle (SDLC)?</h3>
+<p>The SDLC is a structured process used by development teams to design, build, test, deploy, and maintain high‑quality software.</p>
+<img src="image-4.png" alt="diagram" width="720"><img src="image-5.png" alt="diagram" width="720"><p><strong>Typical phases of SDLC</strong> (and what a DevOps engineer does in each):</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>DevOps involvement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Planning</strong></td>
+<td>Participate in sizing, define infrastructure needs, estimate cloud costs.</td>
+</tr>
+<tr>
+<td><strong>Design (HLD/LLD)</strong></td>
+<td>Help with high‑level &amp; low‑level design decisions – e.g., microservices vs monolith, database selection, network topology.</td>
+</tr>
+<tr>
+<td><strong>Development</strong></td>
+<td>Provide local dev environments (Docker Compose, Vagrant), pre‑commit hooks for linting/testing.</td>
+</tr>
+<tr>
+<td><strong>Testing</strong></td>
+<td>Automate unit, integration, and end‑to‑end tests in CI pipelines; provision ephemeral test environments.</td>
+</tr>
+<tr>
+<td><strong>Deployment</strong></td>
+<td>Automate rollout (blue/green, canary), manage feature flags, auto rollbacks.</td>
+</tr>
+<tr>
+<td><strong>Operation &amp; Monitoring</strong></td>
+<td>Set up observability stack, on‑call rotations, auto‑scaling, incident response.</td>
+</tr>
+<tr>
+<td><strong>Maintenance</strong></td>
+<td>Patch OS/images, rotate credentials, migrate data, handle deprecations without downtime.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>🔁 A DevOps engineer’s job is to <strong>automate the whole SDLC process</strong> – from code commit to production monitoring.</p>
+</blockquote>
+<hr>
+<h2>Where DevOps and Cloud Computing fit in the SDLC Process</h2>
+<table>
+<thead>
+<tr>
+<th>SDLC Phase</th>
+<th>How DevOps helps</th>
+<th>How Cloud helps</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Plan</strong></td>
+<td>Version control all work (Git), track work items (Jira)</td>
+<td>Estimate cloud costs with pricing calculators</td>
+</tr>
+<tr>
+<td><strong>Design</strong></td>
+<td>Infrastructure design reviewed as code (IaC)</td>
+<td>Use managed services (RDS, S3, Lambda) to reduce ops burden</td>
+</tr>
+<tr>
+<td><strong>Develop</strong></td>
+<td>Local containerised dev environment matches production</td>
+<td>Cloud dev environments (GitHub Codespaces, Cloud9)</td>
+</tr>
+<tr>
+<td><strong>Test</strong></td>
+<td>Automated testing in CI pipeline</td>
+<td>Spin up test environments on demand (cheap, fast)</td>
+</tr>
+<tr>
+<td><strong>Deploy</strong></td>
+<td>CI/CD pipeline deploys after tests pass</td>
+<td>Blue/green, canary deployments using load balancers</td>
+</tr>
+<tr>
+<td><strong>Operate</strong></td>
+<td>Centralised logging &amp; monitoring dashboards</td>
+<td>Auto‑scaling groups, serverless (no server to manage)</td>
+</tr>
+<tr>
+<td><strong>Maintain</strong></td>
+<td>Infrastructure as Code makes changes repeatable &amp; auditable</td>
+<td>Cloud snapshots, disaster recovery across regions</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>How DevOps and Cloud accelerate software delivery</h2>
+<table>
+<thead>
+<tr>
+<th>Challenge before</th>
+<th>With DevOps + Cloud</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Provisioning servers takes weeks</td>
+<td>Cloud – minutes with IaC</td>
+</tr>
+<tr>
+<td>Manual testing &amp; deployment (error prone)</td>
+<td>Automated CI/CD pipelines</td>
+</tr>
+<tr>
+<td>Environment drift (dev ≠ prod)</td>
+<td>Immutable infrastructure, containerisation</td>
+</tr>
+<tr>
+<td>Hard to scale for peak traffic</td>
+<td>Auto‑scaling, load balancers</td>
+</tr>
+<tr>
+<td>Long lead time to fix bugs</td>
+<td>Continuous monitoring + fast rollback</td>
+</tr>
+<tr>
+<td>High upfront hardware cost</td>
+<td>Pay‑as‑you‑go, no waste</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>📈 <strong>Result</strong> – Deployment frequency increases, lead time for changes drops from months to hours, recovery time from failures is seconds/minutes.</p>
+</blockquote>
+<hr>
+<h2>CI / CD / Continuous Deployment – Clear Definitions</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CI (Continuous Integration)</strong></td>
+<td>Developers <strong>push code to GitHub</strong> (or any Git repo) frequently. Each push triggers an automated build and test. This catches integration issues early.</td>
+</tr>
+<tr>
+<td><strong>CD (Continuous Delivery)</strong></td>
+<td>The code is automatically <strong>built, tested, and packaged</strong> – ready for deployment. A manual approval step may exist before going to production.</td>
+</tr>
+<tr>
+<td><strong>Continuous Deployment</strong></td>
+<td>Every change that passes all tests is <strong>automatically deployed</strong> to production without human intervention. (The “CD” in DevOps often refers to this.)</td>
+</tr>
+</tbody></table>
+<p><strong>Simple flow:</strong></p>
+<p>Code change -&gt; CI build/test -&gt; package artifact -&gt; deploy to staging -&gt; approval/tests -&gt; production deployment -&gt; monitoring.</p>
+<hr>
+<h2>DevOps Engineer Work With Different Teams</h2>
+<img src="image-21.png" alt="DevOps engineer work diagram" width="720"><img src="image-22.png" alt="DevOps team collaboration diagram" width="720"><h3>DevOps Engineer</h3>
+<ul>
+<li>Connects <strong>Dev team, Test team, and Ops team</strong>.</li>
+<li>Creates CI/CD pipelines for build, test, and deployment.</li>
+<li>Automates manual work using scripts, tools, and cloud services.</li>
+<li>Monitors application health after deployment.</li>
+<li>Helps fix deployment, server, and environment problems.</li>
+</ul>
+<h3>Development Team</h3>
+<ul>
+<li>Writes application code and pushes it to Git.</li>
+<li>Fixes bugs and adds new features.</li>
+<li>Works with DevOps to make code easy to build and deploy.</li>
+</ul>
+<h3>Testing / QA Team</h3>
+<ul>
+<li>Tests the application before release.</li>
+<li>Writes or runs automated test cases.</li>
+<li>Checks if new code breaks old features.</li>
+<li>Gives feedback before deployment.</li>
+</ul>
+<h3>Operations Team</h3>
+<ul>
+<li>Manages servers, networks, storage, and production systems.</li>
+<li>Handles uptime, backups, monitoring, and incidents.</li>
+<li>Works with DevOps to make production stable.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Dev builds, Test checks, Ops runs, DevOps connects and automates everything.</strong></p>
+</blockquote>
+<hr>
+<h2>CI, CD, and Continuous Deployment</h2>
+<img src="image-23.png" alt="CI CD continuous deployment diagram" width="720"><table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>CI - Continuous Integration</strong></td>
+<td>Developers push code often. The system automatically builds and tests the code.</td>
+</tr>
+<tr>
+<td><strong>CD - Continuous Delivery</strong></td>
+<td>Code is ready to deploy after build and test. Usually one manual approval is needed.</td>
+</tr>
+<tr>
+<td><strong>Continuous Deployment</strong></td>
+<td>Code automatically goes to production if all tests pass. No manual approval is needed.</td>
+</tr>
+</tbody></table>
+<h3>Easy Difference</h3>
+<ul>
+<li><strong>CI</strong> = build + test automatically.</li>
+<li><strong>Continuous Delivery</strong> = ready for release automatically.</li>
+<li><strong>Continuous Deployment</strong> = released to users automatically.</li>
+</ul>
+<hr>
+<h2>Better DevOps Pipeline</h2>
+<img src="image-24.png" alt="better DevOps pipeline diagram" width="720"><h3>Common Pipeline Steps</h3>
+<ol>
+<li><strong>Plan</strong> - decide feature or bug fix.</li>
+<li><strong>Code</strong> - developer writes code.</li>
+<li><strong>Commit</strong> - code is pushed to Git.</li>
+<li><strong>Build</strong> - application package is created.</li>
+<li><strong>Test</strong> - automated tests run.</li>
+<li><strong>Security Scan</strong> - code and packages are checked for risk.</li>
+<li><strong>Deploy</strong> - application is released to staging or production.</li>
+<li><strong>Monitor</strong> - logs, metrics, and alerts are checked.</li>
+</ol>
+<blockquote>
+<p>A good pipeline reduces manual mistakes and gives fast feedback.</p>
+</blockquote>
+<hr>
+<h2>Cloud Computing - Key Services</h2>
+<p>Cloud computing means using computing resources over the internet instead of buying and managing all hardware yourself.</p>
+<h3>Main Service Models</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Full form</th>
+<th>Simple meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>IaaS</strong></td>
+<td>Infrastructure as a Service</td>
+<td>Rent servers, storage, and networking. You manage OS and apps.</td>
+<td>AWS EC2, Azure VM</td>
+</tr>
+<tr>
+<td><strong>PaaS</strong></td>
+<td>Platform as a Service</td>
+<td>Provider manages server and runtime. You deploy your code.</td>
+<td>Heroku, Google App Engine</td>
+</tr>
+<tr>
+<td><strong>SaaS</strong></td>
+<td>Software as a Service</td>
+<td>Ready-made software used through browser/app.</td>
+<td>Gmail, Google Drive, Salesforce</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>On-Premises vs Cloud</h2>
+<img src="image-25.png" alt="on premises vs cloud diagram" width="720"><h3>On-Premises</h3>
+<p>On-premises means the company owns and manages its own servers in its own data center or office.</p>
+<p><strong>Company is responsible for:</strong></p>
+<ul>
+<li><strong>Maintenance</strong> - repairing and updating hardware/software.</li>
+<li><strong>Data recovery</strong> - backups and disaster recovery setup.</li>
+<li><strong>Security</strong> - physical security, firewall, access control.</li>
+<li><strong>Scaling</strong> - buying and adding more servers when demand increases.</li>
+</ul>
+<h3>Hardware Part</h3>
+<ul>
+<li>Servers</li>
+<li>Storage hardware</li>
+<li>Network devices</li>
+<li>Physical data center space</li>
+</ul>
+<h3>Software Part</h3>
+<ul>
+<li>Operating system</li>
+<li>Database</li>
+<li>Runtime environment</li>
+<li>Application software</li>
+</ul>
+<h3>Cloud</h3>
+<p>Cloud is mostly the opposite of on-premises:</p>
+<ul>
+<li>No need to buy physical servers.</li>
+<li>Cloud provider manages data centers and hardware.</li>
+<li>Easy to scale up or down.</li>
+<li>Pay only for what you use.</li>
+<li>Faster setup compared to traditional infrastructure.</li>
+</ul>
+<hr>
+<h2>Virtualization and Hypervisor</h2>
+<img src="image-26.png" alt="virtualization hypervisor diagram" width="720"><h3>Virtualization</h3>
+<p>Virtualization means creating multiple <strong>virtual machines</strong> from one physical machine.</p>
+<h3>Hypervisor</h3>
+<p>A hypervisor is software that creates and manages virtual machines.</p>
+<p><strong>Example:</strong><br>One physical server can run:</p>
+<ul>
+<li>VM 1 - Linux server</li>
+<li>VM 2 - Windows server</li>
+<li>VM 3 - Database server</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Virtualization helps use one physical server like many separate servers.</strong></p>
+</blockquote>
+<hr>
+<h2>On-Premises Infrastructure</h2>
+<img src="image-27.png" alt="on premises infrastructure diagram" width="720"><p>In on-premises infrastructure, the company controls almost everything:</p>
+<ul>
+<li>Physical building or server room.</li>
+<li>Servers and storage.</li>
+<li>Network and firewall.</li>
+<li>Operating systems.</li>
+<li>Databases.</li>
+<li>Application environment.</li>
+<li>Backup and recovery.</li>
+</ul>
+<p>This gives more control, but it also needs more money, maintenance, and skilled staff.</p>
+<hr>
+<h2>IaaS, PaaS, SaaS Responsibility</h2>
+<img src="image-28.png" alt="IaaS PaaS SaaS responsibility diagram" width="720"><table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>On-Premises</th>
+<th>IaaS</th>
+<th>PaaS</th>
+<th>SaaS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Data</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Runtime</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>You manage</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Virtualization</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Servers</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Storage</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+<tr>
+<td>Networking</td>
+<td>You manage</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+<td>Provider manages</td>
+</tr>
+</tbody></table>
+<h3>Simple Memory Trick</h3>
+<ul>
+<li><strong>IaaS</strong> = provider gives infrastructure.</li>
+<li><strong>PaaS</strong> = provider gives platform.</li>
+<li><strong>SaaS</strong> = provider gives complete software.</li>
+</ul>
+<hr>
+<h2>Why Linux is Important in Cloud</h2>
+<img src="image-29.png" alt="Linux in cloud diagram" width="720"><p>Linux is used heavily in cloud computing because it is stable, secure, flexible, and easy to automate.</p>
+<img src="image-34.png" alt="Linux in cloud diagram" width="720"><h3>Why Cloud Providers Use Linux</h3>
+<ul>
+<li><strong>Open source</strong> - companies can modify it for their own cloud systems.</li>
+<li><strong>Stable</strong> - good for running servers 24/7.</li>
+<li><strong>Secure</strong> - strong permission system and regular security updates.</li>
+<li><strong>Lightweight</strong> - can run with fewer resources than many desktop operating systems.</li>
+<li><strong>Automation friendly</strong> - works well with shell scripts, SSH, DevOps tools, and containers.</li>
+<li><strong>Best for servers</strong> - most web servers, databases, and containers run on Linux.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Linux is the main server operating system used in cloud and DevOps.</strong></p>
+</blockquote>
+<hr>
+<h2>Cloud Providers and Operating Systems</h2>
+<img src="image-30.png" alt="cloud provider operating systems diagram" width="720"><p>Different cloud providers use customized operating systems and virtualization technology internally.</p>
+<table>
+<thead>
+<tr>
+<th>Cloud provider</th>
+<th>Common virtualization base</th>
+<th>Simple note</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>AWS</strong></td>
+<td>KVM-based virtualization with Nitro System</td>
+<td>Uses lightweight virtualization and special hardware cards for better speed and security.</td>
+</tr>
+<tr>
+<td><strong>Google Cloud / GCP</strong></td>
+<td>KVM-based virtualization</td>
+<td>Uses Linux/KVM technology for running virtual machines.</td>
+</tr>
+<tr>
+<td><strong>Microsoft Azure</strong></td>
+<td>Hyper-V based virtualization</td>
+<td>Uses Microsoft Hyper-V technology, connected with Windows and Linux VM support.</td>
+</tr>
+</tbody></table>
+<h3>Important Note</h3>
+<ul>
+<li>AWS and Google use a lot of <strong>custom Linux-based systems</strong> inside their cloud.</li>
+<li>Azure is Microsoft cloud, so it uses <strong>custom Windows/Hyper-V technology</strong>, but it also runs Linux VMs very well.</li>
+</ul>
+<hr>
+<h2>What Hypervisor Does</h2>
+<p>A <strong>hypervisor</strong> is the virtualization layer that creates and manages virtual machines.</p>
+<h3>Main Work of Hypervisor</h3>
+<ul>
+<li><strong>Create VMs</strong> - divides one physical server into multiple virtual servers.</li>
+<li><strong>CPU management</strong> - gives CPU power to each VM.</li>
+<li><strong>Memory management</strong> - assigns RAM to each VM.</li>
+<li><strong>Network layer</strong> - connects VMs to virtual/private nets.</li>
+<li><strong>Storage layer</strong> - connects VMs to virtual disks and cloud storage.</li>
+<li><strong>Security layer</strong> - isolates one VM from another VM.</li>
+<li><strong>Resource control</strong> - prevents one VM from using all server resources.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Hypervisor sits between hardware and virtual machines.</strong></p>
+</blockquote>
+<hr>
+<h2>AWS Nitro System</h2>
+<p>AWS Nitro System is AWS&#39;s modern virtualization system used for EC2 instances.</p>
+<h3>Why AWS Nitro is Important</h3>
+<ul>
+<li>Moves many virtualization tasks to special hardware cards.</li>
+<li>Improves VM performance because the main server CPU has less overhead.</li>
+<li>Improves security by isolating customers better.</li>
+<li>Handles networking, storage, and monitoring more efficiently.</li>
+<li>Allows AWS to provide faster and more lightweight EC2 instances.</li>
+</ul>
+<h3>Easy Explanation</h3>
+<p>In older virtualization, the hypervisor did many jobs directly on the server CPU.<br>In AWS Nitro, special Nitro cards handle many jobs like:</p>
+<ul>
+<li>Networking</li>
+<li>Storage</li>
+<li>Security</li>
+<li>Monitoring</li>
+</ul>
+<p>So EC2 instances become faster, safer, and closer to real physical machine performance.</p>
+<hr>
+<h2>Type 1 and Type 2 Hypervisor</h2>
+<img src="image-31.png" alt="type 1 and type 2 hypervisor diagram" width="720"><table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Also called</th>
+<th>How it works</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Type 1 Hypervisor</strong></td>
+<td>Bare-metal hypervisor</td>
+<td>Runs directly on physical hardware.</td>
+<td>VMware ESXi, Microsoft Hyper-V, KVM, Xen</td>
+</tr>
+<tr>
+<td><strong>Type 2 Hypervisor</strong></td>
+<td>Hosted hypervisor</td>
+<td>Runs on top of an existing operating system.</td>
+<td>VirtualBox, VMware Workstation</td>
+</tr>
+</tbody></table>
+<h3>Type 1 Hypervisor</h3>
+<ul>
+<li>Used in data centers and cloud platforms.</li>
+<li>Faster and more secure.</li>
+<li>Best for production servers.</li>
+</ul>
+<h3>Type 2 Hypervisor</h3>
+<ul>
+<li>Used mostly on laptops/desktops for practice and testing.</li>
+<li>Easy to install.</li>
+<li>Performance is lower because it depends on the host OS.</li>
+</ul>
+<blockquote>
+<p>Cloud providers mainly use <strong>Type 1 hypervisors</strong> because they need high performance and strong isolation.</p>
+</blockquote>
+<hr>
+<h2>Linux Basics for Cloud and DevOps</h2>
+<img src="image-32.png" alt="Linux basics diagram" width="720"><h3>Why DevOps Engineers Learn Linux</h3>
+<ul>
+<li>Most cloud servers run Linux.</li>
+<li>Docker and Kubernetes are commonly used with Linux.</li>
+<li>CI/CD tools often run on Linux agents.</li>
+<li>Logs, services, permissions, and networking are managed using Linux commands.</li>
+<li>SSH is used to connect to remote Linux servers.</li>
+</ul>
+<h3>Common Linux Skills</h3>
+<ul>
+<li>File commands: <code>ls</code>, <code>cd</code>, <code>pwd</code>, <code>cp</code>, <code>mv</code>, <code>rm</code></li>
+<li>Text commands: <code>cat</code>, <code>less</code>, <code>head</code>, <code>tail</code>, <code>grep</code></li>
+<li>Permission commands: <code>chmod</code>, <code>chown</code></li>
+<li>Process commands: <code>ps</code>, <code>top</code>, <code>kill</code></li>
+<li>Service commands: <code>systemctl</code>, <code>journalctl</code></li>
+<li>Network commands: <code>ping</code>, <code>curl</code>, <code>netstat</code>, <code>ss</code></li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>For DevOps, Linux is not optional. It is a daily tool.</strong></p>
+</blockquote>
+<hr>
+<h2>Nested Virtualization</h2>
+<img src="image-33.png" alt="nested virtualization diagram" width="720"><p>Nested virtualization means running a virtual machine <strong>inside another virtual machine</strong>.</p>
+<h3>Simple Example</h3>
+<ul>
+<li>Physical server runs a hypervisor.</li>
+<li>Hypervisor creates VM 1.</li>
+<li>Inside VM 1, we install another hypervisor.</li>
+<li>That inner hypervisor creates VM 2.</li>
+</ul>
+<h3>Why Nested Virtualization is Used</h3>
+<ul>
+<li>Practice cloud and virtualization concepts.</li>
+<li>Test hypervisors without buying physical servers.</li>
+<li>Run labs for DevOps, Kubernetes, OpenStack, and security testing.</li>
+<li>Create training environments inside cloud VMs.</li>
+</ul>
+<h3>Important Point</h3>
+<p>Nested virtualization can be slower than normal virtualization because there are extra virtualization layers.</p>
+<blockquote>
+<p>Simple idea: <strong>Nested virtualization = VM inside VM.</strong></p>
+</blockquote>
+<hr>
+<h2>Why Cloud Providers Use Linux</h2>
+<p>Cloud providers use Linux because it is open source, stable, secure, and easy to customize.</p>
+<h3>Main Reasons</h3>
+<ul>
+<li><strong>Open source</strong> - providers can modify Linux for their own cloud platform.</li>
+<li><strong>Low cost</strong> - no license cost like many commercial operating systems.</li>
+<li><strong>Secure</strong> - strong user permission and process isolation.</li>
+<li><strong>Stable</strong> - good for servers running continuously.</li>
+<li><strong>Customizable</strong> - easy to remove unnecessary parts and make it lightweight.</li>
+<li><strong>DevOps friendly</strong> - works well with automation, shell scripting, containers, and CI/CD.</li>
+</ul>
+<blockquote>
+<p>AWS, Google Cloud, and many cloud services use heavily customized Linux-based systems internally.</p>
+</blockquote>
+<hr>
+<h2>Basic Linux Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>reboot</code></td>
+<td>Restart the machine.</td>
+</tr>
+<tr>
+<td><code>clear</code></td>
+<td>Clear the terminal screen.</td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td>Exit from current shell/session.</td>
+</tr>
+<tr>
+<td><code>ip addr</code></td>
+<td>Show IP address and network interfaces.</td>
+</tr>
+<tr>
+<td><code>whoami</code></td>
+<td>Show current logged-in username.</td>
+</tr>
+<tr>
+<td><code>ls</code></td>
+<td>List files and folders.</td>
+</tr>
+<tr>
+<td><code>ls -l</code></td>
+<td>List files with more details like permissions, owner, size, and date.</td>
+</tr>
+<tr>
+<td><code>ls -lt</code></td>
+<td>List files sorted by latest modified first.</td>
+</tr>
+<tr>
+<td><code>ls -ltr</code></td>
+<td>List files sorted by oldest modified first.</td>
+</tr>
+</tbody></table>
+<h3>Package Management Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo apt update</code></td>
+<td>Refresh package list from repositories.</td>
+</tr>
+<tr>
+<td><code>sudo apt upgrade</code></td>
+<td>Upgrade installed packages.</td>
+</tr>
+<tr>
+<td><code>sudo apt install python3</code></td>
+<td>Install Python 3.</td>
+</tr>
+<tr>
+<td><code>sudo apt remove python3</code></td>
+<td>Remove Python 3.</td>
+</tr>
+</tbody></table>
+<h3>Important Difference</h3>
+<ul>
+<li><code>apt update</code> only updates the package list.</li>
+<li><code>apt upgrade</code> upgrades the installed software.</li>
+</ul>
+<hr>
+<h2>Sudo, Root User, and Normal User</h2>
+<h3>What is <code>sudo</code>?</h3>
+<p><code>sudo</code> means <strong>superuser do</strong>. It allows a normal user to run commands with administrator/root permission.</p>
+<h3>Root vs Normal User</h3>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$</code></td>
+<td>Normal user shell.</td>
+</tr>
+<tr>
+<td><code>#</code></td>
+<td>Root user shell.</td>
+</tr>
+</tbody></table>
+<h3>Useful Commands</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo -i</code></td>
+<td>Switch to root user shell.</td>
+</tr>
+<tr>
+<td><code>whoami</code></td>
+<td>Check which user you are currently using.</td>
+</tr>
+<tr>
+<td><code>exit</code></td>
+<td>Exit from root shell or SSH session.</td>
+</tr>
+</tbody></table>
+<h3>Example</h3>
+<pre><code class="language-bash">whoami
+sudo -i
+whoami
+exit
+</code></pre>
+<blockquote>
+<p>Use root carefully because root can change or delete important system files.</p>
+</blockquote>
+<hr>
+<h2>SSH Basics</h2>
+<p>SSH means <strong>Secure Shell</strong>. It is used to connect to a remote Linux server securely.</p>
+<h3>Why SSH is Used</h3>
+<ul>
+<li>Login to cloud servers.</li>
+<li>Run Linux commands remotely.</li>
+<li>Manage EC2/VM instances.</li>
+<li>Copy files securely between machines.</li>
+</ul>
+<h3>Install and Start SSH Server</h3>
+<pre><code class="language-bash">sudo apt install openssh-server -y
+sudo systemctl start ssh
+sudo systemctl enable ssh
+</code></pre>
+<h3>Command Meaning</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sudo apt install openssh-server -y</code></td>
+<td>Install SSH server. <code>-y</code> automatically answers yes during install.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl start ssh</code></td>
+<td>Start SSH service now.</td>
+</tr>
+<tr>
+<td><code>sudo systemctl enable ssh</code></td>
+<td>Start SSH automatically after reboot.</td>
+</tr>
+</tbody></table>
+<h3>Basic SSH Login Format</h3>
+<pre><code class="language-bash">ssh username@server-ip
+</code></pre>
+<p>Example:</p>
+<pre><code class="language-bash">ssh ubuntu@192.168.1.10
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>SSH is the secure way to control Linux servers from another computer.</strong></p>
+</blockquote>
+<hr>
+<h2>Linux Folder Structure</h2>
+<p>Linux file system starts from <code>/</code>, called the <strong>root directory</strong>. Everything in Linux is stored under <code>/</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/</code></td>
+<td>Root directory. Starting point of the full Linux file system.</td>
+</tr>
+<tr>
+<td><code>/bin</code></td>
+<td>Essential user commands like <code>ls</code>, <code>cp</code>, <code>mv</code>, <code>cat</code>, <code>mkdir</code>.</td>
+</tr>
+<tr>
+<td><code>/sbin</code></td>
+<td>System administration commands like <code>reboot</code>, <code>shutdown</code>, <code>fdisk</code>. Mostly used by root/admin.</td>
+</tr>
+<tr>
+<td><code>/lib</code></td>
+<td>Important library files needed by commands and system programs.</td>
+</tr>
+<tr>
+<td><code>/etc</code></td>
+<td>Configuration files like users, groups, SSH config, network config.</td>
+</tr>
+<tr>
+<td><code>/home</code></td>
+<td>Home folders of normal users, like <code>/home/anuj</code>.</td>
+</tr>
+<tr>
+<td><code>/root</code></td>
+<td>Home folder of the root user.</td>
+</tr>
+<tr>
+<td><code>/var</code></td>
+<td>Variable data like logs, cache, mail, web files. Example: <code>/var/log</code>.</td>
+</tr>
+<tr>
+<td><code>/tmp</code></td>
+<td>Temporary files. Data here may be deleted automatically.</td>
+</tr>
+<tr>
+<td><code>/opt</code></td>
+<td>Optional third-party software installed manually.</td>
+</tr>
+<tr>
+<td><code>/usr</code></td>
+<td>User programs, libraries, documentation, and shared files.</td>
+</tr>
+<tr>
+<td><code>/dev</code></td>
+<td>Device files like disks, terminals, USB devices.</td>
+</tr>
+<tr>
+<td><code>/proc</code></td>
+<td>Virtual files showing running process and kernel information.</td>
+</tr>
+<tr>
+<td><code>/sys</code></td>
+<td>Virtual files showing hardware and kernel device information.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Note: You wrote <code>/str</code>, but the common important directory is usually <code>/usr</code>.</p>
+</blockquote>
+<hr>
+<h2>User Management in Linux</h2>
+<p>Linux is a multi-user operating system. Many users can exist on the same server, and each user can have different permissions.</p>
+<h3>Important User Files</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/etc/passwd</code></td>
+<td>Stores user account information like username, UID, GID, home directory, and shell.</td>
+</tr>
+<tr>
+<td><code>/etc/shadow</code></td>
+<td>Stores encrypted password hashes and password aging information. Only root can read it.</td>
+</tr>
+<tr>
+<td><code>/etc/group</code></td>
+<td>Stores group information and group members.</td>
+</tr>
+</tbody></table>
+<h3>View User and Group Files</h3>
+<pre><code class="language-bash">cat /etc/passwd
+cat /etc/shadow
+cat /etc/group
+</code></pre>
+<hr>
+<h2><code>useradd</code> vs <code>adduser</code></h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>useradd</code></td>
+<td>Low-level command. Good for scripting. On many systems it does not create home folder unless <code>-m</code> is used.</td>
+</tr>
+<tr>
+<td><code>adduser</code></td>
+<td>Friendlier wrapper around <code>useradd</code> on Ubuntu/Debian. Usually asks questions and creates home folder by default.</td>
+</tr>
+</tbody></table>
+<h3>Create User With <code>useradd</code></h3>
+<pre><code class="language-bash">sudo useradd -m -s /bin/bash username
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-m</code></td>
+<td>Create user&#39;s home directory.</td>
+</tr>
+<tr>
+<td><code>-s /bin/bash</code></td>
+<td>Set login shell to Bash.</td>
+</tr>
+</tbody></table>
+<h3>Create User With <code>adduser</code></h3>
+<pre><code class="language-bash">sudo adduser username
+</code></pre>
+<p>This usually creates:</p>
+<ul>
+<li>User account</li>
+<li>Home directory</li>
+<li>Default shell</li>
+<li>Password prompt</li>
+</ul>
+<hr>
+<h2>Login as Another User</h2>
+<pre><code class="language-bash">su - username
+</code></pre>
+<p>or with sudo:</p>
+<pre><code class="language-bash">sudo su - username
+</code></pre>
+<p>To check current user:</p>
+<pre><code class="language-bash">whoami
+</code></pre>
+<hr>
+<h2><code>/etc/shadow</code> and Passwords</h2>
+<p>Linux does not store normal readable passwords. It stores <strong>password hashes</strong> in <code>/etc/shadow</code>.</p>
+<h3>Important Points</h3>
+<ul>
+<li>Passwords are encrypted/hashed, so they cannot be read directly.</li>
+<li>If password field shows <code>!</code> or <code>*</code>, password login is locked or no password is set.</li>
+<li>If you forget a Linux user password, root/admin can reset it using <code>passwd username</code>.</li>
+<li>If root access is lost, recovery is harder and may need rescue mode, boot disk, or cloud provider recovery tools.</li>
+</ul>
+<h3>Reset User Password</h3>
+<pre><code class="language-bash">sudo passwd username
+</code></pre>
+<h3>Cloud Note</h3>
+<p>Cloud providers usually do <strong>not</strong> store your VM password in plain text. For IaaS VMs, access is commonly done by:</p>
+<ul>
+<li>SSH key pair</li>
+<li>Password reset agent/extension</li>
+<li>Serial console or rescue mode</li>
+<li>Detaching disk and fixing access from another VM</li>
+</ul>
+<hr>
+<h2>Delete User</h2>
+<p>Delete user and remove home directory:</p>
+<pre><code class="language-bash">sudo deluser --remove-home username
+</code></pre>
+<p>Only delete a user when you are sure their files are not needed.</p>
+<hr>
+<h2>Group Management</h2>
+<p>Groups are used to give permissions to many users together.</p>
+<h3>Create Group</h3>
+<pre><code class="language-bash">sudo groupadd devteam
+</code></pre>
+<h3>View Groups</h3>
+<pre><code class="language-bash">cat /etc/group
+</code></pre>
+<h3>Add User to Group</h3>
+<pre><code class="language-bash">sudo usermod -aG devteam username
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-a</code></td>
+<td>Append user to group without removing old groups.</td>
+</tr>
+<tr>
+<td><code>-G</code></td>
+<td>Add user to secondary group list.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Always use <code>-aG</code> together. If you use only <code>-G</code>, the user may be removed from other groups.</p>
+</blockquote>
+<hr>
+<h2><code>sudo</code> Group</h2>
+<p>In Ubuntu/Debian, <code>sudo</code> is also a group. Users in the <code>sudo</code> group can run admin commands with <code>sudo</code>.</p>
+<h3>Add User to <code>sudo</code> Group</h3>
+<pre><code class="language-bash">sudo usermod -aG sudo username
+</code></pre>
+<h3>Remove User From Group</h3>
+<pre><code class="language-bash">sudo deluser username groupname
+</code></pre>
+<h3>Check User Groups</h3>
+<pre><code class="language-bash">groups username
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Users identify people/accounts, groups give shared permissions.</strong></p>
+</blockquote>
+<hr>
+<h2>User Group Commands Explained</h2>
+<h3>Replace User Groups</h3>
+<pre><code class="language-bash">sudo usermod -G anuj,sudo anuj
+</code></pre>
+<p>This sets the secondary groups of user <code>anuj</code> to only:</p>
+<ul>
+<li><code>anuj</code></li>
+<li><code>sudo</code></li>
+</ul>
+<p>Important: <code>-G</code> without <code>-a</code> replaces old secondary groups. If <code>anuj</code> was already in <code>devteam</code>, this command can remove <code>anuj</code> from <code>devteam</code>.</p>
+<h3>Add User to Extra Group</h3>
+<pre><code class="language-bash">sudo usermod -aG devteam anuj
+</code></pre>
+<p>This adds user <code>anuj</code> to the <code>devteam</code> group without removing old groups.</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-a</code></td>
+<td>Append/add to existing groups.</td>
+</tr>
+<tr>
+<td><code>-G</code></td>
+<td>Secondary group list.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Best practice: use <code>-aG</code> when adding a user to a group.</p>
+</blockquote>
+<h3>Remove User From Group</h3>
+<pre><code class="language-bash">sudo gpasswd -d anuj devteam
+</code></pre>
+<p>This removes user <code>anuj</code> from the <code>devteam</code> group.</p>
+<h3>Check User ID and Groups</h3>
+<pre><code class="language-bash">id anuj
+</code></pre>
+<p>This shows:</p>
+<ul>
+<li>UID - user ID</li>
+<li>GID - primary group ID</li>
+<li>groups - all groups the user belongs to</li>
+</ul>
+<p>Example output:</p>
+<pre><code class="language-bash">uid=1000(anuj) gid=1000(anuj) groups=1000(anuj),27(sudo),1002(devteam)
+</code></pre>
+<hr>
+<h2>Normal User Default Permissions</h2>
+<p>A normal Linux user has limited permissions.</p>
+<h3>Normal User Usually Can</h3>
+<ul>
+<li>Read many system files.</li>
+<li>Create/edit files inside their own home directory, like <code>/home/anuj</code>.</li>
+<li>Create temporary files inside <code>/tmp</code>.</li>
+<li>Run normal commands like <code>ls</code>, <code>cat</code>, <code>pwd</code>, <code>whoami</code>.</li>
+</ul>
+<h3>Normal User Usually Cannot</h3>
+<ul>
+<li>Edit system files inside <code>/etc</code>.</li>
+<li>Install or remove software.</li>
+<li>Create users or groups.</li>
+<li>Change files owned by other users.</li>
+<li>Modify protected directories like <code>/bin</code>, <code>/sbin</code>, <code>/lib</code>, <code>/usr</code>.</li>
+</ul>
+<blockquote>
+<p>Note: normal users do not have only <code>/tmp</code> access. They also have access to their own home directory.</p>
+</blockquote>
+<hr>
+<h2><code>ls -ltr</code> Command</h2>
+<pre><code class="language-bash">ls -ltr
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls</code></td>
+<td>List files and directories.</td>
+</tr>
+<tr>
+<td><code>-l</code></td>
+<td>Long listing format with permissions, owner, size, date.</td>
+</tr>
+<tr>
+<td><code>-t</code></td>
+<td>Sort by modified time.</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>Reverse the order.</td>
+</tr>
+</tbody></table>
+<p>So <code>ls -ltr</code> shows files in long format, sorted from oldest to newest.</p>
+<hr>
+<h2>Linux Permission Format</h2>
+<p>Example:</p>
+<pre><code class="language-bash">drwxrwxrwx
+</code></pre>
+<p>This has 10 characters:</p>
+<pre><code class="language-text">d rwx rwx rwx
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>d</code></td>
+<td>Type. <code>d</code> means directory. <code>-</code> means file.</td>
+</tr>
+<tr>
+<td>First <code>rwx</code></td>
+<td>Owner permissions.</td>
+</tr>
+<tr>
+<td>Second <code>rwx</code></td>
+<td>Group permissions.</td>
+</tr>
+<tr>
+<td>Third <code>rwx</code></td>
+<td>Others/everyone permissions.</td>
+</tr>
+</tbody></table>
+<h3>Permission Letters</h3>
+<table>
+<thead>
+<tr>
+<th>Letter</th>
+<th>Meaning for file</th>
+<th>Meaning for directory</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>r</code></td>
+<td>Read file content.</td>
+<td>List directory content.</td>
+</tr>
+<tr>
+<td><code>w</code></td>
+<td>Modify file content.</td>
+<td>Create/delete/rename files inside directory.</td>
+</tr>
+<tr>
+<td><code>x</code></td>
+<td>Execute file.</td>
+<td>Enter/access directory using <code>cd</code>.</td>
+</tr>
+<tr>
+<td><code>-</code></td>
+<td>Permission not given.</td>
+<td>Permission not given.</td>
+</tr>
+</tbody></table>
+<h3>Examples</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-rw-r--r--</code></td>
+<td>Normal file. Owner can read/write. Group and others can only read.</td>
+</tr>
+<tr>
+<td><code>drwxr-xr-x</code></td>
+<td>Directory. Owner full access. Group/others can read and enter.</td>
+</tr>
+<tr>
+<td><code>drwx------</code></td>
+<td>Directory only owner can access.</td>
+</tr>
+<tr>
+<td><code>drwxrwxrwx</code></td>
+<td>Directory everyone can read/write/enter. Not safe for important folders.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>You wrote <code>drex-rwx-rwx</code>; the usual format is <code>drwxrwxrwx</code>. It means directory with read, write, execute for owner, group, and others.</p>
+</blockquote>
+<hr>
+<h2>AWS Basics</h2>
+<p>AWS means <strong>Amazon Web Services</strong>. It provides cloud services like servers, storage, databases, networking, and security.</p>
+<h3>AWS EC2 Instance</h3>
+<p>EC2 means <strong>Elastic Compute Cloud</strong>.</p>
+<p>An EC2 instance is a virtual server in AWS.</p>
+<p>We use EC2 to:</p>
+<ul>
+<li>Run websites.</li>
+<li>Run applications.</li>
+<li>Practice Linux commands.</li>
+<li>Host backend servers.</li>
+<li>Install software like Apache, Nginx, Java, Node.js, Docker, etc.</li>
+</ul>
+<h3>PEM and PPK File</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>.pem</code></td>
+<td>Private key file used from Linux/macOS terminal or Git Bash.</td>
+</tr>
+<tr>
+<td><code>.ppk</code></td>
+<td>PuTTY private key file used with PuTTY on Windows.</td>
+</tr>
+</tbody></table>
+<h3>Important Point</h3>
+<ul>
+<li>AWS gives a key pair when creating an EC2 instance.</li>
+<li>Private key is used to SSH login into EC2.</li>
+<li>Keep the key safe. If lost, normal SSH login becomes difficult.</li>
+<li>On Linux/macOS, key permission should be secure:</li>
+</ul>
+<pre><code class="language-bash">chmod 400 key-name.pem
+</code></pre>
+<h3>SSH Login to EC2</h3>
+<pre><code class="language-bash">ssh -i key-name.pem ubuntu@public-ip
+</code></pre>
+<p>For Amazon Linux:</p>
+<pre><code class="language-bash">ssh -i key-name.pem ec2-user@public-ip
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ssh</code></td>
+<td>Connect to remote server.</td>
+</tr>
+<tr>
+<td><code>-i key-name.pem</code></td>
+<td>Use this private key file.</td>
+</tr>
+<tr>
+<td><code>ubuntu</code></td>
+<td>Default user for Ubuntu EC2.</td>
+</tr>
+<tr>
+<td><code>ec2-user</code></td>
+<td>Default user for Amazon Linux EC2.</td>
+</tr>
+<tr>
+<td><code>public-ip</code></td>
+<td>Public IP address of EC2 instance.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Install Apache on EC2 and Serve Website</h2>
+<p>Apache is a web server. It receives browser requests and sends website files as response.</p>
+<h3>Ubuntu EC2 Commands</h3>
+<pre><code class="language-bash">sudo apt update
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+sudo systemctl status apache2
+</code></pre>
+<h3>Amazon Linux EC2 Commands</h3>
+<pre><code class="language-bash">sudo yum update -y
+sudo yum install httpd -y
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl status httpd
+</code></pre>
+<h3>Open Website in Browser</h3>
+<pre><code class="language-text">http://public-ip
+</code></pre>
+<p>Security group must allow <strong>HTTP port 80</strong> from internet.</p>
+<hr>
+<h2>Why <code>/var/www/html</code>?</h2>
+<p><code>/var/www/html</code> is the default document root for Apache on Ubuntu.</p>
+<p>Document root means the folder from where Apache serves website files.</p>
+<p>Example:</p>
+<ul>
+<li>File path on server: <code>/var/www/html/index.html</code></li>
+<li>Browser URL: <code>http://public-ip/index.html</code></li>
+</ul>
+<h3>Why Files Stay After EC2 Restart</h3>
+<p>Files inside <code>/var/www/html</code> are stored on the EC2 disk volume, not in RAM.</p>
+<p>So files remain after:</p>
+<ul>
+<li>EC2 stop/start.</li>
+<li>EC2 reboot.</li>
+<li>Apache restart.</li>
+</ul>
+<p>Files may be lost only if:</p>
+<ul>
+<li>EC2 is terminated and root volume is deleted.</li>
+<li>You manually delete the files.</li>
+<li>Volume is detached or damaged.</li>
+</ul>
+<hr>
+<h2>Deploy Static Website to EC2 From Your Machine</h2>
+<h3>Step 1: Connect to EC2</h3>
+<pre><code class="language-bash">ssh -i key-name.pem ubuntu@public-ip
+</code></pre>
+<h3>Step 2: Install Apache</h3>
+<pre><code class="language-bash">sudo apt update
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2
+</code></pre>
+<h3>Step 3: Copy Website Files From Local Machine</h3>
+<p>Run this command from your own machine, not inside EC2:</p>
+<pre><code class="language-bash">scp -i key-name.pem -r ./website/* ubuntu@public-ip:/tmp/
+</code></pre>
+<h3>Step 4: Move Files to Apache Folder</h3>
+<p>Run inside EC2:</p>
+<pre><code class="language-bash">sudo cp -r /tmp/* /var/www/html/
+</code></pre>
+<h3>Step 5: Check Website</h3>
+<p>Open:</p>
+<pre><code class="language-text">http://public-ip
+</code></pre>
+<hr>
+<h2>Elastic IP Address</h2>
+<p>Elastic IP is a fixed public IPv4 address in AWS.</p>
+<p>Normal EC2 public IP can change after stop/start. Elastic IP stays same until you release it.</p>
+<h3>Why Use Elastic IP?</h3>
+<ul>
+<li>Fixed IP for website/server.</li>
+<li>Useful for DNS records.</li>
+<li>Public IP does not change after EC2 restart.</li>
+</ul>
+<h3>Common Actions</h3>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Allocate Elastic IP</td>
+<td>Create/get a new Elastic IP in AWS.</td>
+</tr>
+<tr>
+<td>Associate Elastic IP</td>
+<td>Attach Elastic IP to EC2 instance or network interface.</td>
+</tr>
+<tr>
+<td>Disassociate Elastic IP</td>
+<td>Remove Elastic IP from instance/network interface.</td>
+</tr>
+<tr>
+<td>Release Elastic IP</td>
+<td>Delete Elastic IP from your AWS account.</td>
+</tr>
+</tbody></table>
+<h3>Associate Path</h3>
+<p>Elastic IP -&gt; Actions -&gt; Associate Elastic IP address -&gt; select instance/network interface.</p>
+<h3>Disassociate Path</h3>
+<p>Elastic IP -&gt; Actions -&gt; Disassociate Elastic IP address.</p>
+<blockquote>
+<p>Note: AWS may charge for unused Elastic IP, so release it when not needed.</p>
+</blockquote>
+<hr>
+<h2>AWS Volumes With EC2</h2>
+<p>EC2 uses EBS volumes for storage.</p>
+<p>EBS means <strong>Elastic Block Store</strong>. It works like a virtual hard disk attached to EC2.</p>
+<p>EBS is block storage. It is commonly used as the disk for EC2 instances.</p>
+<h3>Important Points</h3>
+<ul>
+<li>Root volume contains operating system files.</li>
+<li>Extra volumes can be attached for application data.</li>
+<li>Volumes are shown under EC2 -&gt; Storage.</li>
+<li>If <strong>Delete on termination</strong> is enabled, volume is deleted when EC2 is terminated.</li>
+<li>If <strong>Delete on termination</strong> is disabled, volume remains even after EC2 termination.</li>
+<li>EBS volume and EC2 instance should be in the same Availability Zone.</li>
+</ul>
+<blockquote>
+<p>For important data, do not delete the volume when terminating EC2.</p>
+</blockquote>
+<h3>EBS Volume Types</h3>
+<table>
+<thead>
+<tr>
+<th>EBS type</th>
+<th>Simple use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>General Purpose SSD</td>
+<td>Normal applications, boot volume, websites.</td>
+</tr>
+<tr>
+<td>Provisioned IOPS SSD</td>
+<td>High I/O applications like large databases.</td>
+</tr>
+<tr>
+<td>Throughput Optimized HDD</td>
+<td>Big data, log processing, large sequential reads/writes.</td>
+</tr>
+<tr>
+<td>Cold HDD</td>
+<td>Low-cost storage for less frequently accessed data.</td>
+</tr>
+<tr>
+<td>Magnetic</td>
+<td>Older, low-cost previous generation storage.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>EBS is like a hard disk for EC2.</strong></p>
+</blockquote>
+<hr>
+<h2>Types of Website</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Static website</td>
+<td>Same files are served to every user. No backend processing.</td>
+<td>HTML, CSS, JS portfolio site.</td>
+</tr>
+<tr>
+<td>Dynamic website</td>
+<td>Server generates response using backend code/database.</td>
+<td>Login app, ecommerce, dashboard.</td>
+</tr>
+</tbody></table>
+<h3>Static Website</h3>
+<ul>
+<li>Uses HTML, CSS, JavaScript.</li>
+<li>Easy to host on Apache, Nginx, or S3.</li>
+<li>Usually does not need write permission for Apache.</li>
+</ul>
+<h3>Dynamic Website</h3>
+<ul>
+<li>Uses backend like PHP, Node.js, Python, Java, etc.</li>
+<li>May connect to database.</li>
+<li>May need write permission for upload/cache/session folders.</li>
+</ul>
+<hr>
+<h2>Apache Process Commands</h2>
+<h3>Show All Running Processes</h3>
+<pre><code class="language-bash">ps -ef
+</code></pre>
+<h3>Search Apache Process</h3>
+<p>Ubuntu:</p>
+<pre><code class="language-bash">ps -ef | grep apache
+</code></pre>
+<p>Amazon Linux:</p>
+<pre><code class="language-bash">ps -ef | grep httpd
+</code></pre>
+<h3>Meaning</h3>
+<p><code>ps -ef</code> shows running processes with details like user, process ID, parent process ID, and command.</p>
+<hr>
+<h2>What is <code>www-data</code>?</h2>
+<p><code>www-data</code> is the default Apache user/group on Ubuntu.</p>
+<p>Apache worker processes run as <code>www-data</code> for security.</p>
+<h3>Why Not Run Apache as Root?</h3>
+<ul>
+<li>Root has full system permission.</li>
+<li>If website has a security issue, attacker can get more control.</li>
+<li>Running as <code>www-data</code> limits damage.</li>
+</ul>
+<h3>File Permission for <code>/var/www/html</code></h3>
+<p>For a simple static website:</p>
+<pre><code class="language-bash">sudo chown -R root:root /var/www/html
+sudo chmod -R 755 /var/www/html
+</code></pre>
+<p>For a dynamic website where Apache needs write permission:</p>
+<pre><code class="language-bash">sudo chown -R www-data:www-data /var/www/html
+</code></pre>
+<p>Better practice: give write permission only to required folders, like uploads/cache, not the full website.</p>
+<p>Example:</p>
+<pre><code class="language-bash">sudo chown -R www-data:www-data /var/www/html/uploads
+</code></pre>
+<hr>
+<h2>Useful Copy and Delete Commands</h2>
+<h3>Copy All Files and Folders</h3>
+<pre><code class="language-bash">cp -r /from/* /to/
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cp</code></td>
+<td>Copy.</td>
+</tr>
+<tr>
+<td><code>-r</code></td>
+<td>Recursive, used for folders also.</td>
+</tr>
+<tr>
+<td><code>/from/*</code></td>
+<td>Copy everything inside source folder.</td>
+</tr>
+<tr>
+<td><code>/to/</code></td>
+<td>Destination folder.</td>
+</tr>
+</tbody></table>
+<h3>Delete File or Folder Forcefully</h3>
+<pre><code class="language-bash">rm -rf /location
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-r</code></td>
+<td>Recursive, delete folders and their content.</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>Force, do not ask confirmation.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Be very careful with <code>rm -rf</code>. A wrong path can delete important data.</p>
+</blockquote>
+<hr>
+<h2>Authentication and Authorization</h2>
+<h3>Authentication</h3>
+<p>Authentication means <strong>checking who you are</strong>.</p>
+<p>Example:</p>
+<ul>
+<li>Username and password login.</li>
+<li>SSH key login.</li>
+<li>OTP verification.</li>
+</ul>
+<h3>Authorization</h3>
+<p>Authorization means <strong>checking what you are allowed to do</strong>.</p>
+<p>Example:</p>
+<ul>
+<li>User can read files but cannot delete files.</li>
+<li>IAM user can start EC2 but cannot terminate EC2.</li>
+<li>Developer can deploy to staging but not production.</li>
+</ul>
+<h3>Easy Difference</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Simple question</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Authentication</td>
+<td>Who are you?</td>
+</tr>
+<tr>
+<td>Authorization</td>
+<td>What can you access?</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>AWS IAM</h2>
+<img src="image-35.png" alt="AWS IAM diagram" width="720"><p>IAM means <strong>Identity and Access Management</strong>.</p>
+<p>IAM is used to manage users, groups, roles, and permissions in AWS.</p>
+<h3>IAM Main Parts</h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>User</td>
+<td>One person or application account.</td>
+</tr>
+<tr>
+<td>Group</td>
+<td>Collection of users with same permissions.</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Temporary permission given to AWS service or user.</td>
+</tr>
+<tr>
+<td>Policy</td>
+<td>JSON document that defines allowed or denied actions.</td>
+</tr>
+</tbody></table>
+<h3>Example</h3>
+<ul>
+<li>IAM user logs in to AWS.</li>
+<li>IAM policy allows <code>ec2:StartInstances</code>.</li>
+<li>Same policy may deny <code>ec2:TerminateInstances</code>.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>IAM controls who can access AWS and what actions they can perform.</strong></p>
+</blockquote>
+<hr>
+<h2>IAM User, Group, Policy, and Role</h2>
+<img src="image-37.png" alt="IAM user group policy diagram" width="720">
+<img src="image-36.png" alt="IAM roles diagram" width="720">
+<img src="image-38.png" alt="IAM permissions diagram" width="720"><h3>IAM User With No Permission</h3>
+<p>An IAM user with no permission can only login to AWS console.</p>
+<p>By default, the user cannot:</p>
+<ul>
+<li>Create EC2 instance.</li>
+<li>Start or stop EC2.</li>
+<li>Create S3 bucket.</li>
+<li>Read or delete AWS resources.</li>
+</ul>
+<p>To give permission, we attach a policy directly to the user or add the user to a group that already has permission.</p>
+<h3>IAM Group</h3>
+<p>IAM group is a collection of IAM users.</p>
+<p>Example:</p>
+<ul>
+<li><code>Developers</code> group can access EC2.</li>
+<li><code>Admins</code> group can access all AWS services.</li>
+<li><code>ReadOnly</code> group can only view resources.</li>
+</ul>
+<p>If a user is added to a group, the user gets the group&#39;s permissions.</p>
+<h3>IAM Policy</h3>
+<p>IAM policy is a JSON document that defines permissions.</p>
+<p>Policy tells:</p>
+<ul>
+<li>Which service is allowed.</li>
+<li>Which action is allowed or denied.</li>
+<li>Which resource can be accessed.</li>
+</ul>
+<p>Example actions:</p>
+<ul>
+<li><code>ec2:StartInstances</code></li>
+<li><code>ec2:StopInstances</code></li>
+<li><code>s3:GetObject</code></li>
+<li><code>s3:PutObject</code></li>
+</ul>
+<hr>
+<h2>AWS IAM Roles in Depth</h2>
+<p>IAM role is an identity with permissions, but it is not a normal user.</p>
+<p>A role is used to give <strong>temporary access</strong>.</p>
+<h3>Where Roles Are Used</h3>
+<p>Roles are commonly used:</p>
+<ul>
+<li>Between two AWS services.</li>
+<li>By an AWS service to access another AWS service.</li>
+<li>By users for temporary access.</li>
+<li>By applications running inside EC2.</li>
+</ul>
+<h3>Example: EC2 Role</h3>
+<p>Suppose an application is running on EC2 and needs to read files from S3.</p>
+<p>Bad method:</p>
+<ul>
+<li>Store AWS access key and secret key inside EC2.</li>
+</ul>
+<p>Good method:</p>
+<ul>
+<li>Create IAM role with S3 read permission.</li>
+<li>Attach role to EC2.</li>
+<li>EC2 gets temporary credentials automatically.</li>
+</ul>
+<h3>Why Roles Are Better</h3>
+<ul>
+<li>No need to store permanent access keys.</li>
+<li>Temporary credentials are rotated automatically.</li>
+<li>More secure for AWS services.</li>
+<li>Easy to give and remove permission.</li>
+</ul>
+<h3>Role Trust Policy and Permission Policy</h3>
+<p>IAM role has two important parts:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Trust policy</td>
+<td>Who can use/assume this role?</td>
+</tr>
+<tr>
+<td>Permission policy</td>
+<td>What can this role do after it is assumed?</td>
+</tr>
+</tbody></table>
+<p>Example:</p>
+<ul>
+<li>Trust policy says EC2 can assume this role.</li>
+<li>Permission policy says role can read S3 bucket.</li>
+</ul>
+<h3>Simple Role Flow</h3>
+<pre><code class="language-text">EC2 instance -&gt; assumes IAM role -&gt; gets temporary credentials -&gt; accesses S3
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>User is for a person/application login. Role is for temporary permission, often used between AWS services.</strong></p>
+</blockquote>
+<hr>
+<h2>EC2 Basics</h2>
+<p>EC2 means <strong>Elastic Compute Cloud</strong>.</p>
+<p>An EC2 instance is a virtual machine/server in AWS.</p>
+<p>EC2 provides:</p>
+<ul>
+<li>CPU</li>
+<li>RAM</li>
+<li>Network</li>
+<li>Storage</li>
+<li>Operating system</li>
+</ul>
+<h3>Pay As You Go Model</h3>
+<p>AWS follows a pay as you go model.</p>
+<p>This means:</p>
+<ul>
+<li>You pay only for what you use.</li>
+<li>If EC2 runs for more time, cost increases.</li>
+<li>If EC2 is stopped, compute cost usually stops.</li>
+<li>Storage cost can continue even if EC2 is stopped.</li>
+</ul>
+<blockquote>
+<p>Important: Stop or terminate unused EC2 instances to avoid extra cost.</p>
+</blockquote>
+<hr>
+<h2>EC2 Instance Types</h2>
+<img src="image-39.png" alt="EC2 instance types diagram" width="720"><p>EC2 instance type decides the CPU, RAM, storage, and network capacity of the instance.</p>
+<h3>Common EC2 Instance Type Families</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Best for</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>General purpose</td>
+<td>Web servers, small apps, testing</td>
+<td>Balanced CPU, RAM, and network.</td>
+</tr>
+<tr>
+<td>Compute optimized</td>
+<td>Gaming servers, batch jobs, CPU-heavy apps</td>
+<td>More CPU power.</td>
+</tr>
+<tr>
+<td>Memory optimized</td>
+<td>Databases, caching, big data</td>
+<td>More RAM.</td>
+</tr>
+<tr>
+<td>Storage optimized</td>
+<td>Large file processing, high disk usage</td>
+<td>Faster/local storage.</td>
+</tr>
+<tr>
+<td>Accelerated computing</td>
+<td>ML, AI, graphics, GPU workloads</td>
+<td>Uses GPU or special hardware.</td>
+</tr>
+</tbody></table>
+<h3>Example Instance Names</h3>
+<table>
+<thead>
+<tr>
+<th>Example</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>t2.micro</code></td>
+<td>General purpose, small, often used for practice/free tier.</td>
+</tr>
+<tr>
+<td><code>t3.micro</code></td>
+<td>Newer general purpose small instance.</td>
+</tr>
+<tr>
+<td><code>m5.large</code></td>
+<td>General purpose production-type instance.</td>
+</tr>
+<tr>
+<td><code>c5.large</code></td>
+<td>Compute optimized instance.</td>
+</tr>
+<tr>
+<td><code>r5.large</code></td>
+<td>Memory optimized instance.</td>
+</tr>
+</tbody></table>
+<h3>How to Read <code>t2.micro</code></h3>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>t</code></td>
+<td>Instance family.</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Generation/version.</td>
+</tr>
+<tr>
+<td><code>micro</code></td>
+<td>Size of instance.</td>
+</tr>
+</tbody></table>
+<p>Size can be:</p>
+<ul>
+<li><code>nano</code></li>
+<li><code>micro</code></li>
+<li><code>small</code></li>
+<li><code>medium</code></li>
+<li><code>large</code></li>
+<li><code>xlarge</code></li>
+</ul>
+<p>Larger size means more CPU/RAM and higher cost.</p>
+<hr>
+<h2>Network Fundamentals</h2>
+<img src="image-40.png" alt="network fundamentals diagram" width="720"><h3>Computer Network</h3>
+<p>A computer network is a group of devices connected together to share data and resources.</p>
+<p>Examples:</p>
+<ul>
+<li>Laptop connected to Wi-Fi.</li>
+<li>Mobile connected to internet.</li>
+<li>EC2 instances connected inside AWS VPC.</li>
+<li>Office computers connected through LAN.</li>
+</ul>
+<h3>Why Networking Is Important in Cloud</h3>
+<p>Cloud servers need networking to:</p>
+<ul>
+<li>Connect to internet.</li>
+<li>Communicate with other servers.</li>
+<li>Connect frontend, backend, and database.</li>
+<li>Control access using security groups and firewalls.</li>
+</ul>
+<hr>
+<h2>Network Interface</h2>
+<p>A network interface is the connection point between a computer/server and the network.</p>
+<p>In physical computers, it can be:</p>
+<ul>
+<li>Ethernet card.</li>
+<li>Wi-Fi adapter.</li>
+</ul>
+<p>In AWS, EC2 uses <strong>Elastic Network Interface</strong>, also called ENI.</p>
+<p>ENI contains:</p>
+<ul>
+<li>Private IP address.</li>
+<li>Public IP address if assigned.</li>
+<li>Security groups.</li>
+<li>MAC address.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Network interface is like the network card of a server.</strong></p>
+</blockquote>
+<hr>
+<h2>Components in Computer Network</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Device/Host</td>
+<td>Computer, server, mobile, printer, EC2 instance.</td>
+</tr>
+<tr>
+<td>NIC</td>
+<td>Network Interface Card used to connect to network.</td>
+</tr>
+<tr>
+<td>Switch</td>
+<td>Connects devices inside the same local network.</td>
+</tr>
+<tr>
+<td>Router</td>
+<td>Connects different networks together.</td>
+</tr>
+<tr>
+<td>Modem</td>
+<td>Connects home/office network to ISP.</td>
+</tr>
+<tr>
+<td>Firewall</td>
+<td>Allows or blocks traffic based on rules.</td>
+</tr>
+<tr>
+<td>IP address</td>
+<td>Unique address of a device in network.</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Converts domain name to IP address.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>IP Address</h2>
+<p>IP address is a unique address used to identify a device on a network.</p>
+<p>Example:</p>
+<pre><code class="language-text">192.168.1.10
+</code></pre>
+<h3>Types of IP Address</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Private IP</td>
+<td>Used inside private/local network.</td>
+</tr>
+<tr>
+<td>Public IP</td>
+<td>Used on internet.</td>
+</tr>
+<tr>
+<td>Static IP</td>
+<td>Fixed IP address.</td>
+</tr>
+<tr>
+<td>Dynamic IP</td>
+<td>IP address that can change.</td>
+</tr>
+</tbody></table>
+<h3>AWS Example</h3>
+<table>
+<thead>
+<tr>
+<th>IP type</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Private IP</td>
+<td>EC2 communication inside VPC.</td>
+</tr>
+<tr>
+<td>Public IP</td>
+<td>Connect to EC2 from internet.</td>
+</tr>
+<tr>
+<td>Elastic IP</td>
+<td>Fixed public IP for EC2.</td>
+</tr>
+</tbody></table>
+<hr>
+<img src="image-41.png" alt="IP address diagram" width="720">
+<img src="image-42.png" alt="network diagram" width="720">
+<img src="image-43.png" alt="network diagram" width="720"><h2>OSI Model</h2>
+<p>OSI model explains how data travels from one computer to another.</p>
+<p>It has 7 layers.</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Name</th>
+<th>Simple meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>7</td>
+<td>Application</td>
+<td>User-facing apps like browser, HTTP, DNS.</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Presentation</td>
+<td>Data format, encryption, compression.</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Session</td>
+<td>Starts and manages communication session.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Transport</td>
+<td>Reliable data transfer, TCP/UDP, ports.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Network</td>
+<td>IP address and routing.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Data Link</td>
+<td>MAC address and local network transfer.</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Physical</td>
+<td>Cables, signals, Wi-Fi, hardware.</td>
+</tr>
+</tbody></table>
+<h3>Easy Flow</h3>
+<pre><code class="language-text">Browser -&gt; HTTP -&gt; TCP -&gt; IP -&gt; Network card -&gt; Cable/Wi-Fi
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>OSI model is a layered way to understand networking.</strong></p>
+</blockquote>
+<hr>
+<h2>Traceroute, Public IP, Private IP, and NAT</h2>
+<h3>Trace Command for Website Request</h3>
+<p>Traceroute shows the path your request takes to reach a website/server.</p>
+<p>For Google:</p>
+<pre><code class="language-bash">traceroute google.com
+</code></pre>
+<p>On Windows:</p>
+<pre><code class="language-cmd">tracert google.com
+</code></pre>
+<p>If <code>traceroute</code> is not installed on Ubuntu:</p>
+<pre><code class="language-bash">sudo apt install traceroute -y
+</code></pre>
+<h3>What Traceroute Shows</h3>
+<p>Traceroute shows routers/hops between your machine and destination.</p>
+<p>Example:</p>
+<pre><code class="language-text">Your laptop -&gt; home router -&gt; ISP router -&gt; internet routers -&gt; Google server
+</code></pre>
+<p>Each line is usually one router/hop.</p>
+<p>Some hops may show <code>* * *</code>. This means that router is not replying to traceroute, but traffic may still pass through it.</p>
+<hr>
+<h2>How a Request to <code>google.com</code> Is Served</h2>
+<p>When you open <code>google.com</code>:</p>
+<ol>
+<li>Browser asks DNS: what is the IP of <code>google.com</code>?</li>
+<li>DNS returns an IP address.</li>
+<li>Your laptop sends request to your router.</li>
+<li>Router sends request to ISP.</li>
+<li>ISP sends request through internet routers.</li>
+<li>Request reaches Google server/load balancer.</li>
+<li>Google sends response back.</li>
+<li>Browser shows the website.</li>
+</ol>
+<p>Simple flow:</p>
+<pre><code class="language-text">Browser -&gt; DNS -&gt; Router -&gt; ISP -&gt; Internet -&gt; Google -&gt; Response back
+</code></pre>
+<hr>
+<h2>How to Check Your IP</h2>
+<h3>Check Private IP on Your Machine</h3>
+<p>Linux:</p>
+<pre><code class="language-bash">ip addr
+</code></pre>
+<p>Windows:</p>
+<pre><code class="language-cmd">ipconfig
+</code></pre>
+<p>Private IP examples:</p>
+<pre><code class="language-text">192.168.1.10
+10.0.0.5
+172.16.5.20
+</code></pre>
+<h3>Check Public IP Seen by Internet</h3>
+<pre><code class="language-bash">curl ifconfig.me
+</code></pre>
+<p>Or open a website like:</p>
+<pre><code class="language-text">whatismyipaddress.com
+</code></pre>
+<p>This shows your <strong>public IP</strong>, not your laptop&#39;s private IP.</p>
+<hr>
+<h2>IPv4 Address Limit and Private IP</h2>
+<p>IPv4 has about <strong>4.3 billion</strong> total addresses.</p>
+<p>But not all are usable for normal public internet because some are reserved for:</p>
+<ul>
+<li>Private networks.</li>
+<li>Loopback.</li>
+<li>Multicast.</li>
+<li>Testing/documentation.</li>
+<li>Special networking use.</li>
+</ul>
+<p>Because public IPv4 addresses are limited, private IP ranges are used inside local networks.</p>
+<h3>Private IPv4 Ranges</h3>
+<table>
+<thead>
+<tr>
+<th>Range</th>
+<th>Common use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>10.0.0.0/8</code></td>
+<td>Large private networks.</td>
+</tr>
+<tr>
+<td><code>172.16.0.0/12</code></td>
+<td>Medium/private networks.</td>
+</tr>
+<tr>
+<td><code>192.168.0.0/16</code></td>
+<td>Home/office networks.</td>
+</tr>
+</tbody></table>
+<p>These private IPs are not routed on the public internet.</p>
+<hr>
+<h2>Why Same Private IP Can Exist in Many Homes</h2>
+<p>Many routers give private IPs to devices.</p>
+<p>Example:</p>
+<ul>
+<li>Your laptop: <code>192.168.1.10</code></li>
+<li>Your friend&#39;s laptop: <code>192.168.1.10</code></li>
+<li>Another office laptop: <code>192.168.1.10</code></li>
+</ul>
+<p>This is allowed because private IPs are used only inside each local network.</p>
+<p>They do not need to be globally unique.</p>
+<p>Public IP must be unique on the internet.<br>Private IP only needs to be unique inside the same local network.</p>
+<hr>
+<h2>What IP Does a Website See?</h2>
+<p>When you check your IP from a website, the website sees your <strong>public IP</strong>.</p>
+<p>It usually does not see your laptop&#39;s private IP.</p>
+<p>Example:</p>
+<pre><code class="language-text">Laptop private IP: 192.168.1.10
+Router public IP: 49.x.x.x
+Website sees: 49.x.x.x
+</code></pre>
+<p>This happens because of NAT.</p>
+<hr>
+<h2>NAT - Network Address Translation</h2>
+<p>NAT allows many private devices to use one public IP.</p>
+<p>Example:</p>
+<pre><code class="language-text">Laptop      192.168.1.10
+Mobile      192.168.1.11
+TV          192.168.1.12
+Router      Public IP: 49.x.x.x
+</code></pre>
+<p>All devices go to internet using router&#39;s public IP.</p>
+<p>Router keeps a NAT table to remember which response belongs to which device.</p>
+<h3>NAT Example</h3>
+<pre><code class="language-text">Laptop sends request to google.com
+Source IP changes from 192.168.1.10 to router public IP 49.x.x.x
+Google replies to 49.x.x.x
+Router receives reply
+Router forwards reply back to 192.168.1.10
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Private IP is used inside home/office. Public IP is used on internet. NAT connects both worlds.</strong></p>
+</blockquote>
+<hr>
+<h2>Can Router Have Private IP?</h2>
+<p>Yes, a router usually has at least two sides:</p>
+<table>
+<thead>
+<tr>
+<th>Router side</th>
+<th>IP type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>LAN side</td>
+<td>Private IP</td>
+<td><code>192.168.1.1</code></td>
+</tr>
+<tr>
+<td>WAN side</td>
+<td>Public or private IP</td>
+<td><code>49.x.x.x</code> or <code>100.64.x.x</code></td>
+</tr>
+</tbody></table>
+<h3>Home Router LAN IP</h3>
+<p>Your router&#39;s inside/local IP is usually private.</p>
+<p>Example:</p>
+<pre><code class="language-text">192.168.1.1
+</code></pre>
+<p>Your laptop uses this as the default gateway.</p>
+<h3>Router WAN IP</h3>
+<p>The router&#39;s outside/WAN IP can be:</p>
+<ul>
+<li>Public IP given by ISP.</li>
+<li>Private/shared IP if ISP uses CGNAT.</li>
+</ul>
+<hr>
+<h2>What If Router WAN IP Is Also Private?</h2>
+<p>Sometimes your router does not get a public IP directly.</p>
+<p>ISP may give your router a private/shared IP and use another NAT at ISP level.</p>
+<p>This is called <strong>CGNAT</strong> or <strong>Carrier Grade NAT</strong>.</p>
+<p>Flow:</p>
+<pre><code class="language-text">Laptop private IP -&gt; home router private/shared WAN IP -&gt; ISP public IP -&gt; internet
+</code></pre>
+<p>In this case, websites see the ISP&#39;s public IP, not your router&#39;s private WAN IP.</p>
+<h3>How Will World See It?</h3>
+<p>The world/internet only sees the final public IP used by NAT.</p>
+<p>If you are behind normal NAT:</p>
+<pre><code class="language-text">Website sees your router public IP.
+</code></pre>
+<p>If you are behind CGNAT:</p>
+<pre><code class="language-text">Website sees ISP public IP shared by many customers.
+</code></pre>
+<blockquote>
+<p>Simple answer: <strong>The world cannot directly see private IPs. It sees a public IP after NAT.</strong></p>
+</blockquote>
+<hr>
+<h2>Subnet, Subnetting, and Subnetwork</h2>
+<p>A subnet or subnetwork is a smaller network created from a bigger network.</p>
+<p>Subnetting means dividing one large network into smaller parts.</p>
+<h3>Why Subnetting Is Used</h3>
+<ul>
+<li>To organize network properly.</li>
+<li>To separate public and private resources.</li>
+<li>To improve security.</li>
+<li>To reduce unnecessary network traffic.</li>
+<li>To manage IP addresses better.</li>
+</ul>
+<h3>Simple Example</h3>
+<p>Big network:</p>
+<pre><code class="language-text">10.0.0.0/16
+</code></pre>
+<p>Can be divided into smaller subnets:</p>
+<pre><code class="language-text">10.0.1.0/24
+10.0.2.0/24
+10.0.3.0/24
+</code></pre>
+<p>Example use:</p>
+<ul>
+<li><code>10.0.1.0/24</code> = public subnet</li>
+<li><code>10.0.2.0/24</code> = private app subnet</li>
+<li><code>10.0.3.0/24</code> = private database subnet</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Subnetting divides a big network into smaller networks.</strong></p>
+</blockquote>
+<hr>
+<h2>CIDR</h2>
+<p>CIDR means <strong>Classless Inter-Domain Routing</strong>.</p>
+<p>CIDR is a way to write IP address ranges.</p>
+<p>Example:</p>
+<pre><code class="language-text">192.168.1.0/24
+</code></pre>
+<p>Here:</p>
+<ul>
+<li><code>192.168.1.0</code> is the network address.</li>
+<li><code>/24</code> tells how many bits are fixed for the network.</li>
+</ul>
+<h3>Common CIDR Examples</h3>
+<table>
+<thead>
+<tr>
+<th>CIDR</th>
+<th>Approx IP count</th>
+<th>Simple use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>/16</code></td>
+<td>65,536 IPs</td>
+<td>Large network/VPC.</td>
+</tr>
+<tr>
+<td><code>/24</code></td>
+<td>256 IPs</td>
+<td>Common subnet size.</td>
+</tr>
+<tr>
+<td><code>/28</code></td>
+<td>16 IPs</td>
+<td>Small subnet.</td>
+</tr>
+<tr>
+<td><code>/32</code></td>
+<td>1 IP</td>
+<td>Single IP address.</td>
+</tr>
+</tbody></table>
+<h3>Important Point</h3>
+<p>Smaller CIDR number means bigger network.</p>
+<p>Example:</p>
+<ul>
+<li><code>/16</code> has more IPs than <code>/24</code>.</li>
+<li><code>/24</code> has more IPs than <code>/28</code>.</li>
+</ul>
+<hr>
+<h2>DNS Resolution</h2>
+<p>DNS means <strong>Domain Name System</strong>.</p>
+<p>DNS converts domain name into IP address.</p>
+<p>Example:</p>
+<pre><code class="language-text">google.com -&gt; 142.250.x.x
+</code></pre>
+<h3>DNS Resolution Flow</h3>
+<p>When you open <code>google.com</code>:</p>
+<ol>
+<li>Browser checks its cache.</li>
+<li>Operating system checks DNS cache.</li>
+<li>Request goes to DNS resolver, usually ISP or public DNS like Google DNS.</li>
+<li>Resolver asks root DNS server.</li>
+<li>Root server points to <code>.com</code> DNS server.</li>
+<li><code>.com</code> server points to Google&#39;s DNS server.</li>
+<li>Google&#39;s DNS server returns IP address.</li>
+<li>Browser connects to that IP.</li>
+</ol>
+<p>Simple flow:</p>
+<pre><code class="language-text">Domain name -&gt; DNS lookup -&gt; IP address -&gt; website request
+</code></pre>
+<hr>
+<h2>OSI Model and TCP/IP Layers</h2>
+<img src="image-45.png" alt="OSI and TCP IP layers diagram" width="720">
+<img src="image-44.png" alt="network layers diagram" width="720"><p>OSI model has 7 layers. TCP/IP model is the practical model used on the internet.</p>
+<h3>OSI vs TCP/IP</h3>
+<table>
+<thead>
+<tr>
+<th>OSI Layer</th>
+<th>TCP/IP Layer</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application, Presentation, Session</td>
+<td>Application</td>
+<td>HTTP, DNS, SSH, FTP</td>
+</tr>
+<tr>
+<td>Transport</td>
+<td>Transport</td>
+<td>TCP, UDP</td>
+</tr>
+<tr>
+<td>Network</td>
+<td>Internet</td>
+<td>IP, routing</td>
+</tr>
+<tr>
+<td>Data Link, Physical</td>
+<td>Network Access</td>
+<td>Ethernet, Wi-Fi, cables</td>
+</tr>
+</tbody></table>
+<h3>Simple Request Flow</h3>
+<p>When opening a website:</p>
+<pre><code class="language-text">HTTP request -&gt; TCP port 443 -&gt; IP address -&gt; Ethernet/Wi-Fi -&gt; internet
+</code></pre>
+<h3>Common Protocols</h3>
+<table>
+<thead>
+<tr>
+<th>Protocol</th>
+<th>Layer</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>HTTP/HTTPS</td>
+<td>Application</td>
+<td>Website access.</td>
+</tr>
+<tr>
+<td>DNS</td>
+<td>Application</td>
+<td>Domain to IP conversion.</td>
+</tr>
+<tr>
+<td>SSH</td>
+<td>Application</td>
+<td>Remote server login.</td>
+</tr>
+<tr>
+<td>TCP</td>
+<td>Transport</td>
+<td>Reliable connection.</td>
+</tr>
+<tr>
+<td>UDP</td>
+<td>Transport</td>
+<td>Fast connection, no guarantee.</td>
+</tr>
+<tr>
+<td>IP</td>
+<td>Internet/Network</td>
+<td>Addressing and routing.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Virtual Private Cloud - VPC</h2>
+<p>A VPC means <strong>Virtual Private Cloud</strong>.</p>
+<p>It is your private network inside AWS.</p>
+<p>Inside a VPC, you can create:</p>
+<ul>
+<li>Subnets.</li>
+<li>EC2 instances.</li>
+<li>Route tables.</li>
+<li>Internet gateway.</li>
+<li>NAT gateway.</li>
+<li>Security groups.</li>
+<li>NACLs.</li>
+<li>Load balancers.</li>
+</ul>
+<p>Example VPC CIDR:</p>
+<pre><code class="language-text">10.0.0.0/16
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>VPC is like your own private data center network inside AWS.</strong></p>
+</blockquote>
+<hr>
+<h2>Public Gateway / Internet Gateway</h2>
+<p>In AWS, the correct name is usually <strong>Internet Gateway</strong>, not public gateway.</p>
+<p>An Internet Gateway allows resources in a VPC to connect to the internet.</p>
+<p>For an EC2 instance to be public:</p>
+<ul>
+<li>It must be in a public subnet.</li>
+<li>It must have a public IP or Elastic IP.</li>
+<li>Route table must have route to Internet Gateway.</li>
+<li>Security group must allow required traffic.</li>
+</ul>
+<p>Route table example:</p>
+<pre><code class="language-text">0.0.0.0/0 -&gt; Internet Gateway
+</code></pre>
+<p><code>0.0.0.0/0</code> means all IPv4 internet traffic.</p>
+<hr>
+<h2>Public Subnet and Private Subnet</h2>
+<h3>Public Subnet</h3>
+<p>A public subnet is a subnet that has a route to Internet Gateway.</p>
+<p>Used for:</p>
+<ul>
+<li>Public web servers.</li>
+<li>Load balancers.</li>
+<li>Bastion host.</li>
+</ul>
+<h3>Private Subnet</h3>
+<p>A private subnet does not have a direct route to Internet Gateway.</p>
+<p>Used for:</p>
+<ul>
+<li>Databases.</li>
+<li>Backend app servers.</li>
+<li>Internal services.</li>
+</ul>
+<h3>Difference</h3>
+<table>
+<thead>
+<tr>
+<th>Subnet type</th>
+<th>Internet route</th>
+<th>Common resources</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Public subnet</td>
+<td>Has route to Internet Gateway</td>
+<td>Load balancer, public EC2</td>
+</tr>
+<tr>
+<td>Private subnet</td>
+<td>No direct route to Internet Gateway</td>
+<td>Database, backend EC2</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Public subnet can be reached from internet if rules allow. Private subnet is kept internal.</strong></p>
+</blockquote>
+<hr>
+<h2>Load Balancer</h2>
+<p>A load balancer distributes traffic across multiple servers.</p>
+<p>Example:</p>
+<pre><code class="language-text">Users -&gt; Load Balancer -&gt; EC2-1 / EC2-2 / EC2-3
+</code></pre>
+<h3>Why Load Balancer Is Used</h3>
+<ul>
+<li>Handles more traffic.</li>
+<li>Improves availability.</li>
+<li>Sends traffic only to healthy instances.</li>
+<li>Helps avoid single server failure.</li>
+<li>Can handle HTTPS certificates.</li>
+</ul>
+<h3>AWS Common Load Balancers</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Application Load Balancer</td>
+<td>HTTP/HTTPS web traffic.</td>
+</tr>
+<tr>
+<td>Network Load Balancer</td>
+<td>Very fast TCP/UDP traffic.</td>
+</tr>
+<tr>
+<td>Gateway Load Balancer</td>
+<td>Security appliances/firewalls.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>NACL and Security Group</h2>
+<img src="image-46.png" alt="NACL and security group diagram" width="720">
+<img src="47.png" alt="VPC networking diagram" width="720"><p>Both NACL and Security Group are used to control network traffic in AWS.</p>
+<h3>Security Group</h3>
+<p>Security group works at EC2/network interface level.</p>
+<p>Important points:</p>
+<ul>
+<li>Stateful.</li>
+<li>Rules are only allow rules.</li>
+<li>If inbound request is allowed, response is automatically allowed.</li>
+<li>Commonly attached to EC2, load balancer, RDS, etc.</li>
+</ul>
+<p>Example:</p>
+<ul>
+<li>Allow HTTP port 80 from internet.</li>
+<li>Allow SSH port 22 only from your IP.</li>
+</ul>
+<h3>NACL</h3>
+<p>NACL means <strong>Network Access Control List</strong>.</p>
+<p>NACL works at subnet level.</p>
+<p>Important points:</p>
+<ul>
+<li>Stateless.</li>
+<li>Has allow and deny rules.</li>
+<li>Inbound and outbound rules are checked separately.</li>
+<li>Applies to all resources inside that subnet.</li>
+</ul>
+<h3>Security Group vs NACL</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Security Group</th>
+<th>NACL</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Level</td>
+<td>Instance/network interface</td>
+<td>Subnet</td>
+</tr>
+<tr>
+<td>State</td>
+<td>Stateful</td>
+<td>Stateless</td>
+</tr>
+<tr>
+<td>Rules</td>
+<td>Allow only</td>
+<td>Allow and deny</td>
+</tr>
+<tr>
+<td>Return traffic</td>
+<td>Automatically allowed</td>
+<td>Must be allowed separately</td>
+</tr>
+<tr>
+<td>Common use</td>
+<td>Instance level protection</td>
+<td>Subnet level protection</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Security group protects instance. NACL protects subnet.</strong></p>
+</blockquote>
+<hr>
+<h2>AWS VPC Application Architecture</h2>
+<img src="image-49.png" alt="AWS VPC application architecture" width="720"><p>This architecture is used to deploy an application securely inside a VPC.</p>
+<h3>Basic Design</h3>
+<ul>
+<li>Create one VPC for the application.</li>
+<li>Create 4 subnets:<ul>
+<li>2 public subnets.</li>
+<li>2 private subnets.</li>
+</ul>
+</li>
+<li>Place subnets in 2 different Availability Zones.</li>
+<li>If one Availability Zone goes down, the application can still run from the other Availability Zone.</li>
+</ul>
+<blockquote>
+<p>Note: A subnet belongs to one Availability Zone. For multi-region deployment, create separate VPCs in different AWS regions.</p>
+</blockquote>
+<h3>Internet Gateway</h3>
+<ul>
+<li>Create an Internet Gateway.</li>
+<li>Attach the Internet Gateway to the VPC.</li>
+<li>Create or update the public route table.</li>
+<li>Add this route in the public route table:</li>
+</ul>
+<pre><code class="language-text">0.0.0.0/0 -&gt; Internet Gateway
+</code></pre>
+<ul>
+<li>Associate the public route table with public subnets.</li>
+<li>Resources in public subnets can connect to the internet if security group rules allow it.</li>
+</ul>
+<h3>NAT Gateway</h3>
+<ul>
+<li>NAT Gateway is created in a public subnet.</li>
+<li>Private subnets use NAT Gateway to access the internet.</li>
+<li>Private EC2 instances can download packages and updates from the internet.</li>
+<li>Internet users cannot directly connect to private EC2 instances through NAT Gateway.</li>
+</ul>
+<p>Private subnet route table example:</p>
+<pre><code class="language-text">0.0.0.0/0 -&gt; NAT Gateway
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Internet Gateway is for public subnet internet access. NAT Gateway is for private subnet outbound internet access.</strong></p>
+</blockquote>
+<hr>
+<h2>Bastion Host for Private EC2 Access</h2>
+<img src="image-50.png" alt="Bastion host architecture" width="720"><p>A bastion host is an EC2 instance in the public subnet.</p>
+<p>It is used to connect to EC2 instances in private subnets.</p>
+<h3>Bastion Host Setup</h3>
+<ul>
+<li>Launch bastion host EC2 in public subnet.</li>
+<li>Give it a public IP or Elastic IP.</li>
+<li>Bastion security group should allow SSH only from your IP.</li>
+<li>Private EC2 security group should allow SSH only from bastion host security group.</li>
+</ul>
+<p>Security group flow:</p>
+<pre><code class="language-text">Your laptop IP -&gt; Bastion host -&gt; Private EC2
+</code></pre>
+<h3>Copy PEM File to Bastion Host</h3>
+<p>For practice/lab, you can copy the private EC2 key to bastion host:</p>
+<pre><code class="language-bash">scp -i &quot;test1.pem&quot; &quot;test1.pem&quot; ubuntu@public-ip:/home/ubuntu
+</code></pre>
+<p>Then connect to bastion host:</p>
+<pre><code class="language-bash">ssh -i &quot;test1.pem&quot; ubuntu@public-ip
+</code></pre>
+<p>Inside bastion host, set permission and connect to private EC2:</p>
+<pre><code class="language-bash">chmod 400 test1.pem
+ssh -i &quot;test1.pem&quot; ubuntu@private-ip
+</code></pre>
+<blockquote>
+<p>Important: In real projects, avoid copying PEM/private keys to servers. Prefer SSH agent forwarding, Session Manager, or a secure access tool.</p>
+</blockquote>
+<h3>Final Flow</h3>
+<pre><code class="language-text">User -&gt; Load Balancer -&gt; App EC2 in private subnet
+Admin -&gt; Bastion Host -&gt; Private EC2
+Private EC2 -&gt; NAT Gateway -&gt; Internet
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Public subnet exposes only required entry points like load balancer and bastion host. Application servers stay inside private subnets.</strong></p>
+</blockquote>
+<hr>
+<h2>Storage Services in AWS</h2>
+<p>AWS provides different storage services for different types of data.</p>
+<p>Main AWS storage services:</p>
+<ul>
+<li><strong>EBS</strong> - block storage for EC2.</li>
+<li><strong>EFS</strong> - file system storage shared by multiple servers.</li>
+<li><strong>S3</strong> - object storage for files, backups, images, videos, and static websites.</li>
+</ul>
+<hr>
+<h2>Types of Storage</h2>
+<h3>1. Block Storage</h3>
+<p>Block storage stores data in fixed-size blocks.</p>
+<p>It works like a hard disk or SSD attached to a server.</p>
+<p>AWS example:</p>
+<ul>
+<li><strong>EBS - Elastic Block Store</strong></li>
+</ul>
+<p>Used for:</p>
+<ul>
+<li>EC2 root volume.</li>
+<li>Database storage.</li>
+<li>Application data.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Block storage is like a disk attached to one EC2 instance.</strong></p>
+</blockquote>
+<h3>2. File System Based Storage</h3>
+<p>File storage stores data as files and folders.</p>
+<p>Multiple servers can share the same file system.</p>
+<p>AWS example:</p>
+<ul>
+<li><strong>EFS - Elastic File System</strong></li>
+</ul>
+<p>Used for:</p>
+<ul>
+<li>Shared application files.</li>
+<li>Common upload folder.</li>
+<li>Multiple EC2 instances needing same files.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>File storage is like a shared folder for many servers.</strong></p>
+</blockquote>
+<h3>3. Object Based Storage</h3>
+<p>Object storage stores data as objects inside buckets.</p>
+<p>Each object contains:</p>
+<ul>
+<li>File/data.</li>
+<li>Metadata.</li>
+<li>Unique key/name.</li>
+</ul>
+<p>AWS example:</p>
+<ul>
+<li><strong>S3 - Simple Storage Service</strong></li>
+</ul>
+<p>Used for:</p>
+<ul>
+<li>Images and videos.</li>
+<li>Backups.</li>
+<li>Logs.</li>
+<li>Static website hosting.</li>
+<li>Large files.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>Object storage is best for storing files, not for installing OS.</strong></p>
+</blockquote>
+<hr>
+<h2>EBS - Elastic Block Store</h2>
+<p>EBS is the storage volume used with EC2.</p>
+<p>When we create an EC2 instance, AWS creates a root EBS volume for the operating system.</p>
+<p>We can also create extra EBS volumes and attach them to EC2.</p>
+<h3>EBS Volume Types</h3>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>General Purpose SSD</td>
+<td>Normal use, boot volume, small/medium applications.</td>
+</tr>
+<tr>
+<td>Provisioned IOPS SSD</td>
+<td>High input/output apps like databases.</td>
+</tr>
+<tr>
+<td>Throughput Optimized HDD</td>
+<td>Big data, logs, large data processing.</td>
+</tr>
+<tr>
+<td>Cold HDD</td>
+<td>Low-cost storage for rarely accessed data.</td>
+</tr>
+<tr>
+<td>Magnetic</td>
+<td>Older and cheaper previous generation storage.</td>
+</tr>
+</tbody></table>
+<h3>Create and Attach EBS Volume to EC2</h3>
+<p>Steps:</p>
+<ul>
+<li>Go to EC2 dashboard.</li>
+<li>Open <strong>Elastic Block Store -&gt; Volumes</strong>.</li>
+<li>Create a new volume.</li>
+<li>Select size, type, and same Availability Zone as EC2.</li>
+<li>Attach the volume to EC2 instance.</li>
+<li>Connect to EC2 using SSH.</li>
+<li>Format the volume if it is new.</li>
+<li>Mount the volume to a folder.</li>
+</ul>
+<h3>Mounting</h3>
+<p>Mounting means connecting a storage volume to a folder in Linux.</p>
+<p>After mounting, we can read and write data through that folder.</p>
+<p>Example idea:</p>
+<pre><code class="language-text">EBS volume -&gt; mounted to /data -&gt; application reads/writes files
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Mounting is like creating a door between Linux folder and storage disk.</strong></p>
+</blockquote>
+<h3>Disk and Mount Commands</h3>
+<p>Show all disks attached to the system:</p>
+<pre><code class="language-bash">sudo fdisk -l
+</code></pre>
+<p>Show mounted file systems and free space:</p>
+<pre><code class="language-bash">df -h
+</code></pre>
+<p>Show block devices in simple tree format:</p>
+<pre><code class="language-bash">lsblk
+</code></pre>
+<h3>Common File Systems</h3>
+<table>
+<thead>
+<tr>
+<th>File system</th>
+<th>Common use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NTFS</td>
+<td>Windows disk.</td>
+</tr>
+<tr>
+<td>FAT/FAT32/exFAT</td>
+<td>Pen drive or cross-platform storage.</td>
+</tr>
+<tr>
+<td>ext4</td>
+<td>Common Linux file system.</td>
+</tr>
+<tr>
+<td>XFS</td>
+<td>Linux file system, often used for large storage.</td>
+</tr>
+</tbody></table>
+<h3>Create Partition</h3>
+<p>Use <code>fdisk</code> to create/manage partitions on a disk.</p>
+<p>Example:</p>
+<pre><code class="language-bash">sudo fdisk /dev/nvme1n1
+</code></pre>
+<p>Inside <code>fdisk</code>, common keys:</p>
+<ul>
+<li><code>n</code> - create new partition.</li>
+<li><code>p</code> - print partition table.</li>
+<li><code>w</code> - write changes and exit.</li>
+<li><code>q</code> - quit without saving.</li>
+</ul>
+<blockquote>
+<p>Be careful: wrong disk selection can delete data.</p>
+</blockquote>
+<h3>Format the Disk</h3>
+<p>Formatting creates a file system on the disk/partition.</p>
+<p>Example for ext4:</p>
+<pre><code class="language-bash">sudo mkfs.ext4 /dev/nvme1n1
+</code></pre>
+<p>If a partition is created, format the partition name:</p>
+<pre><code class="language-bash">sudo mkfs.ext4 /dev/nvme1n1p1
+</code></pre>
+<blockquote>
+<p>Note: Formatting deletes existing data on that disk/partition.</p>
+</blockquote>
+<h3>Temporary Mount</h3>
+<p>Temporary mount works until reboot.</p>
+<p>Create a folder:</p>
+<pre><code class="language-bash">sudo mkdir /data
+</code></pre>
+<p>Mount disk/partition to folder:</p>
+<pre><code class="language-bash">sudo mount /dev/nvme1n1 /data
+</code></pre>
+<p>Or if partition exists:</p>
+<pre><code class="language-bash">sudo mount /dev/nvme1n1p1 /data
+</code></pre>
+<p>Unmount:</p>
+<pre><code class="language-bash">sudo umount /data
+</code></pre>
+<h3>Permanent Mount</h3>
+<p>Permanent mount means disk automatically mounts after reboot.</p>
+<p>Step 1: Get UUID of disk/partition:</p>
+<pre><code class="language-bash">sudo blkid
+</code></pre>
+<p>Example output idea:</p>
+<pre><code class="language-text">/dev/nvme1n1: UUID=&quot;abcd-1234&quot; TYPE=&quot;ext4&quot;
+</code></pre>
+<p>Step 2: Create mount folder:</p>
+<pre><code class="language-bash">sudo mkdir /data
+</code></pre>
+<p>Step 3: Edit <code>/etc/fstab</code>:</p>
+<pre><code class="language-bash">sudo nano /etc/fstab
+</code></pre>
+<p>Step 4: Add this line:</p>
+<pre><code class="language-text">UUID=abcd-1234 /data ext4 defaults,nofail 0 2
+</code></pre>
+<p>Step 5: Test mount:</p>
+<pre><code class="language-bash">sudo mount -a
+</code></pre>
+<p>Step 6: Check:</p>
+<pre><code class="language-bash">df -h
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Temporary mount uses <code>mount</code> command. Permanent mount uses <code>/etc/fstab</code>.</strong></p>
+</blockquote>
+<p><img src="image-52.png" alt="alt text"></p>
+<h2>S3 - Simple Storage Service</h2>
+<p><img src="image-51.png" alt="alt text"><br><img src="image-53.png" alt="alt text"></p>
+<p>Amazon S3 is an <strong>object storage service</strong> used to store files, images, videos, backups, logs, and static website content.</p>
+<p>S3 is managed by AWS, so we do not need to manage disks, partitions, mounting, or manual scaling.</p>
+<blockquote>
+<p>Simple idea: <strong>S3 is like unlimited online storage for objects/files.</strong></p>
+</blockquote>
+<h3>S3 Main Points</h3>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Short detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Full form</td>
+<td>Simple Storage Service</td>
+</tr>
+<tr>
+<td>Storage type</td>
+<td>Object storage</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Region specific</td>
+</tr>
+<tr>
+<td>Data design</td>
+<td>Data is distributed across multiple Availability Zones in a Region, depending on storage class.</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Managed automatically by AWS.</td>
+</tr>
+<tr>
+<td>Pricing</td>
+<td>Pay for what you store and use.</td>
+</tr>
+<tr>
+<td>Bucket rule</td>
+<td>We can create many buckets, but we cannot create a bucket inside another bucket.</td>
+</tr>
+<tr>
+<td>Access</td>
+<td>Accessed using HTTP/HTTPS, AWS Console, AWS CLI, SDK, or API.</td>
+</tr>
+</tbody></table>
+<h3>Bucket Structure</h3>
+<table>
+<thead>
+<tr>
+<th>Bucket part</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Bucket name / bucket ID</td>
+<td>Unique name of the bucket.</td>
+</tr>
+<tr>
+<td>Object data</td>
+<td>Actual file content, like image, video, backup, log, or document.</td>
+</tr>
+<tr>
+<td>Object key</td>
+<td>Unique object name/path inside the bucket.</td>
+</tr>
+<tr>
+<td>Metadata</td>
+<td>Extra information about the object, like content type, size, and custom tags.</td>
+</tr>
+</tbody></table>
+<p>Example:</p>
+<pre><code class="language-text">bucket
+{
+  bucket name,
+  objects/data,
+  object keys,
+  metadata
+}
+</code></pre>
+<h3>S3 vs EBS</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>S3</th>
+<th>EBS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Storage type</td>
+<td>Object storage</td>
+<td>Block storage</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Region level service</td>
+<td>Availability Zone level service</td>
+</tr>
+<tr>
+<td>Used for</td>
+<td>Files, images, videos, backups, logs, static websites</td>
+<td>EC2 root volume, application disk, database disk</td>
+</tr>
+<tr>
+<td>Attach/mount</td>
+<td>Cannot be mounted as a normal EC2 disk</td>
+<td>Can be attached and mounted to EC2</td>
+</tr>
+<tr>
+<td>Access method</td>
+<td>HTTP/HTTPS, API, CLI, SDK</td>
+<td>Linux file system after mounting</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Automatically managed by AWS</td>
+<td>User selects and manages volume size/type</td>
+</tr>
+<tr>
+<td>Cost idea</td>
+<td>Pay for stored data and requests</td>
+<td>Pay for provisioned volume size and type</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>S3 is for storing objects. EBS is like a hard disk for EC2.</strong></p>
+</blockquote>
+<h3>S3 Access vs EBS Access</h3>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>S3</th>
+<th>EBS</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Access from application</td>
+<td>Use S3 URL/API/SDK/CLI.</td>
+<td>Read/write from mounted folder.</td>
+</tr>
+<tr>
+<td>Website hosting</td>
+<td>Easy for static websites.</td>
+<td>Need EC2 web server like Apache or Nginx.</td>
+</tr>
+<tr>
+<td>EC2 dependency</td>
+<td>Does not need EC2.</td>
+<td>Commonly attached to EC2.</td>
+</tr>
+<tr>
+<td>Mounting</td>
+<td>Not mounted like a normal disk.</td>
+<td>Mounted to a Linux directory.</td>
+</tr>
+</tbody></table>
+<h3>S3 Storage Classes / Types</h3>
+<table>
+<thead>
+<tr>
+<th>Storage class</th>
+<th>Short detail</th>
+<th>Availability design</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S3 Standard</td>
+<td>Default class for frequently accessed data.</td>
+<td>Stores data across minimum 3 Availability Zones.</td>
+</tr>
+<tr>
+<td>S3 Standard-IA</td>
+<td>Infrequent Access; for data accessed less often but needed quickly.</td>
+<td>Stores data across minimum 3 Availability Zones.</td>
+</tr>
+<tr>
+<td>S3 One Zone-IA</td>
+<td>Lower cost infrequent access storage in one Availability Zone.</td>
+<td>Stores data in 1 Availability Zone.</td>
+</tr>
+<tr>
+<td>S3 Intelligent-Tiering</td>
+<td>Automatically moves data between access tiers based on usage.</td>
+<td>Multi-AZ design.</td>
+</tr>
+<tr>
+<td>S3 Glacier Instant Retrieval</td>
+<td>Archive storage with milliseconds retrieval for rarely accessed data.</td>
+<td>Multi-AZ design.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Choose S3 storage class based on how often data is accessed and how quickly it must be retrieved.</strong></p>
+</blockquote>
+<h3>More Important S3 Storage Classes</h3>
+<table>
+<thead>
+<tr>
+<th>Storage class</th>
+<th>Best for</th>
+<th>Retrieval</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S3 Standard</td>
+<td>Frequently accessed data.</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>S3 Standard-IA</td>
+<td>Data accessed less often but still needed quickly.</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>S3 One Zone-IA</td>
+<td>Infrequent data that can be recreated if one AZ fails.</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td>S3 Intelligent-Tiering</td>
+<td>Data with unknown or changing access patterns.</td>
+<td>Automatic tier movement</td>
+</tr>
+<tr>
+<td>S3 Glacier Instant Retrieval</td>
+<td>Archive data that still needs instant access.</td>
+<td>Milliseconds</td>
+</tr>
+<tr>
+<td>S3 Glacier Flexible Retrieval</td>
+<td>Low-cost archive data.</td>
+<td>Minutes to hours</td>
+</tr>
+<tr>
+<td>S3 Glacier Deep Archive</td>
+<td>Lowest-cost long-term archive data.</td>
+<td>Hours</td>
+</tr>
+</tbody></table>
+<h3>S3 Charges</h3>
+<p>S3 pricing depends on how much data is stored, how often it is accessed, storage class, and data movement.</p>
+<table>
+<thead>
+<tr>
+<th>Charge factor</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Amount of data stored</td>
+<td>More GB/TB stored means more storage cost.</td>
+</tr>
+<tr>
+<td>Number of requests</td>
+<td>PUT, GET, LIST, COPY, and other requests can add cost.</td>
+</tr>
+<tr>
+<td>Storage class / tier</td>
+<td>Standard costs more than archive classes, but gives faster access.</td>
+</tr>
+<tr>
+<td>Data transfer</td>
+<td>Data transfer out of AWS or across Regions can cost extra.</td>
+</tr>
+<tr>
+<td>Region replication</td>
+<td>Cross-Region Replication stores copied data in another Region and may add transfer + storage charges.</td>
+</tr>
+<tr>
+<td>Lifecycle transitions</td>
+<td>Moving objects between storage classes may have transition request charges.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>S3 cost = storage amount + request count + storage class + data transfer.</strong></p>
+</blockquote>
+<p><img src="image-54.png" alt="alt text"></p>
+<h2>AWS RDS - Relational Database Service</h2>
+<p>AWS RDS is a managed database service for relational databases.</p>
+<p>RDS helps us create, run, backup, monitor, and scale databases without manually managing database servers.</p>
+<p>Supported database engines:</p>
+<ul>
+<li>MySQL</li>
+<li>PostgreSQL</li>
+<li>MariaDB</li>
+<li>Oracle</li>
+<li>SQL Server</li>
+<li>Amazon Aurora</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>RDS is a managed database service. AWS handles a lot of database administration work.</strong></p>
+</blockquote>
+<p><img src="image-55.png" alt="alt text"></p>
+<h3>Why RDS is Important</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Short detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Managed service</td>
+<td>AWS manages database setup, patching, backups, and maintenance.</td>
+</tr>
+<tr>
+<td>High availability</td>
+<td>RDS can run with standby database in another Availability Zone.</td>
+</tr>
+<tr>
+<td>Automated backups</td>
+<td>RDS can automatically take backups and allow point-in-time recovery.</td>
+</tr>
+<tr>
+<td>Read replicas</td>
+<td>Extra database copies can be used to handle read traffic.</td>
+</tr>
+<tr>
+<td>Security</td>
+<td>Supports VPC, security groups, IAM integration, encryption, and database users.</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Works with CloudWatch metrics and logs.</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Instance size and storage can be scaled based on need.</td>
+</tr>
+</tbody></table>
+<h3>RDS High Availability</h3>
+<p>RDS can be used as a distributed database service for better availability.</p>
+<p>In a Multi-AZ deployment:</p>
+<ul>
+<li>One database is the <strong>primary database</strong>.</li>
+<li>Another database is the <strong>standby/secondary database</strong>.</li>
+<li>If the primary fails, AWS can fail over to the standby database.</li>
+<li>This improves availability and reduces downtime.</li>
+</ul>
+<pre><code class="language-text">Application
+    |
+Primary RDS database
+    |
+Standby/Secondary RDS database in another AZ
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Multi-AZ is mainly for high availability, not for increasing read speed.</strong></p>
+</blockquote>
+<h3>RDS Replica Types</h3>
+<table>
+<thead>
+<tr>
+<th>Replica type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Standby replica / secondary database</td>
+<td>Used for failover and high availability.</td>
+</tr>
+<tr>
+<td>Read replica</td>
+<td>Used to reduce read load from the primary database.</td>
+</tr>
+</tbody></table>
+<h3>Primary vs Secondary Database</h3>
+<table>
+<thead>
+<tr>
+<th>Database</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Primary database</td>
+<td>Main database where application writes data.</td>
+</tr>
+<tr>
+<td>Secondary/standby database</td>
+<td>Backup live copy used if primary fails.</td>
+</tr>
+<tr>
+<td>Read replica</td>
+<td>Copy used mainly for read queries.</td>
+</tr>
+</tbody></table>
+<h3>RDS vs Normal Database on EC2</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>RDS</th>
+<th>Database on EC2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Setup</td>
+<td>Easy and managed by AWS</td>
+<td>Manual installation and setup</td>
+</tr>
+<tr>
+<td>Backups</td>
+<td>Built-in automated backups</td>
+<td>Need to configure manually</td>
+</tr>
+<tr>
+<td>Patching</td>
+<td>AWS helps manage patches</td>
+<td>User manages OS and database patches</td>
+</tr>
+<tr>
+<td>High availability</td>
+<td>Multi-AZ option available</td>
+<td>User must design and configure HA</td>
+</tr>
+<tr>
+<td>Control</td>
+<td>Less OS-level control</td>
+<td>Full server control</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Managed production databases</td>
+<td>Custom database setup or full control needs</td>
+</tr>
+</tbody></table>
+<h3>Important RDS Points</h3>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>RDS is not serverless by default</td>
+<td>We choose database instance type, storage, and engine.</td>
+</tr>
+<tr>
+<td>RDS runs inside VPC</td>
+<td>It can be placed in private subnets for security.</td>
+</tr>
+<tr>
+<td>Public access should usually be off</td>
+<td>Production databases should not be open to the internet.</td>
+</tr>
+<tr>
+<td>Security group controls access</td>
+<td>Only application servers should be allowed to connect.</td>
+</tr>
+<tr>
+<td>Multi-AZ gives failover</td>
+<td>Good for availability.</td>
+</tr>
+<tr>
+<td>Read replica gives read scaling</td>
+<td>Good when many users read data.</td>
+</tr>
+<tr>
+<td>Backups protect data</td>
+<td>Useful for restore and disaster recovery.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Use RDS when you need a managed relational database with backup, security, monitoring, and high availability options.</strong></p>
+</blockquote>
+<h2>Monolithic vs Microservices</h2>
+<p>A software application can be designed as one large application or as many small independent services.</p>
+<h3>Monolithic Architecture</h3>
+<p>A monolithic application keeps most features in one codebase and deploys them together.</p>
+<p>Example:</p>
+<pre><code class="language-text">Frontend + User logic + Payment logic + Order logic + Database logic
+                    |
+             One big application
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Codebase</td>
+<td>Usually one large codebase.</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Whole application is deployed together.</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Scale the full application even if only one part needs more resources.</td>
+</tr>
+<tr>
+<td>Debugging</td>
+<td>Easier in small projects, harder as app grows.</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Small apps, simple projects, early-stage products.</td>
+</tr>
+</tbody></table>
+<h3>Microservices Architecture</h3>
+<p>Microservices split the application into small services. Each service handles one business function.</p>
+<p>Example:</p>
+<pre><code class="language-text">User service -&gt; user data
+Order service -&gt; order data
+Payment service -&gt; payment data
+Notification service -&gt; emails/SMS
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Codebase</td>
+<td>Multiple small services.</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Each service can be deployed independently.</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Scale only the service that needs more capacity.</td>
+</tr>
+<tr>
+<td>Communication</td>
+<td>Services communicate using API, queues, or events.</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Large applications, teams, and systems needing independent scaling.</td>
+</tr>
+</tbody></table>
+<h3>Monolithic vs Microservices</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Monolithic</th>
+<th>Microservices</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Structure</td>
+<td>One large application</td>
+<td>Many small services</td>
+</tr>
+<tr>
+<td>Deployment</td>
+<td>Deploy everything together</td>
+<td>Deploy services separately</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Scale whole app</td>
+<td>Scale selected services</td>
+</tr>
+<tr>
+<td>Development</td>
+<td>Simple at start</td>
+<td>Better for large teams</td>
+</tr>
+<tr>
+<td>Failure impact</td>
+<td>One bug can affect whole app</td>
+<td>Failure can be isolated to one service</td>
+</tr>
+<tr>
+<td>Complexity</td>
+<td>Less distributed complexity</td>
+<td>More network, monitoring, and deployment complexity</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Monolithic is one big app. Microservices are many small apps working together.</strong></p>
+</blockquote>
+<hr>
+<h2>AWS Lambda</h2>
+<p>AWS Lambda is a <strong>serverless compute service</strong>.</p>
+<p>It runs code without creating or managing servers like EC2.</p>
+<p>Lambda is also <strong>trigger based</strong>, meaning it runs when an event happens.</p>
+<blockquote>
+<p>Simple idea: <strong>Lambda runs code only when needed.</strong></p>
+</blockquote>
+<h3>What is a Lambda Function?</h3>
+<p>A Lambda function is a small piece of code deployed to AWS Lambda.</p>
+<p>It contains:</p>
+<ul>
+<li>Code.</li>
+<li>Runtime, like Python, Node.js, Java, Go, etc.</li>
+<li>Handler function.</li>
+<li>IAM role/permissions.</li>
+<li>Memory and timeout settings.</li>
+<li>Trigger or event source.</li>
+</ul>
+<p>Example idea:</p>
+<pre><code class="language-text">Event happens -&gt; Lambda function runs -&gt; Task completed
+</code></pre>
+<h3>Lambda vs EC2</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>AWS Lambda</th>
+<th>EC2</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Compute type</td>
+<td>Serverless compute</td>
+<td>Virtual server</td>
+</tr>
+<tr>
+<td>Server management</td>
+<td>AWS manages servers</td>
+<td>User manages instance</td>
+</tr>
+<tr>
+<td>Running time</td>
+<td>Runs only when triggered</td>
+<td>Runs continuously until stopped</td>
+</tr>
+<tr>
+<td>Billing</td>
+<td>Pay per request and execution time</td>
+<td>Pay for instance running time</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Automatically scales</td>
+<td>Need auto scaling configuration</td>
+</tr>
+<tr>
+<td>Best for</td>
+<td>Event-based tasks, APIs, automation</td>
+<td>Long-running apps, full server control</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>EC2 is like renting a server. Lambda is like running code only when an event happens.</strong></p>
+</blockquote>
+<h3>Why Use Lambda?</h3>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>No server management</td>
+<td>No need to patch, maintain, or scale servers manually.</td>
+</tr>
+<tr>
+<td>Cost optimization</td>
+<td>Good for workloads that run sometimes, not continuously.</td>
+</tr>
+<tr>
+<td>Automatic scaling</td>
+<td>Lambda can run many function instances in parallel.</td>
+</tr>
+<tr>
+<td>Event driven</td>
+<td>Works well with S3, API Gateway, DynamoDB, SQS, EventBridge, etc.</td>
+</tr>
+<tr>
+<td>Fast development</td>
+<td>Useful for small backend tasks and automation.</td>
+</tr>
+</tbody></table>
+<h3>Lambda Triggers</h3>
+<p>A trigger is an AWS service or event that starts a Lambda function.</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Example use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>API Gateway</td>
+<td>Create REST API or backend endpoint.</td>
+</tr>
+<tr>
+<td>S3</td>
+<td>Run code when a file is uploaded to a bucket.</td>
+</tr>
+<tr>
+<td>DynamoDB Streams</td>
+<td>Run code when database records change.</td>
+</tr>
+<tr>
+<td>SQS</td>
+<td>Process messages from a queue.</td>
+</tr>
+<tr>
+<td>SNS</td>
+<td>Process notification events.</td>
+</tr>
+<tr>
+<td>EventBridge / CloudWatch Events</td>
+<td>Run scheduled jobs like cron.</td>
+</tr>
+<tr>
+<td>Application Load Balancer</td>
+<td>Send web requests to Lambda.</td>
+</tr>
+</tbody></table>
+<p>Example:</p>
+<pre><code class="language-text">User uploads image to S3
+        |
+S3 triggers Lambda
+        |
+Lambda resizes image
+        |
+Lambda stores output image back in S3
+</code></pre>
+<h3>How to Create Lambda Function</h3>
+<p>Basic steps:</p>
+<ul>
+<li>Open AWS Lambda service.</li>
+<li>Click <strong>Create function</strong>.</li>
+<li>Choose <strong>Author from scratch</strong>.</li>
+<li>Enter function name.</li>
+<li>Select runtime, like Python or Node.js.</li>
+<li>Create or select IAM execution role.</li>
+<li>Write or upload code.</li>
+<li>Configure memory and timeout.</li>
+<li>Add trigger, like S3, API Gateway, or EventBridge.</li>
+<li>Test the function with sample event.</li>
+<li>Monitor logs in CloudWatch.</li>
+</ul>
+<h3>Important Lambda Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Runtime</td>
+<td>Programming language environment.</td>
+</tr>
+<tr>
+<td>Handler</td>
+<td>Function entry point AWS calls.</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>RAM allocated to Lambda. More memory can also give more CPU power.</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>Maximum execution time allowed.</td>
+</tr>
+<tr>
+<td>IAM role</td>
+<td>Permissions Lambda needs to access AWS services.</td>
+</tr>
+<tr>
+<td>Environment variables</td>
+<td>Key-value configuration values.</td>
+</tr>
+<tr>
+<td>Layers</td>
+<td>Shared libraries or dependencies used by functions.</td>
+</tr>
+<tr>
+<td>Concurrency</td>
+<td>Number of function executions that can run at the same time.</td>
+</tr>
+</tbody></table>
+<h3>Common Lambda Use Cases</h3>
+<table>
+<thead>
+<tr>
+<th>Use case</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Serverless API</td>
+<td>API Gateway -&gt; Lambda -&gt; DynamoDB/RDS</td>
+</tr>
+<tr>
+<td>File processing</td>
+<td>S3 upload -&gt; Lambda -&gt; image/video/document processing</td>
+</tr>
+<tr>
+<td>Automation</td>
+<td>Start/stop resources, cleanup old files, send alerts</td>
+</tr>
+<tr>
+<td>Scheduled tasks</td>
+<td>EventBridge schedule -&gt; Lambda runs daily/hourly</td>
+</tr>
+<tr>
+<td>Queue processing</td>
+<td>SQS -&gt; Lambda processes messages</td>
+</tr>
+<tr>
+<td>Notifications</td>
+<td>SNS/EventBridge -&gt; Lambda sends email/SMS/update</td>
+</tr>
+<tr>
+<td>Data processing</td>
+<td>Process logs, streams, and events</td>
+</tr>
+</tbody></table>
+<h3>Lambda Cost Optimization</h3>
+<p>Lambda can reduce cost because it runs only when needed.</p>
+<table>
+<thead>
+<tr>
+<th>Cost factor</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Number of requests</td>
+<td>More invocations means more cost.</td>
+</tr>
+<tr>
+<td>Execution duration</td>
+<td>Longer-running functions cost more.</td>
+</tr>
+<tr>
+<td>Memory size</td>
+<td>More memory can increase cost but may reduce duration.</td>
+</tr>
+<tr>
+<td>Data transfer</td>
+<td>Moving data between services/Regions can add cost.</td>
+</tr>
+<tr>
+<td>Provisioned concurrency</td>
+<td>Keeping Lambda warm for low latency can add cost.</td>
+</tr>
+</tbody></table>
+<p>Best for cost optimization:</p>
+<ul>
+<li>Infrequent jobs.</li>
+<li>Event-driven background tasks.</li>
+<li>Scheduled automation.</li>
+<li>APIs with variable traffic.</li>
+<li>Processing only when data arrives.</li>
+</ul>
+<h3>Lambda Limitations</h3>
+<table>
+<thead>
+<tr>
+<th>Limitation</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Not for all long-running jobs</td>
+<td>Lambda has maximum execution time limits.</td>
+</tr>
+<tr>
+<td>Cold start</td>
+<td>First request after idle time may be slower.</td>
+</tr>
+<tr>
+<td>Stateless</td>
+<td>Function should not depend on local stored state.</td>
+</tr>
+<tr>
+<td>Package size limits</td>
+<td>Large dependencies need careful packaging/layers.</td>
+</tr>
+<tr>
+<td>Debugging</td>
+<td>Distributed logs and events need good monitoring.</td>
+</tr>
+</tbody></table>
+<h3>Lambda with Other AWS Services</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Lambda usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>S3</td>
+<td>Process files after upload.</td>
+</tr>
+<tr>
+<td>API Gateway</td>
+<td>Build serverless APIs.</td>
+</tr>
+<tr>
+<td>DynamoDB</td>
+<td>Process database stream changes.</td>
+</tr>
+<tr>
+<td>SQS</td>
+<td>Process queue messages.</td>
+</tr>
+<tr>
+<td>SNS</td>
+<td>React to notifications.</td>
+</tr>
+<tr>
+<td>EventBridge</td>
+<td>Run scheduled or event-based automation.</td>
+</tr>
+<tr>
+<td>CloudWatch</td>
+<td>Store logs and monitor metrics.</td>
+</tr>
+<tr>
+<td>IAM</td>
+<td>Give secure permissions to Lambda.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>Lambda is best when code should run because something happened.</strong></p>
+</blockquote>
+<h2>Project: Find Security Groups with Public Port 80 Access</h2>
+<p>This project checks all AWS Regions and finds how many Security Groups allow public HTTP access on port <code>80</code>.</p>
+<p>Public access means inbound rule allows:</p>
+<ul>
+<li><code>0.0.0.0/0</code> for IPv4.</li>
+<li><code>::/0</code> for IPv6.</li>
+</ul>
+<p>Port <code>80</code> is HTTP. If it is open to the public, anyone on the internet can try to connect.</p>
+<h3>Project Architecture</h3>
+<pre><code class="language-text">EventBridge schedule
+        |
+AWS Lambda function
+        |
+EC2 describe regions + describe security groups
+        |
+Find security groups with port 80 open to 0.0.0.0/0 or ::/0
+        |
+Publish result to SNS topic
+        |
+SNS sends email notification
+</code></pre>
+<h3>AWS Services Used</h3>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Use in project</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AWS Lambda</td>
+<td>Runs the scanning code without managing EC2.</td>
+</tr>
+<tr>
+<td>Amazon EC2 API</td>
+<td>Lists Regions and Security Groups.</td>
+</tr>
+<tr>
+<td>Amazon SNS</td>
+<td>Sends email alert/report.</td>
+</tr>
+<tr>
+<td>IAM Role</td>
+<td>Gives Lambda permission to call EC2 and SNS.</td>
+</tr>
+<tr>
+<td>EventBridge</td>
+<td>Runs Lambda on schedule, like daily or hourly.</td>
+</tr>
+<tr>
+<td>CloudWatch Logs</td>
+<td>Stores Lambda execution logs.</td>
+</tr>
+</tbody></table>
+<h3>Why Use Lambda for This Project?</h3>
+<table>
+<thead>
+<tr>
+<th>Reason</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Serverless</td>
+<td>No need to create and manage EC2 server.</td>
+</tr>
+<tr>
+<td>Trigger based</td>
+<td>Can run automatically using EventBridge schedule.</td>
+</tr>
+<tr>
+<td>Cost optimization</td>
+<td>Runs only during scan time, not 24/7.</td>
+</tr>
+<tr>
+<td>Easy integration</td>
+<td>Can call AWS APIs and send SNS notification.</td>
+</tr>
+<tr>
+<td>Good for automation</td>
+<td>Best for security checks, cleanup jobs, reports, and alerts.</td>
+</tr>
+</tbody></table>
+<h3>Logic of the Lambda Function</h3>
+<p>Steps:</p>
+<ul>
+<li>Get list of enabled AWS Regions.</li>
+<li>For each Region, call <code>describe-security-groups</code>.</li>
+<li>Check inbound rules.</li>
+<li>Find rules where protocol is TCP and port <code>80</code> is allowed.</li>
+<li>Check if source is <code>0.0.0.0/0</code> or <code>::/0</code>.</li>
+<li>Count matching Security Groups.</li>
+<li>Prepare report with Region, Security Group ID, name, VPC ID, and rule.</li>
+<li>Publish report to SNS topic.</li>
+</ul>
+<p>Example output idea:</p>
+<pre><code class="language-text">Public port 80 Security Group report
+
+Region: ap-south-1
+Security Group: sg-123456
+Name: web-sg
+VPC: vpc-123456
+Issue: Port 80 open to 0.0.0.0/0
+
+Total public HTTP security groups: 1
+</code></pre>
+<blockquote>
+<p>Simple idea: <strong>Lambda checks Security Groups and SNS sends the alert.</strong></p>
+</blockquote>
+<hr>
+<h2>Amazon SNS - Simple Notification Service</h2>
+<p>Amazon SNS is a managed messaging and notification service.</p>
+<p>SNS uses <strong>topics</strong> and <strong>subscriptions</strong>.</p>
+<p><img src="image-56.png" alt="alt text"></p>
+<h3>SNS Topic</h3>
+<p>An SNS topic is like a message channel.</p>
+<p>Publisher sends message to the topic, and SNS delivers the message to all subscribers.</p>
+<pre><code class="language-text">Publisher -&gt; SNS Topic -&gt; Subscribers
+</code></pre>
+<h3>SNS Subscription</h3>
+<p>A subscription connects an endpoint to an SNS topic.</p>
+<p>The endpoint can be:</p>
+<ul>
+<li>Email address.</li>
+<li>AWS Lambda function.</li>
+<li>SQS queue.</li>
+<li>HTTP/HTTPS endpoint.</li>
+<li>SMS phone number.</li>
+</ul>
+<h3>SNS Email Notification Flow</h3>
+<pre><code class="language-text">Create SNS topic
+        |
+Add email subscription
+        |
+Confirm email subscription from inbox
+        |
+Publish message to topic
+        |
+SNS sends email
+</code></pre>
+<p>Important: For email subscriptions, the email owner must confirm the subscription before messages are delivered.</p>
+<h3>SNS Topic vs Subscription</h3>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Topic</td>
+<td>Message channel where messages are published.</td>
+</tr>
+<tr>
+<td>Subscription</td>
+<td>Connection between topic and receiver.</td>
+</tr>
+<tr>
+<td>Publisher</td>
+<td>Service/user that sends message to topic.</td>
+</tr>
+<tr>
+<td>Subscriber</td>
+<td>Receiver of message, like email, Lambda, or SQS.</td>
+</tr>
+<tr>
+<td>Endpoint</td>
+<td>Actual target address, like email ID or Lambda ARN.</td>
+</tr>
+</tbody></table>
+<h3>SNS in Security Group Project</h3>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>Lambda completes Security Group scan.</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Lambda creates summary report.</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Lambda publishes message to SNS topic.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>SNS sends email to subscribed email address.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>SNS sends notification to many receivers from one topic.</strong></p>
+</blockquote>
+<hr>
+<h2>IAM for Lambda Security Project</h2>
+<p>IAM controls who can access AWS services and what actions are allowed.</p>
+<p>For this project:</p>
+<ul>
+<li>Create an IAM policy.</li>
+<li>Create an IAM role for Lambda.</li>
+<li>Attach the policy to the role.</li>
+<li>Lambda uses the role to access EC2, SNS, and CloudWatch Logs.</li>
+</ul>
+<h3>IAM Policy vs Role</h3>
+<table>
+<thead>
+<tr>
+<th>IAM item</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Policy</td>
+<td>JSON permissions document. It says what actions are allowed or denied.</td>
+</tr>
+<tr>
+<td>Role</td>
+<td>Identity assumed by AWS services like Lambda.</td>
+</tr>
+<tr>
+<td>User</td>
+<td>Human or application identity with credentials.</td>
+</tr>
+<tr>
+<td>Access key</td>
+<td>Programmatic credential for IAM user.</td>
+</tr>
+</tbody></table>
+<h3>IAM Flow for Lambda</h3>
+<pre><code class="language-text">Create policy -&gt; Create role -&gt; Attach policy to role -&gt; Assign role to Lambda
+</code></pre>
+<h3>Permissions Needed</h3>
+<table>
+<thead>
+<tr>
+<th>Permission</th>
+<th>Why needed</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ec2:DescribeRegions</code></td>
+<td>To list AWS Regions.</td>
+</tr>
+<tr>
+<td><code>ec2:DescribeSecurityGroups</code></td>
+<td>To inspect Security Group inbound rules.</td>
+</tr>
+<tr>
+<td><code>sns:Publish</code></td>
+<td>To send report to SNS topic.</td>
+</tr>
+<tr>
+<td><code>logs:CreateLogGroup</code></td>
+<td>To create CloudWatch log group.</td>
+</tr>
+<tr>
+<td><code>logs:CreateLogStream</code></td>
+<td>To create Lambda log stream.</td>
+</tr>
+<tr>
+<td><code>logs:PutLogEvents</code></td>
+<td>To write Lambda logs.</td>
+</tr>
+</tbody></table>
+<h3>IAM User, Access Key, and AdministratorAccess</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Detail</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>IAM user</td>
+<td>Used for a human or application identity.</td>
+</tr>
+<tr>
+<td>Access key</td>
+<td>Used by AWS CLI or SDK for programmatic access.</td>
+</tr>
+<tr>
+<td>IAM user policy</td>
+<td>Permissions attached directly to a user.</td>
+</tr>
+<tr>
+<td><code>AdministratorAccess</code></td>
+<td>AWS managed policy with full access to AWS services and resources.</td>
+</tr>
+</tbody></table>
+<p>Important:</p>
+<ul>
+<li>Avoid using root account access keys.</li>
+<li>Use least privilege instead of full <code>AdministratorAccess</code> for production.</li>
+<li>Store access keys safely.</li>
+<li>Rotate access keys regularly.</li>
+<li>Prefer IAM roles for AWS services like Lambda.</li>
+</ul>
+<blockquote>
+<p>Simple idea: <strong>IAM policy defines permission. IAM role gives those permissions to Lambda.</strong></p>
+</blockquote>
+<hr>
+<h2>AWS CLI</h2>
+<p>AWS CLI is a command line tool used to manage AWS services from terminal.</p>
+<h3>AWS CLI Setup Idea</h3>
+<pre><code class="language-bash">aws configure
+</code></pre>
+<p>It asks for:</p>
+<ul>
+<li>Access key ID.</li>
+<li>Secret access key.</li>
+<li>Default Region.</li>
+<li>Output format.</li>
+</ul>
+<p>Access keys usually come from an IAM user.</p>
+<h3>Useful AWS CLI Commands</h3>
+<p>Check which IAM user/role is being used:</p>
+<pre><code class="language-bash">aws sts get-caller-identity
+</code></pre>
+<p>List EC2 instances:</p>
+<pre><code class="language-bash">aws ec2 describe-instances
+</code></pre>
+<p>List Security Groups:</p>
+<pre><code class="language-bash">aws ec2 describe-security-groups
+</code></pre>
+<p>Find Security Groups with public port <code>80</code> in one Region:</p>
+<pre><code class="language-bash">aws ec2 describe-security-groups \
+  --region ap-south-1 \
+  --filters Name=ip-permission.from-port,Values=80 Name=ip-permission.to-port,Values=80 Name=ip-permission.cidr,Values=0.0.0.0/0
+</code></pre>
+<p>List all AWS Regions:</p>
+<pre><code class="language-bash">aws ec2 describe-regions --query &quot;Regions[].RegionName&quot; --output text
+</code></pre>
+<h3>AWS CLI Documentation Links</h3>
+<table>
+<thead>
+<tr>
+<th>Command / topic</th>
+<th>Official docs</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>aws sts get-caller-identity</code></td>
+<td><a href="https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html">https://docs.aws.amazon.com/cli/latest/reference/sts/get-caller-identity.html</a></td>
+</tr>
+<tr>
+<td><code>aws ec2 describe-instances</code></td>
+<td><a href="https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html">https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-instances.html</a></td>
+</tr>
+<tr>
+<td><code>aws ec2 describe-security-groups</code></td>
+<td><a href="https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-groups.html">https://docs.aws.amazon.com/cli/latest/reference/ec2/describe-security-groups.html</a></td>
+</tr>
+<tr>
+<td>AWS CLI config files</td>
+<td><a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html">https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html</a></td>
+</tr>
+<tr>
+<td>SNS create topic</td>
+<td><a href="https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html">https://docs.aws.amazon.com/sns/latest/dg/sns-create-topic.html</a></td>
+</tr>
+<tr>
+<td>SNS create subscription</td>
+<td><a href="https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html">https://docs.aws.amazon.com/sns/latest/dg/sns-create-subscribe-endpoint-to-topic.html</a></td>
+</tr>
+<tr>
+<td>Lambda with SNS</td>
+<td><a href="https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html">https://docs.aws.amazon.com/lambda/latest/dg/with-sns.html</a></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>Simple idea: <strong>AWS CLI lets us test AWS identity, list resources, and debug Lambda permissions from terminal.</strong></p>
+</blockquote>
+
+    </div>
+</body>
+</html>

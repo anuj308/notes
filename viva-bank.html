@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viva Question Bank</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00;--cyan:#0891b2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.filter{padding:8px 24px;display:flex;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--bg3)}
+.filter button{padding:4px 12px;border-radius:20px;border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.filter button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.main{max-width:800px;margin:0 auto;padding:24px}
+.qa{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);margin:8px 0;overflow:hidden}
+.qa summary{padding:12px 16px;cursor:pointer;font-weight:600;font-size:.9rem;display:flex;align-items:center;gap:8px;transition:background .2s}
+.qa summary:hover{background:var(--bg3)}
+.qa summary::marker{color:var(--accent)}
+.qa .answer{padding:0 16px 14px;color:var(--text2);font-size:.85rem;border-top:1px solid var(--bg4);margin-top:0;padding-top:10px}
+.qa .answer strong{color:var(--green)}
+.tag{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.6rem;font-weight:600;margin-left:6px}
+.tag-blue{background:rgba(88,166,255,.15);color:var(--accent)}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green)}
+.tag-orange{background:rgba(240,136,62,.15);color:var(--orange)}
+.tag-purple{background:rgba(188,140,255,.15);color:var(--purple)}
+.tag-cyan{background:rgba(57,210,192,.15);color:var(--cyan)}
+.tag-red{background:rgba(248,81,73,.15);color:var(--red)}
+.hidden{display:none!important}
+@media print{.topbar,.filter{display:none!important}body{background:#fff;color:#000}.qa[open] .answer{color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>💬 Viva Question Bank</h1>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="filter" id="filterBar">
+  <button class="active" data-cat="all" onclick="filterCat('all',this)">All</button>
+  <button data-cat="devops" onclick="filterCat('devops',this)">DevOps</button>
+  <button data-cat="aws" onclick="filterCat('aws',this)">AWS</button>
+  <button data-cat="docker" onclick="filterCat('docker',this)">Docker</button>
+  <button data-cat="git" onclick="filterCat('git',this)">Git</button>
+  <button data-cat="laravel" onclick="filterCat('laravel',this)">Laravel</button>
+  <button data-cat="testing" onclick="filterCat('testing',this)">Testing</button>
+  <button data-cat="linux" onclick="filterCat('linux',this)">Linux</button>
+  <button data-cat="sql" onclick="filterCat('sql',this)">SQL/PLSQL</button>
+</div>
+<main class="main" id="qaContainer"></main>
+
+<script>
+const qas = [
+  {cat:"devops",q:"What is DevOps?",a:"DevOps is a set of practices combining software development (Dev) and IT operations (Ops). It emphasizes automation, monitoring, and collaboration to shorten the development lifecycle and deliver software continuously."},
+  {cat:"devops",q:"What is the difference between CI and CD?",a:"<strong>CI (Continuous Integration)</strong> = auto build and test on every commit. <strong>CD (Continuous Delivery)</strong> = auto package, manual deploy. <strong>CD (Continuous Deployment)</strong> = fully auto deploy to production."},
+  {cat:"devops",q:"What are the 7 phases of DevOps lifecycle?",a:"Plan → Code → Build → Test → Release → Deploy → Monitor. Each phase feeds into the next with continuous feedback loops."},
+  {cat:"devops",q:"What is Infrastructure as Code (IaC)?",a:"IaC is managing infrastructure through machine-readable configuration files rather than manual processes. Tools: Terraform, Ansible, CloudFormation. Benefits: version control, repeatability, automation."},
+  {cat:"devops",q:"What is the difference between Waterfall and DevOps?",a:"Waterfall is sequential (Plan→Design→Build→Test→Deploy). DevOps is iterative with continuous feedback, automated testing, and frequent deployments. DevOps reduces release time from months to hours."},
+  {cat:"devops",q:"What is a DevOps pipeline?",a:"An automated workflow that takes code from development to production: Source → Build → Test → Staging → Deploy. Tools: Jenkins, GitHub Actions, GitLab CI."},
+  {cat:"devops",q:"What is SRE and how does it relate to DevOps?",a:"SRE (Site Reliability Engineering) is Google's approach to operations. It's a specific implementation of DevOps focused on reliability using SLIs, SLOs, and error budgets."},
+  {cat:"aws",q:"What is EC2?",a:"EC2 (Elastic Compute Cloud) provides virtual servers (instances) in the AWS cloud. Pricing: On-Demand, Reserved (72% savings), Spot (90% off), Savings Plans."},
+  {cat:"aws",q:"What is the difference between S3 and EBS?",a:"<strong>S3</strong> = object storage (files, images) accessible via HTTP. <strong>EBS</strong> = block storage (like a hard drive) attached to EC2 for databases and file systems."},
+  {cat:"aws",q:"What is IAM and its best practices?",a:"IAM (Identity and Access Management) controls AWS access. Best practices: least privilege, enable MFA, avoid root account, use roles not access keys, rotate credentials."},
+  {cat:"aws",q:"What is VPC?",a:"VPC (Virtual Private Cloud) is a logically isolated section of AWS cloud. You control IP ranges, subnets, route tables, and gateways. Public subnets have internet access; private don't."},
+  {cat:"aws",q:"What is the difference between Security Groups and NACLs?",a:"<strong>Security Groups:</strong> Stateful, instance level, allow only rules. <strong>NACLs:</strong> Stateless, subnet level, allow and deny rules."},
+  {cat:"aws",q:"When would you use Lambda vs EC2?",a:"<strong>Lambda:</strong> Event-driven, short tasks, no server management, pay per invocation. <strong>EC2:</strong> Long-running apps, full server control, persistent workloads."},
+  {cat:"docker",q:"What is Docker and why is it used?",a:"Docker packages applications with dependencies into lightweight containers. Eliminates 'works on my machine' problem. Containers share host OS kernel (unlike VMs), making them fast and portable."},
+  {cat:"docker",q:"What is the difference between a Docker image and container?",a:"<strong>Image:</strong> Read-only template with code, runtime, dependencies. <strong>Container:</strong> Running instance of an image with a thin writable layer."},
+  {cat:"docker",q:"What is Docker Compose?",a:"Tool for defining and running multi-container applications using a YAML file. Defines services, volumes, networks. Commands: docker compose up -d, docker compose down."},
+  {cat:"docker",q:"CMD vs ENTRYPOINT?",a:"<strong>CMD:</strong> Default command, easily overridden. <strong>ENTRYPOINT:</strong> Defines the main executable. Use ENTRYPOINT + CMD together for configurable defaults."},
+  {cat:"docker",q:"Why use Docker volumes?",a:"Volumes persist data beyond container lifecycle. Data in the container's writable layer is lost when the container is removed. Volumes are Docker-managed and portable."},
+  {cat:"docker",q:"What is port mapping?",a:"Mapping container port to host port using -p host:container. Example: -p 8080:80 maps host port 8080 to container port 80. Access via localhost:8080."},
+  {cat:"git",q:"What is Git?",a:"Git is a distributed version control system created by Linus Torvalds. Every clone has full repository history. Commands: init, add, commit, push, pull, branch, merge."},
+  {cat:"git",q:"What is the difference between git pull and git fetch?",a:"<strong>git fetch:</strong> Downloads remote changes without merging. <strong>git pull:</strong> Fetches AND merges remote changes into your current branch."},
+  {cat:"git",q:"What is a merge conflict?",a:"When Git cannot automatically combine changes from two branches (same lines modified). Resolution: open files, choose changes, remove conflict markers, git add and commit."},
+  {cat:"git",q:"What is git stash?",a:"Temporarily saves uncommitted changes and reverts working directory. Use when you need to switch branches but aren't ready to commit. Restore with git stash pop."},
+  {cat:"git",q:"What is the difference between git reset and git revert?",a:"<strong>git reset:</strong> Moves HEAD to previous commit (rewrites history, dangerous for shared branches). <strong>git revert:</strong> Creates new commit that undoes changes (safe for shared branches)."},
+  {cat:"laravel",q:"What is Laravel?",a:"Laravel is a PHP-based web framework for building web applications using MVC pattern. Developed by Taylor Otwell. Features: Blade templates, Eloquent ORM, Artisan CLI, built-in auth."},
+  {cat:"laravel",q:"What is MVC?",a:"<strong>Model:</strong> Data and business logic (database). <strong>View:</strong> UI rendering (Blade templates). <strong>Controller:</strong> Handles requests, coordinates Model and View."},
+  {cat:"laravel",q:"What is Eloquent ORM?",a:"Laravel's Object-Relational Mapping system. Work with database records as PHP objects. Supports relationships, scopes, accessors, mutators. Reduces SQL injection."},
+  {cat:"laravel",q:"What is Blade templating?",a:"Laravel's powerful templating engine. Files use .blade.php extension. Features: @extends, @section, @yield for template inheritance. @if, @foreach, @forelse for control structures."},
+  {cat:"laravel",q:"What is CSRF protection?",a:"Cross-Site Request Forgery protection. Laravel generates a token for each session. Include @csrf in forms. Prevents unauthorized form submissions from other sites."},
+  {cat:"testing",q:"What is the difference between static and dynamic testing?",a:"<strong>Static:</strong> Done without running program (code review, walkthrough). <strong>Dynamic:</strong> Done by running program (unit, integration, system testing)."},
+  {cat:"testing",q:"What is verification vs validation?",a:"<strong>Verification:</strong> 'Are we building the product right?' (checks documents/SRS). <strong>Validation:</strong> 'Are we building the right product?' (checks actual software against user needs)."},
+  {cat:"testing",q:"What is Alpha vs Beta testing?",a:"<strong>Alpha:</strong> Internal team testing in controlled environment before release. <strong>Beta:</strong> Real users testing in real environment before final release to get feedback."},
+  {cat:"testing",q:"What are the test levels?",a:"1) Unit testing (individual functions), 2) Integration testing (modules working together), 3) System testing (complete application), 4) Acceptance testing (user requirements)."},
+  {cat:"linux",q:"What does chmod 755 mean?",a:"755 = Owner: rwx (read+write+execute), Group: r-x (read+execute), Others: r-x (read+execute). Common for directories and scripts."},
+  {cat:"linux",q:"What is the difference between hard link and soft link?",a:"<strong>Hard link:</strong> Points directly to inode (survives file deletion). <strong>Soft link:</strong> Points to file path (breaks if original deleted)."},
+  {cat:"linux",q:"What is a zombie process?",a:"A process that has completed execution but still has an entry in the process table. Occurs when child terminates but parent hasn't read exit status."},
+  {cat:"sql",q:"What is a PRIMARY KEY?",a:"A column (or set of columns) that uniquely identifies each row. Must be UNIQUE and NOT NULL. Only one primary key per table."},
+  {cat:"sql",q:"What is the difference between WHERE and HAVING?",a:"<strong>WHERE:</strong> Filters rows BEFORE grouping. <strong>HAVING:</strong> Filters groups AFTER grouping (used with GROUP BY)."},
+  {cat:"sql",q:"What is a cursor in PL/SQL?",a:"A cursor is a pointer to a result set returned by a SQL query. Implicit cursors are automatic. Explicit cursors are declared for multi-row queries."},
+  {cat:"sql",q:"What is a package in PL/SQL?",a:"A package groups related procedures, functions, variables, and cursors. Has a specification (public interface) and body (implementation). Improves code organization and performance."},
+  {cat:"sql",q:"What is a trigger?",a:"A PL/SQL block that automatically executes when a DML event (INSERT, UPDATE, DELETE) occurs on a table. Used for auditing, validation, and maintaining data integrity."},
+];
+
+let currentCat='all';
+const container=document.getElementById('qaContainer');
+
+function render(filter='all'){
+  const filtered=filter==='all'?qas:qas.filter(q=>q.cat===filter);
+  container.innerHTML=filtered.map((q,i)=>`
+    <details class="qa" data-cat="${q.cat}">
+      <summary>${q.q} <span class="tag tag-${q.cat==='devops'?'blue':q.cat==='aws'?'orange':q.cat==='docker'?'cyan':q.cat==='git'?'purple':q.cat==='laravel'?'red':q.cat==='testing'?'green':q.cat==='linux'?'red':'green'}">${q.cat.toUpperCase()}</span></summary>
+      <div class="answer">${q.a}</div>
+    </details>
+  `).join('');
+}
+function filterCat(cat,btn){currentCat=cat;document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');render(cat)}
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+render();
+</script>
+</body>
+</html>

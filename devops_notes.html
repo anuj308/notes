@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cloud Computing & DevOps Notes</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.7}
+.sidebar{position:fixed;top:0;left:0;width:260px;height:100vh;background:var(--bg2);border-right:1px solid var(--bg4);overflow-y:auto;z-index:100;padding:1rem 0}
+.sidebar::-webkit-scrollbar{width:5px}.sidebar::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+.sidebar-header{padding:0 1rem .8rem;border-bottom:1px solid var(--bg4);margin-bottom:.5rem}
+.sidebar-header h2{color:var(--accent);font-size:1rem}.sidebar-header small{color:var(--text2);font-size:.7rem}
+.nav-section{padding:.3rem 1rem;font-size:.65rem;text-transform:uppercase;color:var(--text2);letter-spacing:.5px;font-weight:600}
+.nav-link{display:block;padding:.3rem 1rem .3rem 1.5rem;color:var(--text2);text-decoration:none;font-size:.8rem;transition:all .15s;border-left:2px solid transparent}
+.nav-link:hover{background:rgba(88,166,255,.08);color:var(--accent);border-left-color:var(--accent)}
+.main{margin-left:260px;padding:2rem 3rem 4rem;max-width:900px}
+h1{font-size:2rem;font-weight:700;margin:1.5rem 0 1rem;padding-bottom:.5rem;border-bottom:2px solid var(--bg4)}
+h2{font-size:1.4rem;font-weight:700;margin:1.5rem 0 .8rem;color:var(--accent)}
+h3{font-size:1.1rem;font-weight:600;margin:1rem 0 .5rem;color:var(--green)}
+p{margin:.5rem 0;color:var(--text2)}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:1.2rem;margin:1rem 0;transition:border-color .2s}
+.card:hover{border-color:rgba(88,166,255,.3)}
+code{background:rgba(88,166,255,.1);color:var(--accent);padding:.1em .4em;border-radius:4px;font-size:.85em}
+pre{background:var(--bg);border:1px solid var(--bg4);border-radius:var(--radius);padding:1rem;overflow-x:auto;font-size:.85rem;line-height:1.5;white-space:pre-wrap;margin:.8rem 0}
+table{width:100%;border-collapse:collapse;margin:.8rem 0;font-size:.85rem}
+th,td{padding:.5rem .7rem;text-align:left;border:1px solid var(--bg4)}
+th{background:rgba(88,166,255,.08);color:var(--accent);font-weight:600}
+tr:nth-child(even){background:var(--bg3)}
+blockquote{border-left:4px solid var(--accent);padding:.8rem 1rem;margin:1rem 0;background:rgba(88,166,255,.05);border-radius:0 var(--radius) var(--radius) 0}
+ul,ol{padding-left:1.5rem;margin:.5rem 0}
+li{margin:.3rem 0;color:var(--text2)}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:8px 30px;display:flex;align-items:center;justify-content:space-between;z-index:50;backdrop-filter:blur(10px)}
+.topbar input{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.8rem;width:250px;outline:none}
+.topbar input:focus{border-color:var(--accent)}
+.btn{padding:5px 10px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.breadcrumb{padding:6px 30px;font-size:.75rem;color:var(--text2);border-bottom:1px solid var(--bg3)}
+.breadcrumb a{color:var(--accent);text-decoration:none}
+@media(max-width:768px){.sidebar{display:none}.main{margin-left:0;padding:1rem}}
+@media print{.sidebar,.topbar,.breadcrumb{display:none!important}.main{margin-left:0;padding:0}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<nav class="sidebar">
+<div class="sidebar-header"><h2>☁️ DevOps Notes</h2><small>Converted from notes.md</small></div>
+<div class="nav-section">Core Topics</div>
+<a href="#devops" class="nav-link">What is DevOps?</a>
+<a href="#devops-vs-old" class="nav-link">DevOps vs Traditional</a>
+<a href="#cloud" class="nav-link">Cloud Computing</a>
+<a href="#cloud-devops" class="nav-link">Cloud + DevOps</a>
+<a href="#devops-jobs" class="nav-link">DevOps Engineer Work</a>
+<a href="#sdlc" class="nav-link">SDLC Concepts</a>
+<a href="#cicd" class="nav-link">CI/CD/Deployment</a>
+<div class="nav-section">AWS Services</div>
+<a href="#ec2" class="nav-link">EC2 Basics</a>
+<a href="#ebs" class="nav-link">EBS Volumes</a>
+<a href="#s3" class="nav-link">S3 Storage</a>
+<a href="#rds" class="nav-link">RDS Database</a>
+<a href="#iam" class="nav-link">IAM Security</a>
+<a href="#vpc" class="nav-link">VPC Networking</a>
+<a href="#lambda" class="nav-link">Lambda Serverless</a>
+<a href="#sns" class="nav-link">SNS Notifications</a>
+<div class="nav-section">Linux</div>
+<a href="#linux-commands" class="nav-link">Linux Commands</a>
+<a href="#permissions" class="nav-link">Permissions</a>
+<a href="#ssh" class="nav-link">SSH Basics</a>
+<a href="#user-mgmt" class="nav-link">User Management</a>
+</nav>
+<header class="topbar">
+<div><input type="text" id="searchInput" placeholder="Search notes..." oninput="searchNotes(this.value)"></div>
+<div><button class="btn" onclick="toggleTheme()">🌙 Theme</button> <a class="btn" href="study-hub.html">🏠 Hub</a></div>
+</header>
+<div class="breadcrumb"><a href="study-hub.html">Home</a> / <span>DevOps & Cloud Computing Notes</span></div>
+<main class="main">
+
+<h1 id="top">Cloud Computing & DevOps – Revision Notes</h1>
+
+<div class="card" id="devops">
+<h2>What is DevOps?</h2>
+<p>DevOps is a set of practices that combines <strong>software development (Dev)</strong> and <strong>IT operations (Ops)</strong>. Its goal is to shorten the development life cycle and provide continuous delivery of high-quality software.</p>
+<h3>Key Pillars of DevOps</h3>
+<ol>
+<li><strong>Continuous Deployment</strong> – Automatically deploy every code change that passes automated tests to production.</li>
+<li><strong>Automation</strong> – Automate repetitive tasks (building, testing, deploying, infrastructure provisioning).</li>
+<li><strong>Code Quality</strong> – Enforce standards, static analysis, peer reviews, and automated testing.</li>
+<li><strong>Monitoring & Observability</strong> – Track application performance, logs, metrics, and alerts.</li>
+</ol>
+<blockquote>💡 <strong>Why DevOps exists</strong> – Traditional silos between developers and operations led to slow releases, finger‑pointing, and manual errors.</blockquote>
+</div>
+
+<div class="card" id="devops-vs-old">
+<h2>DevOps vs Old (Traditional) System</h2>
+<h3>Old System (Waterfall / Siloed)</h3>
+<ul>
+<li>Dev writes code → throws it over the wall to Ops.</li>
+<li>Manual deployment, long release cycles (months).</li>
+<li>Error‑prone, hard to roll back.</li>
+</ul>
+<h3>New System (DevOps)</h3>
+<ul>
+<li>Shared responsibility, CI/CD.</li>
+<li>Infrastructure as Code (IaC).</li>
+<li>Automated testing, deployment, and monitoring.</li>
+<li>Faster feedback loops and higher stability.</li>
+</ul>
+</div>
+
+<div class="card" id="cloud">
+<h2>What is Cloud Computing?</h2>
+<p><strong>Cloud computing</strong> is the on‑demand delivery of IT resources over the internet with pay‑as‑you‑go pricing.</p>
+<table>
+<tr><th>Model</th><th>Description</th></tr>
+<tr><td><strong>Public cloud</strong></td><td>Services offered over the public internet by providers like AWS, Azure, GCP.</td></tr>
+<tr><td><strong>Private cloud</strong></td><td>Cloud environment dedicated solely to one organisation.</td></tr>
+<tr><td><strong>Hybrid cloud</strong></td><td>Combination of public + private clouds.</td></tr>
+<tr><td><strong>Multi‑cloud</strong></td><td>Using two or more public cloud providers simultaneously.</td></tr>
+</table>
+</div>
+
+<div class="card" id="cloud-devops">
+<h2>The Relationship Between DevOps and Cloud Computing</h2>
+<table>
+<tr><th>Aspect</th><th>How they work together</th></tr>
+<tr><td><strong>Automation</strong></td><td>Cloud APIs enable scripted provisioning (Terraform, CloudFormation).</td></tr>
+<tr><td><strong>Continuous Deployment</strong></td><td>Cloud provides managed CI/CD services.</td></tr>
+<tr><td><strong>Monitoring</strong></td><td>Cloud services feed logs/metrics into DevOps dashboards.</td></tr>
+<tr><td><strong>Scalability</strong></td><td>Cloud auto‑scaling groups ensure apps handle load.</td></tr>
+<tr><td><strong>IaC</strong></td><td>Cloud resources are defined in declarative files.</td></tr>
+</table>
+</div>
+
+<div class="card" id="devops-jobs">
+<h2>What does a DevOps Engineer work on?</h2>
+<table>
+<tr><th>Responsibility</th><th>What they actually do</th></tr>
+<tr><td><strong>CI/CD Pipelines</strong></td><td>Build & maintain pipelines (Jenkins, GitLab CI, GitHub Actions).</td></tr>
+<tr><td><strong>IaC</strong></td><td>Write Terraform, CloudFormation, or Pulumi scripts.</td></tr>
+<tr><td><strong>Configuration Management</strong></td><td>Use Ansible, Puppet, Chef to keep servers in a desired state.</td></tr>
+<tr><td><strong>Containerisation</strong></td><td>Create Dockerfiles, manage Kubernetes clusters.</td></tr>
+<tr><td><strong>Monitoring</strong></td><td>Set up Prometheus, Grafana, ELK stack, CloudWatch.</td></tr>
+<tr><td><strong>Security</strong></td><td>Implement secrets management, scan images, enforce IAM.</td></tr>
+</table>
+</div>
+
+<div class="card" id="sdlc">
+<h2>SDLC Concepts</h2>
+<p>The SDLC is a structured process used by development teams to design, build, test, deploy, and maintain software.</p>
+<table>
+<tr><th>Phase</th><th>DevOps involvement</th></tr>
+<tr><td><strong>Planning</strong></td><td>Participate in sizing, define infrastructure needs.</td></tr>
+<tr><td><strong>Design</strong></td><td>Help with HLD/LLD decisions.</td></tr>
+<tr><td><strong>Development</strong></td><td>Provide local dev environments (Docker Compose).</td></tr>
+<tr><td><strong>Testing</strong></td><td>Automate tests in CI pipelines.</td></tr>
+<tr><td><strong>Deployment</strong></td><td>Automate rollout (blue/green, canary).</td></tr>
+<tr><td><strong>Operation</strong></td><td>Set up observability stack.</td></tr>
+</table>
+</div>
+
+<div class="card" id="cicd">
+<h2>CI / CD / Continuous Deployment</h2>
+<table>
+<tr><th>Term</th><th>Meaning</th></tr>
+<tr><td><strong>CI</strong></td><td>Developers push code frequently. Each push triggers automated build and test.</td></tr>
+<tr><td><strong>CD (Delivery)</strong></td><td>Code is automatically built, tested, and packaged – ready for deployment.</td></tr>
+<tr><td><strong>Continuous Deployment</strong></td><td>Every change that passes all tests is automatically deployed to production.</td></tr>
+</table>
+<p><strong>Simple flow:</strong> Code change → CI build/test → package artifact → deploy to staging → approval → production deployment → monitoring.</p>
+</div>
+
+<div class="card" id="ec2">
+<h2>AWS EC2 Instance</h2>
+<p>EC2 means <strong>Elastic Compute Cloud</strong>. An EC2 instance is a virtual server in AWS.</p>
+<h3>SSH Login to EC2</h3>
+<pre>ssh -i key-name.pem ubuntu@public-ip
+# For Amazon Linux:
+ssh -i key-name.pem ec2-user@public-ip</pre>
+<h3>Install Apache on EC2</h3>
+<pre>sudo apt update
+sudo apt install apache2 -y
+sudo systemctl start apache2
+sudo systemctl enable apache2</pre>
+</div>
+
+<div class="card" id="ebs">
+<h2>AWS EBS - Elastic Block Store</h2>
+<p>EBS is block storage that works like a virtual hard disk attached to EC2.</p>
+<table>
+<tr><th>EBS type</th><th>Use</th></tr>
+<tr><td>General Purpose SSD</td><td>Normal applications, boot volume, websites.</td></tr>
+<tr><td>Provisioned IOPS SSD</td><td>High I/O applications like large databases.</td></tr>
+<tr><td>Throughput Optimized HDD</td><td>Big data, log processing.</td></tr>
+</table>
+</div>
+
+<div class="card" id="s3">
+<h2>S3 - Simple Storage Service</h2>
+<p>Amazon S3 is an <strong>object storage service</strong> used to store files, images, videos, backups, logs, and static website content.</p>
+<table>
+<tr><th>Feature</th><th>S3</th><th>EBS</th></tr>
+<tr><td>Storage type</td><td>Object storage</td><td>Block storage</td></tr>
+<tr><td>Scope</td><td>Region level</td><td>Availability Zone level</td></tr>
+<tr><td>Used for</td><td>Files, images, backups</td><td>EC2 root volume, database disk</td></tr>
+<tr><td>Scaling</td><td>Automatic</td><td>User manages</td></tr>
+</table>
+</div>
+
+<div class="card" id="rds">
+<h2>AWS RDS - Relational Database Service</h2>
+<p>RDS is a managed database service for relational databases (MySQL, PostgreSQL, Oracle, SQL Server, Aurora).</p>
+<h3>Key Features</h3>
+<ul>
+<li><strong>Managed service</strong> – AWS handles setup, patching, backups.</li>
+<li><strong>Multi-AZ</strong> – Standby database in another AZ for failover.</li>
+<li><strong>Read replicas</strong> – Extra copies for read traffic.</li>
+<li><strong>Automated backups</strong> – Point-in-time recovery.</li>
+</ul>
+</div>
+
+<div class="card" id="iam">
+<h2>AWS IAM</h2>
+<p>IAM means <strong>Identity and Access Management</strong>. It controls who can access AWS resources.</p>
+<table>
+<tr><th>Part</th><th>Meaning</th></tr>
+<tr><td>User</td><td>One person or application account.</td></tr>
+<tr><td>Group</td><td>Collection of users with same permissions.</td></tr>
+<tr><td>Role</td><td>Temporary permission given to AWS service.</td></tr>
+<tr><td>Policy</td><td>JSON document that defines allowed or denied actions.</td></tr>
+</table>
+</div>
+
+<div class="card" id="vpc">
+<h2>AWS VPC - Virtual Private Cloud</h2>
+<p>VPC is your private network inside AWS. You control IP address ranges, subnets, route tables, and network gateways.</p>
+<table>
+<tr><th>Feature</th><th>Security Group</th><th>NACL</th></tr>
+<tr><td>Level</td><td>Instance/network interface</td><td>Subnet</td></tr>
+<tr><td>State</td><td>Stateful</td><td>Stateless</td></tr>
+<tr><td>Rules</td><td>Allow only</td><td>Allow and deny</td></tr>
+</table>
+</div>
+
+<div class="card" id="lambda">
+<h2>AWS Lambda</h2>
+<p>AWS Lambda is a <strong>serverless compute service</strong>. It runs code without creating or managing servers.</p>
+<h3>Lambda Triggers</h3>
+<table>
+<tr><th>Trigger</th><th>Use</th></tr>
+<tr><td>API Gateway</td><td>Create REST API endpoints.</td></tr>
+<tr><td>S3</td><td>Run code when file uploaded.</td></tr>
+<tr><td>DynamoDB Streams</td><td>Run code when records change.</td></tr>
+<tr><td>SQS</td><td>Process messages from a queue.</td></tr>
+<tr><td>EventBridge</td><td>Run scheduled jobs (cron).</td></tr>
+</table>
+</div>
+
+<div class="card" id="sns">
+<h2>Amazon SNS - Simple Notification Service</h2>
+<p>SNS uses <strong>topics</strong> and <strong>subscriptions</strong> to deliver messages.</p>
+<p><strong>Publisher → SNS Topic → Subscribers</strong></p>
+<p>Subscribers can be: Email, Lambda, SQS, HTTP endpoint, SMS.</p>
+</div>
+
+<div class="card" id="linux-commands">
+<h2>Linux Commands</h2>
+<table>
+<tr><th>Command</th><th>Use</th></tr>
+<tr><td><code>ls -la</code></td><td>List all files with details</td></tr>
+<tr><td><code>ls -ltr</code></td><td>List sorted by oldest modified first</td></tr>
+<tr><td><code>grep -r "pattern" dir/</code></td><td>Search text patterns recursively</td></tr>
+<tr><td><code>find / -name "*.txt"</code></td><td>Find files by name pattern</td></tr>
+<tr><td><code>sudo apt update</code></td><td>Refresh package list</td></tr>
+<tr><td><code>sudo apt install pkg</code></td><td>Install a package</td></tr>
+<tr><td><code>chmod 755 file</code></td><td>Set permissions (rwxr-xr-x)</td></tr>
+<tr><td><code>rm -rf /dir</code></td><td>Force delete directory</td></tr>
+</table>
+</div>
+
+<div class="card" id="permissions">
+<h2>Linux Permissions</h2>
+<pre>drwxrwxrwx
+│├─┤├─┤├─┤
+│ Owner  Group  Others
+└ File type (- = file, d = directory)</pre>
+<table>
+<tr><th>Letter</th><th>File meaning</th><th>Directory meaning</th></tr>
+<tr><td><code>r</code></td><td>Read file content</td><td>List directory content</td></tr>
+<tr><td><code>w</code></td><td>Modify file content</td><td>Create/delete files inside</td></tr>
+<tr><td><code>x</code></td><td>Execute file</td><td>Enter directory using cd</td></tr>
+</table>
+</div>
+
+<div class="card" id="ssh">
+<h2>SSH Basics</h2>
+<pre>sudo apt install openssh-server -y
+sudo systemctl start ssh
+sudo systemctl enable ssh
+ssh username@server-ip</pre>
+</div>
+
+<div class="card" id="user-mgmt">
+<h2>User Management</h2>
+<pre># Create user with home directory
+sudo useradd -m -s /bin/bash username
+
+# Create user (Ubuntu friendly)
+sudo adduser username
+
+# Add user to group
+sudo usermod -aG devteam username
+
+# Check user groups
+groups username
+id username
+
+# Reset password
+sudo passwd username
+
+# Delete user
+sudo deluser --remove-home username</pre>
+</div>
+
+</main>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark');localStorage.setItem('devops-theme',d?'light':'dark')}
+(function(){const s=localStorage.getItem('devops-theme');if(s==='light')document.documentElement.setAttribute('data-theme','light')})();
+function searchNotes(q){q=q.toLowerCase();document.querySelectorAll('.card').forEach(c=>{const t=c.textContent.toLowerCase();c.style.display=t.includes(q)?'block':'none'})}
+</script>
+</body>
+</html>

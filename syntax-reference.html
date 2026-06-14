@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Syntax Reference - C++ & Java</title>
+<style>
+:root{--bg:#0d1117;--bg2:#161b22;--bg3:#21262d;--bg4:#30363d;--text:#e6edf3;--text2:#8b949e;--accent:#58a6ff;--green:#3fb950;--red:#f85149;--yellow:#d29922;--purple:#bc8cff;--orange:#f0883e;--cyan:#39d2c0;--radius:10px}
+[data-theme="light"]{--bg:#f0f2f5;--bg2:#ffffff;--bg3:#f6f8fa;--bg4:#d0d7de;--text:#1f2328;--text2:#656d76;--accent:#0969da;--green:#1a7f37;--red:#cf222e;--yellow:#9a6700;--purple:#8250df;--orange:#bc4c00;--cyan:#0891b2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.topbar{position:sticky;top:0;background:var(--bg2);border-bottom:1px solid var(--bg4);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50}
+.topbar h1{font-size:1.2rem;font-weight:700}
+.topbar-right{display:flex;gap:8px}
+.btn{padding:6px 12px;border-radius:var(--radius);border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--accent)}
+.filter{padding:8px 24px;display:flex;gap:8px;border-bottom:1px solid var(--bg3)}
+.filter button{padding:4px 12px;border-radius:20px;border:1px solid var(--bg4);background:var(--bg3);color:var(--text);font-size:.75rem;cursor:pointer}
+.filter button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.main{max-width:1000px;margin:0 auto;padding:24px}
+.section{margin-bottom:24px}
+.section h2{font-size:1.2rem;font-weight:700;margin-bottom:12px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(460px,1fr));gap:12px}
+.card{background:var(--bg2);border:1px solid var(--bg4);border-radius:var(--radius);padding:14px;transition:border-color .2s}
+.card:hover{border-color:var(--accent)}
+.card h3{font-size:.9rem;font-weight:700;margin-bottom:8px;color:var(--green)}
+pre{background:var(--bg);border:1px solid var(--bg4);border-radius:8px;padding:10px;font-size:.78rem;line-height:1.5;overflow-x:auto;white-space:pre-wrap;font-family:'SF Mono',Consolas,monospace}
+code{background:rgba(88,166,255,.1);color:var(--accent);padding:1px 4px;border-radius:3px;font-size:.82em}
+table{width:100%;border-collapse:collapse;margin:.5rem 0;font-size:.8rem}
+th,td{padding:4px 8px;text-align:left;border:1px solid var(--bg4)}
+th{background:rgba(88,166,255,.08);color:var(--accent);font-weight:600}
+.hidden{display:none!important}
+@media(max-width:768px){.grid{grid-template-columns:1fr}}
+@media print{.topbar,.filter{display:none!important}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <h1>💻 Syntax Reference — C++ & Java</h1>
+  <div class="topbar-right">
+    <button class="btn" onclick="toggleTheme()">🌙</button>
+    <a class="btn" href="study-hub.html">🏠 Hub</a>
+  </div>
+</header>
+<div class="filter">
+  <button class="active" onclick="filterLang('all',this)">All</button>
+  <button onclick="filterLang('cpp',this)">C++</button>
+  <button onclick="filterLang('java',this)">Java</button>
+  <button onclick="filterLang('dsa',this)">DSA</button>
+</div>
+<main class="main">
+
+<!-- C++ BASICS -->
+<div class="section" data-lang="cpp">
+<h2>⚙️ C++ Basics</h2>
+<div class="grid">
+<div class="card"><h3>I/O Streams</h3>
+<pre>#include &lt;iostream&gt;
+using namespace std;
+int main() {
+    int n;
+    cin >> n;          // input
+    cout << n << endl;  // output
+    return 0;
+}</pre></div>
+<div class="card"><h3>Variables & Types</h3>
+<pre>int a = 10;
+double d = 3.14;
+char c = 'A';
+string s = "hello";
+bool b = true;
+auto x = 10;  // type inference</pre></div>
+<div class="card"><h3>Functions</h3>
+<pre>// Default parameters
+void greet(string name = "Guest") {
+    cout << "Hello " << name;
+}
+
+// Inline function
+inline int square(int x) { return x*x; }
+
+// Function overloading
+int add(int a, int b) { return a+b; }
+double add(double a, double b) { return a+b; }</pre></div>
+<div class="card"><h3>Pass by Reference</h3>
+<pre>// Call by value
+void func(int x) { x = 10; }
+
+// Call by reference
+void func(int &x) { x = 10; }
+
+// Call by address
+void func(int *x) { *x = 10; }</pre></div>
+</div>
+</div>
+
+<!-- C++ OOP -->
+<div class="section" data-lang="cpp">
+<h2>⚙️ C++ OOP</h2>
+<div class="grid">
+<div class="card"><h3>Class & Object</h3>
+<pre>class Student {
+private:
+    string name;
+    int age;
+public:
+    // Constructor
+    Student(string n, int a) {
+        this->name = n;
+        this->age = a;
+    }
+    // Destructor
+    ~Student() { cout << "Destroyed"; }
+    void display() {
+        cout << name << " " << age;
+    }
+};</pre></div>
+<div class="card"><h3>Inheritance Types</h3>
+<pre>// Single: Parent → Child
+class Child : public Parent {};
+
+// Multi-level: P1 → P2 → Child
+class Child : public P2 {};
+
+// Multiple: P1, P2 → Child
+class Child : public P1, public P2 {};
+
+// Hierarchical: Parent → C1, C2
+class C1 : public Parent {};
+class C2 : public Parent {};
+
+// Hybrid: Combination of above</pre></div>
+<div class="card"><h3>Polymorphism</h3>
+<pre>// Compile-time (Overloading)
+int add(int a, int b);
+double add(double a, double b);
+
+// Runtime (Overriding)
+class Parent {
+    virtual void show() { }
+};
+class Child : public Parent {
+    void show() override { }
+};
+Parent *ptr = new Child();
+ptr->show();  // calls Child's show</pre></div>
+<div class="card"><h3>Abstract Class</h3>
+<pre>class Shape {
+public:
+    virtual void area() = 0; // Pure virtual
+};
+class Circle : public Shape {
+    int r;
+public:
+    Circle(int r) : r(r) {}
+    void area() override {
+        cout << 3.14 * r * r;
+    }
+};</pre></div>
+</div>
+</div>
+
+<!-- C++ DSA -->
+<div class="section" data-lang="dsa">
+<h2>📊 Data Structures & Algorithms</h2>
+<div class="grid">
+<div class="card"><h3>Sorting Algorithms</h3>
+<pre>// Bubble Sort - O(n²)
+for(int i=0; i<n-1; i++)
+  for(int j=0; j<n-i-1; j++)
+    if(arr[j]>arr[j+1]) swap(arr[j],arr[j+1]);
+
+// Selection Sort - O(n²)
+for(int i=0; i<n; i++) {
+  int min = i;
+  for(int j=i; j<n; j++)
+    if(arr[min]>arr[j]) min = j;
+  swap(arr[i], arr[min]);
+}
+
+// Insertion Sort - O(n²)
+for(int i=1; i<n; i++) {
+  int key = arr[i], j = i-1;
+  while(j>=0 && arr[j]>key) {
+    arr[j+1] = arr[j]; j--;
+  }
+  arr[j+1] = key;
+}</pre></div>
+<div class="card"><h3>Binary Search - O(log n)</h3>
+<pre>int low=0, high=n-1;
+while(low <= high) {
+    int mid = (low+high)/2;
+    if(arr[mid] == target) { found; }
+    else if(arr[mid] < target) low = mid+1;
+    else high = mid-1;
+}</pre></div>
+<div class="card"><h3>Linked List</h3>
+<pre>class Node {
+public:
+    int data;
+    Node *next;
+    Node(int val) : data(val), next(NULL) {}
+};
+
+// Insert at head
+void insertHead(Node *&head, int val) {
+    Node *temp = new Node(val);
+    temp->next = head;
+    head = temp;
+}
+
+// Insert at tail
+void insertTail(Node *&tail, int val) {
+    Node *temp = new Node(val);
+    tail->next = temp;
+    tail = temp;
+}</pre></div>
+<div class="card"><h3>BST Traversal</h3>
+<pre>class Node {
+public:
+    int data;
+    Node *left, *right;
+    Node(int val) : data(val), left(NULL), right(NULL) {}
+};
+
+// Pre-order: Root → Left → Right
+void pre(Node *root) {
+    if(!root) return;
+    cout << root->data;
+    pre(root->left); pre(root->right);
+}
+
+// In-order: Left → Root → Right
+void in(Node *root) {
+    if(!root) return;
+    in(root->left);
+    cout << root->data;
+    in(root->right);
+}
+
+// Post-order: Left → Right → Root
+void post(Node *root) {
+    if(!root) return;
+    post(root->left); post(root->right);
+    cout << root->data;
+}</pre></div>
+<div class="card"><h3>STL Containers</h3>
+<pre>// Vector - Dynamic array
+vector&lt;int&gt; v = {1,2,3};
+v.push_back(4);
+v.size();
+
+// Stack - LIFO
+stack&lt;int&gt; s;
+s.push(1); s.top(); s.pop();
+
+// Queue - FIFO
+queue&lt;int&gt; q;
+q.push(1); q.front(); q.pop();
+
+// Map - Sorted key-value
+map&lt;int,int&gt; m;
+m[key] = value;
+m.find(key) != m.end();
+
+// Set - Sorted unique
+set&lt;int&gt; s;
+s.insert(1);
+s.find(1) != s.end();</pre></div>
+<div class="card"><h3>Graph BFS</h3>
+<pre>vector&lt;int&gt; adj[n]; // adjacency list
+bool vis[n] = {false};
+
+void bfs(int start) {
+    queue&lt;int&gt; q;
+    q.push(start);
+    vis[start] = true;
+    while(!q.empty()) {
+        int node = q.front();
+        q.pop();
+        cout << node << " ";
+        for(int v : adj[node]) {
+            if(!vis[v]) {
+                vis[v] = true;
+                q.push(v);
+            }
+        }
+    }
+}</pre></div>
+</div>
+</div>
+
+<!-- JAVA -->
+<div class="section" data-lang="java">
+<h2>☕ Java Basics</h2>
+<div class="grid">
+<div class="card"><h3>Class & Object</h3>
+<pre>class Student {
+    String name;
+    int age;
+
+    // Constructor
+    Student(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+
+    void display() {
+        System.out.println(name + " " + age);
+    }
+}
+
+// Main
+Student s = new Student("Ram", 20);
+s.display();</pre></div>
+<div class="card"><h3>Inheritance</h3>
+<pre>class Parent {
+    String name = "Parent";
+    void show() {
+        System.out.println(name);
+    }
+}
+
+class Child extends Parent {
+    int age = 10;
+    void display() {
+        System.out.println(name + " " + age);
+    }
+}
+
+Child c = new Child();
+c.show();    // inherited method
+c.display();</pre></div>
+<div class="card"><h3>Method Overloading</h3>
+<pre>class Calculator {
+    int add(int a, int b) {
+        return a + b;
+    }
+    double add(double a, double b) {
+        return a + b;
+    }
+    int add(int a, int b, int c) {
+        return a + b + c;
+    }
+}</pre></div>
+<div class="card"><h3>Abstract Class</h3>
+<pre>abstract class Shape {
+    abstract void area();
+    void display() {
+        System.out.println("Shape");
+    }
+}
+
+class Circle extends Shape {
+    int r;
+    Circle(int r) { this.r = r; }
+    void area() {
+        System.out.println(3.14*r*r);
+    }
+}</pre></div>
+</div>
+</div>
+
+</main>
+<script>
+function toggleTheme(){const h=document.documentElement;const d=h.getAttribute('data-theme')==='dark';h.setAttribute('data-theme',d?'light':'dark')}
+function filterLang(lang,btn){document.querySelectorAll('.filter button').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.section').forEach(s=>{s.classList.toggle('hidden',lang!=='all'&&s.dataset.lang!==lang)})}
+</script>
+</body>
+</html>
