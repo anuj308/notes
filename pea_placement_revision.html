@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PEA Placement Revision - Quick Revision Guide</title>
+<style>
+
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --bg-card: #1e293b;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-light: rgba(59, 130, 246, 0.1);
+  --border: #334155;
+  --success: #22c55e;
+  --warning: #eab308;
+  --danger: #ef4444;
+  --sidebar-width: 280px;
+  --header-height: 64px;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.3);
+  --radius: 12px;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.light-mode {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --border: #e2e8f0;
+  --shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+  --accent-light: rgba(59, 130, 246, 0.08);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  transition: var(--transition);
+}
+
+/* Header */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  box-shadow: var(--shadow);
+}
+
+.header-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.header-controls {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Buttons */
+.btn {
+  padding: 8px 16px;
+  border: 1px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: var(--header-height);
+  left: 0;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  z-index: 100;
+  transition: var(--transition);
+}
+
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.sidebar-section {
+  padding: 12px 16px;
+}
+
+.sidebar-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  margin: 2px 0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  color: var(--text-secondary);
+  text-decoration: none;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.sidebar-link .icon { font-size: 16px; }
+
+/* Main Content */
+.main-content {
+  margin-left: var(--sidebar-width);
+  margin-top: var(--header-height);
+  padding: 32px;
+  min-height: calc(100vh - var(--header-height));
+}
+
+/* Hero Section */
+.hero {
+  background: linear-gradient(135deg, rgba(59,130,246,0.1), rgba(139,92,246,0.1));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero p {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto 24px;
+}
+
+/* Search Bar */
+.search-container {
+  position: relative;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 20px 14px 48px;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 16px;
+  transition: var(--transition);
+  outline: none;
+}
+
+.search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-light);
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 18px;
+}
+
+/* Topic Cards Grid */
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.topic-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  cursor: pointer;
+  transition: var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.topic-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  transform: scaleX(0);
+  transition: var(--transition);
+}
+
+.topic-card:hover::before { transform: scaleX(1); }
+.topic-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.topic-card-icon {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.topic-card h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.topic-card p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.topic-card .lecture-count {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  background: var(--accent-light);
+  color: var(--accent);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Topic Detail Page */
+.topic-detail {
+  display: none;
+}
+
+.topic-detail.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.topic-header {
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--border);
+}
+
+.topic-header h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.topic-header .subtitle {
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+}
+
+/* Content Sections */
+.content-section {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.content-section h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+.slide-content {
+  color: var(--text-secondary);
+  line-height: 1.8;
+}
+
+.slide-content p {
+  margin-bottom: 8px;
+}
+
+.slide-content .question-text {
+  color: var(--accent);
+  font-size: 1.05rem;
+  margin: 16px 0 8px;
+}
+
+.slide-content .option {
+  padding-left: 24px;
+  margin: 4px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 0.95rem;
+}
+
+.slide-content .formula {
+  background: var(--accent-light);
+  border-left: 3px solid var(--accent);
+  padding: 12px 16px;
+  margin: 12px 0;
+  border-radius: 0 8px 8px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 1rem;
+  color: var(--text-primary);
+}
+
+.slide-content .key-point {
+  background: rgba(234, 179, 8, 0.1);
+  border-left: 3px solid var(--warning);
+  padding: 10px 16px;
+  margin: 12px 0;
+  border-radius: 0 8px 8px 0;
+  font-weight: 500;
+}
+
+.slide-content .slide-heading {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  margin: 20px 0 8px;
+  font-weight: 600;
+}
+
+/* MCQ Section */
+.mcq-container {
+  display: grid;
+  gap: 20px;
+}
+
+.mcq-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+}
+
+.mcq-card:hover { border-color: var(--accent); }
+
+.mcq-question {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+
+.mcq-options {
+  display: grid;
+  gap: 8px;
+}
+
+.mcq-option {
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 0.95rem;
+}
+
+.mcq-option:hover {
+  border-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.mcq-option.selected {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+.mcq-option.correct {
+  border-color: var(--success);
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--success);
+}
+
+.mcq-option.wrong {
+  border-color: var(--danger);
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--danger);
+}
+
+.mcq-answer {
+  margin-top: 12px;
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid var(--success);
+  display: none;
+  font-size: 0.95rem;
+}
+
+.mcq-answer.show { display: block; }
+
+.check-btn {
+  margin-top: 12px;
+  padding: 8px 20px;
+}
+
+/* Progress Bar */
+.progress-container {
+  margin: 20px 0;
+}
+
+.progress-bar {
+  height: 8px;
+  background: var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border-radius: 4px;
+  transition: width 0.5s ease;
+  width: 0%;
+}
+
+.progress-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 8px;
+}
+
+/* Formula Handbook */
+.formula-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.formula-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  transition: var(--transition);
+  break-inside: avoid;
+}
+
+.formula-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
+
+.formula-card .formula-title {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--accent);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.formula-card .formula-text {
+  font-family: 'Courier New', monospace;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+  line-height: 1.8;
+}
+
+.formula-card .formula-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 8px;
+}
+
+/* Back to Top */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  border: none;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 4px 12px rgba(59,130,246,0.4);
+  transition: var(--transition);
+  z-index: 999;
+}
+
+.back-to-top.show { display: flex; }
+.back-to-top:hover { transform: translateY(-2px); }
+
+/* Stats Cards */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-align: center;
+}
+
+.stat-card .stat-number {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-card .stat-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
+
+/* Navigation Buttons */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border);
+}
+
+.nav-btn {
+  padding: 12px 24px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    width: 100%;
+    z-index: 999;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding: 16px;
+  }
+
+  .hero {
+    padding: 32px 16px;
+  }
+
+  .hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .topic-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .formula-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .mobile-menu-btn {
+    display: flex !important;
+  }
+}
+
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* Mock Test Section */
+.test-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: var(--transition);
+}
+
+.test-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.test-card h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.test-card .test-meta {
+  display: flex;
+  gap: 16px;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-bottom: 12px;
+}
+
+.test-card .test-meta span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* Filter Tags */
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filter-tag {
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 13px;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+}
+
+.filter-tag:hover, .filter-tag.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  color: var(--accent);
+}
+
+/* Bookmark */
+.bookmark-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  transition: var(--transition);
+  padding: 4px;
+}
+
+.bookmark-btn.bookmarked {
+  color: var(--warning);
+}
+
+/* Tab Navigation */
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--bg-card);
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.tab {
+  padding: 10px 20px;
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  white-space: nowrap;
+  transition: var(--transition);
+}
+
+.tab:hover { color: var(--text-primary); }
+.tab.active {
+  background: var(--accent);
+  color: white;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+/* Print Styles */
+@media print {
+  .header, .sidebar, .back-to-top, .nav-buttons, .search-container { display: none !important; }
+  .main-content { margin-left: 0; margin-top: 0; padding: 0; }
+  .topic-card { break-inside: avoid; }
+  .formula-card { break-inside: avoid; }
+}
+
+/* Revision Page Specific */
+.revision-page .formula-sheet {
+  column-count: 2;
+  column-gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .revision-page .formula-sheet {
+    column-count: 1;
+  }
+}
+
+.revision-page .formula-sheet .formula-card {
+  break-inside: avoid;
+  margin-bottom: 16px;
+}
+
+.countdown-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 20px;
+  color: var(--danger);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.checkbox-list {
+  list-style: none;
+}
+
+.checkbox-list li {
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-list li input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--accent);
+}
+
+.checkbox-list li.checked {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+
+.revision-hero {
+  background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(59,130,246,0.1));
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.revision-hero h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, #ef4444, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.revision-hero .countdown-badge {
+  margin: 16px auto;
+}
+
+.checklist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+@media print {
+  .no-print { display: none !important; }
+  .content-section { break-inside: avoid; }
+}
+
+details summary { cursor: pointer; padding: 8px 0; }
+details summary:hover { color: var(--accent); }
+
+.quick-tip {
+  background: rgba(34,197,94,0.1);
+  border-left: 3px solid var(--success);
+  padding: 12px 16px;
+  margin: 8px 0;
+  border-radius: 0 8px 8px 0;
+  font-size: 0.95rem;
+}
+</style>
+</head>
+<body class="revision-page">
+
+<!-- Header -->
+<header class="header">
+  <div class="header-title">📚 PEA Placement Revision</div>
+  <div class="header-controls">
+    <button class="btn" onclick="toggleDarkMode()" id="themeToggle">🌙 Dark</button>
+    <button class="btn" onclick="window.print()">🖨️ Print</button>
+  </div>
+</header>
+
+<main class="main-content" style="margin-left:0">
+
+  <!-- Revision Hero -->
+  <section class="revision-hero no-print">
+    <div class="countdown-badge">⏰ Last Day Revision</div>
+    <h1>🎯 Placement Aptitude - Quick Revision</h1>
+    <p style="color:var(--text-secondary);max-width:600px;margin:0 auto">
+      Complete revision guide covering all 13 topics from PEA course. 
+      Formulas, shortcuts, MCQs, and important questions for last-minute preparation.
+    </p>
+    <div style="margin-top:20px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="document.getElementById('formulas').scrollIntoView({behavior:'smooth'})">📖 Formulas</button>
+      <button class="btn btn-primary" onclick="document.getElementById('mcqs').scrollIntoView({behavior:'smooth'})">📝 MCQs</button>
+      <button class="btn btn-primary" onclick="document.getElementById('questions').scrollIntoView({behavior:'smooth'})">❓ Questions</button>
+    </div>
+  </section>
+
+  <!-- Revision Checklist -->
+  <section class="no-print">
+    <div class="content-section">
+      <h3>✅ Revision Checklist</h3>
+      <div class="checklist-grid">
+        <ul class="checkbox-list">
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> ⚡ Vedic Maths</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🔢 Number System</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 📊 Average</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 💯 Percentage</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 💰 Profit & Loss</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🏦 SI & CI</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> ⚖️ Ratio & Proportion</li>
+        </ul>
+        <ul class="checkbox-list">
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🧪 Alligation & Mixture</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🔄 Permutation & Combination</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🎲 Probability</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🧠 Logical Reasoning</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 👨‍👩‍👧‍👦 Blood Relation</li>
+          <li><input type="checkbox" onchange="this.parentElement.classList.toggle('checked')"> 🧭 Direction Sense</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Last Day Revision Tips -->
+  <section class="no-print">
+    <div class="content-section">
+      <h3>🎯 Last Day Placement Revision Notes</h3>
+      <div class="quick-tip"><strong>1.</strong> Focus on formulas - keep the formula sheet handy</div>
+      <div class="quick-tip"><strong>2.</strong> Practice Vedic Maths for speed - multiplication, squaring, square roots</div>
+      <div class="quick-tip"><strong>3.</strong> Master Percentage to Fraction conversions - saves time in exams</div>
+      <div class="quick-tip"><strong>4.</strong> For Probability, remember: Two dice sum table (7 has max 6 ways)</div>
+      <div class="quick-tip"><strong>5.</strong> For Blood Relation: draw family tree with + (male) and - (female)</div>
+      <div class="quick-tip"><strong>6.</strong> For Direction: draw path diagram, mark N-S-E-W clearly</div>
+      <div class="quick-tip"><strong>7.</strong> For Alligation: (D-M):(M-C) rule saves time in mixture problems</div>
+      <div class="quick-tip"><strong>8.</strong> For SI/CI: Difference between CI and SI for 2 years = P(R/100)²</div>
+      <div class="quick-tip"><strong>9.</strong> For Number System: Cyclicity of unit digits (2,4,8,6 | 3,9,7,1 | etc.)</div>
+      <div class="quick-tip"><strong>10.</strong> Common mistake: Not reading "at least" / "at most" carefully in probability</div>
+    </div>
+  </section>
+
+  <!-- Common Formula Mistakes -->
+  <section class="no-print">
+    <div class="content-section">
+      <h3>⚠️ Common Formula Mistakes</h3>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Confusing Permutation (order matters) vs Combination (selection)</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Forgetting to divide by 100 in percentage calculations</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Using SI formula for compound interest problems</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Not checking if a number is divisible by 2 before dividing by 6</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Assuming "and" means addition (it means multiplication in counting)</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Forgetting that circular arrangement = (n-1)! not n!</div>
+      <div class="quick-tip" style="border-left-color:var(--danger)"><strong>❌</strong> Not cancelling numerator with denominator in remainder problems</div>
+    </div>
+  </section>
+
+  <!-- Formula Cheat Sheet -->
+  <section id="formulas">
+    <h2 style="margin:32px 0 20px">📖 Formula Cheat Sheet</h2>
+    
+      <div class="content-section">
+        <h3>⚡ Vedic Maths</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Fast Calculation Techniques for Placements</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Multiplication by 11</div>
+      <div class="formula-text">Write last digit, add adjacent digits, write first digit</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Multiplication by 9/99/999</div>
+      <div class="formula-text">Write n zeros (n=no. of 9s), subtract original number</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Multiplication by 5</div>
+      <div class="formula-text">Half the number, add one zero</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Multiplication by 25</div>
+      <div class="formula-text">Half twice, add two zeroes</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Multiplication by 125</div>
+      <div class="formula-text">Half thrice, add three zeroes</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Square of numbers ending with 5</div>
+      <div class="formula-text">(n×5)² = n(n+1) × 100 + 25</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Base 100 Square</div>
+      <div class="formula-text">(Number + Deviation) × 100 + Deviation²</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Square Root (Perfect Squares)</div>
+      <div class="formula-text">Check unit digit, find range, use n×(n+1) to pick</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (27)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• APPLICATIONS</p><p>• MULTIPLICATION OF TWO DIGIT NUMBERS USING CRISS CROSS METHOD</p><p>• MULTIPLICATION OF THREE DIGIT NUMBERS </p><p>• APPLICATIONS</p><p>• APPLICATIONS</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🔢 Number System</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Classification, Divisibility, Factorials & Unit Digits</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 2</div>
+      <div class="formula-text">Last digit is even (0,2,4,6,8)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 3</div>
+      <div class="formula-text">Sum of digits divisible by 3</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 4</div>
+      <div class="formula-text">Last 2 digits divisible by 4</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 5</div>
+      <div class="formula-text">Last digit is 0 or 5</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 6</div>
+      <div class="formula-text">Divisible by both 2 and 3</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 8</div>
+      <div class="formula-text">Last 3 digits divisible by 8</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 9</div>
+      <div class="formula-text">Sum of digits divisible by 9</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Divisibility by 11</div>
+      <div class="formula-text">Sum(odd) - Sum(even) = 0 or multiple of 11</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Trailing Zeros in n!</div>
+      <div class="formula-text">Sum of floor(n/5) + floor(n/25) + floor(n/125) + ...</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Number of Factors</div>
+      <div class="formula-text">If N = a^p × b^q, Factors = (p+1)(q+1)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Product of numbers</div>
+      <div class="formula-text">HCF × LCM = Product of two numbers</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Unit Digit Cycles</div>
+      <div class="formula-text">2: 2,4,8,6 | 3: 3,9,7,1 | 4: 4,6 | 7: 7,9,3,1 | 8: 8,4,2,6</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (51)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question: </p><p>• Question: </p><p>• Question: </p><p>• Question: </p><p>• Question:</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>📊 Average</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Basic Concepts, Weighted Average & Replacement Problems</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Average</div>
+      <div class="formula-text">Average = Sum of terms / Number of terms</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">AP Average</div>
+      <div class="formula-text">Average of consecutive terms = Middle term</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Weighted Average</div>
+      <div class="formula-text">Avg = (n₁a₁ + n₂a₂) / (n₁ + n₂)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Replacement</div>
+      <div class="formula-text">New avg = Old avg ± (change in total)/n</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (23)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question : Find the average of first 100 natural numbers</p><p>• Question : Find the average of first 100 whole numbers</p><p>• Question : </p><p>• Question : </p><p>• INCLUSION AND</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>💯 Percentage</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Basics, Comparison, Elections & Population Problems</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Percentage</div>
+      <div class="formula-text">x% = x/100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">X% of Y = Y% of X</div>
+      <div class="formula-text">Commutative property</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">% Change</div>
+      <div class="formula-text">% Change = (Difference/Original) × 100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Successive % Change</div>
+      <div class="formula-text">Net = a + b + ab/100 (for two changes)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">If A is x% more than B</div>
+      <div class="formula-text">B is [x/(100+x)] × 100% less than A</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">If A is x% less than B</div>
+      <div class="formula-text">B is [x/(100-x)] × 100% more than A</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (39)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Q. 16.66% of 300.</p><p>• X </p><p>• Percentage Comparison</p><p>• Question : If A’s salary is 20 % more than B, then by how much </p><p>• Question : If A’s marks in an exam is 40 % less than B then by how much % B’s marks are more than A.</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>💰 Profit & Loss</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">CP/SP, Discount, Faulty Weights & Successive Discount</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Profit %</div>
+      <div class="formula-text">P% = (SP - CP)/CP × 100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Loss %</div>
+      <div class="formula-text">L% = (CP - SP)/CP × 100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">SP with Profit</div>
+      <div class="formula-text">SP = CP × (100 + P%)/100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">SP with Loss</div>
+      <div class="formula-text">SP = CP × (100 - L%)/100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">CP from SP (Profit)</div>
+      <div class="formula-text">CP = SP × 100/(100 + P%)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">CP from SP (Loss)</div>
+      <div class="formula-text">CP = SP × 100/(100 - L%)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Discount %</div>
+      <div class="formula-text">D% = (MP - SP)/MP × 100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Successive Discount</div>
+      <div class="formula-text">Net D = a + b - ab/100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Faulty Weights</div>
+      <div class="formula-text">Profit% = (Error/(True - Error)) × 100</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (42)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Questions</p><p>• Question</p><p>• Question</p><p>• Questions</p><p>• Questions</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🏦 Simple & Compound Interest</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Interest Calculation, Difference Between SI & CI</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Simple Interest</div>
+      <div class="formula-text">SI = (P × R × T)/100</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Amount (SI)</div>
+      <div class="formula-text">A = P + SI = P(1 + RT/100)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Compound Interest</div>
+      <div class="formula-text">A = P(1 + R/100)^T</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">CI Formula</div>
+      <div class="formula-text">CI = P[(1 + R/100)^T - 1]</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Half-yearly CI</div>
+      <div class="formula-text">A = P(1 + R/200)^(2T)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Quarterly CI</div>
+      <div class="formula-text">A = P(1 + R/400)^(4T)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">CI - SI (2 years)</div>
+      <div class="formula-text">Difference = P(R/100)²</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">CI - SI (3 years)</div>
+      <div class="formula-text">Difference = P(R/100)²(3 + R/100)</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (23)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question: </p><p>• Question: </p><p>• Question: </p><p>• Question: </p><p>• Question: </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>⚖️ Ratio & Proportion</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Ratios, Partnership, Ages & Proportionality</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Ratio</div>
+      <div class="formula-text">a:b where a = antecedent, b = consequent</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Proportion</div>
+      <div class="formula-text">a:b :: c:d =&gt; a×d = b×c</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Fourth Proportional</div>
+      <div class="formula-text">d = bc/a</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Third Proportional</div>
+      <div class="formula-text">c = b²/a</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Mean Proportional</div>
+      <div class="formula-text">b = √(ac)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Duplicate Ratio</div>
+      <div class="formula-text">a² : b²</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Triplicate Ratio</div>
+      <div class="formula-text">a³ : b³</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Partnership</div>
+      <div class="formula-text">Profit ∝ Investment × Time</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (48)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question 5:</p><p>• Compound Ratio: </p><p>• Question 7:</p><p>• Question 8:  </p><p>• Question 9:  </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🧪 Alligation & Mixture</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Mixture Problems, Replacement & Alligation Rule</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Alligation Rule</div>
+      <div class="formula-text">(D-M) : (M-C) = Quantity of Cheaper : Quantity of Dearer</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Mean Price</div>
+      <div class="formula-text">M = (C × q₁ + D × q₂)/(q₁ + q₂)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Replacement Formula</div>
+      <div class="formula-text">Final Quantity = Initial × (1 - x/V)^n</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (41)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• How many kg of tea worth </p><p>• How many kg of tea worth Rs. 25/kg must be blended with 30 kg of tea worth Rs. 30/kg so that by sell</p><p>• A dishonest milkman professes to sell his milk at cost price but he mixes it with water and thereby </p><p>• In what ratio must water be added to spirit to gain 10% by selling it at the cost price?</p><p>• Sea water contains 5% salt by weight. How many kilograms of fresh water must be added to 40kg of sea</p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🔄 Permutation & Combination</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Counting Principles, Arrangements, Circular & Geometric</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Permutation</div>
+      <div class="formula-text">nPr = n!/(n-r)! (Order matters)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Combination</div>
+      <div class="formula-text">nCr = n!/[r!(n-r)!] (Selection)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Fundamental Counting</div>
+      <div class="formula-text">If ways m and n, total = m × n (AND)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Rule of Addition</div>
+      <div class="formula-text">If ways m or n, total = m + n (OR)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Circular Arrangement</div>
+      <div class="formula-text">(n-1)! for n distinct objects in circle</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Linear Arrangement</div>
+      <div class="formula-text">n! ways to arrange n distinct objects</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Number of Diagonals</div>
+      <div class="formula-text">n(n-3)/2 for n-sided polygon</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (73)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question:</p><p>• Question:</p><p>• Practice Question</p><p>• 2. In a class there are 6 boys and 5 girls. In how many ways can a group of 5 members to be formed b</p><p>• 3. In how many ways 3 VIPs can be seated in 3 seats of first row of a function. </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🎲 Probability</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Coins, Dice, Cards, Balls & Conditional Probability</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Probability</div>
+      <div class="formula-text">P(E) = n(E)/n(S)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">P(not E)</div>
+      <div class="formula-text">P(E') = 1 - P(E)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">P(A or B)</div>
+      <div class="formula-text">P(A∪B) = P(A) + P(B) - P(A∩B)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">P(A and B)</div>
+      <div class="formula-text">P(A∩B) = P(A) × P(B|A)</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Two Dice Sum</div>
+      <div class="formula-text">Sum 7 → 6 ways, Sum 2/12 → 1 way each</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Coin Probabilities</div>
+      <div class="formula-text">n coins → 2^n outcomes</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Cards</div>
+      <div class="formula-text">52 cards, 4 suits, 13 each, 26 red, 26 black</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (48)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question </p><p>• Question </p><p>• Question </p><p>• Question </p><p>• Question </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🧠 Logical Reasoning</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Number Series, Alphabet Series, Coding-Decoding</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Letter Positions</div>
+      <div class="formula-text">A=1, B=2, ..., Z=26 | EJOTY: 5,10,15,20,25</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Opposite Letters</div>
+      <div class="formula-text">Sum = 27: A↔Z, B↔Y, C↔X, ...</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Coding Types</div>
+      <div class="formula-text">Letter shift, number coding, symbolic coding</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (69)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Question 8 : </p><p>• Question 9 : </p><p>• Question 10 : </p><p>• Question 11: </p><p>• Question 12: </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>👨‍👩‍👧‍👦 Blood Relation</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Family Trees, Coded Relations & Relation Puzzles</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Family Tree</div>
+      <div class="formula-text">Male = +, Female = -, Vertical = generation, Horizontal = siblings</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Maternal</div>
+      <div class="formula-text">Mother's side relatives</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Paternal</div>
+      <div class="formula-text">Father's side relatives</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (28)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• Type 1: Indicating type Problems</p><p>• If Kamal says ,&quot; Ravi's mother is the only daughter of my mother&quot;, how is Kamal related to Ravi ? </p><p>• Pointing towards photograph, Vipul said, &quot;She is the daughter of my grandfather's only son.&quot; How is </p><p>• Pointing towards a person in a photograph, Anjali said, &quot;He is the only son of the father of my sist</p><p>• Pointing out to a lady, </p>
+          </div>
+        </details>
+      </div>
+      <div class="content-section">
+        <h3>🧭 Direction Sense</h3>
+        <p style="color:var(--text-secondary);margin-bottom:12px">Directions, Shadows, Distance & Displacement</p>
+        <div class="formula-grid" style="grid-template-columns:1fr">
+          
+    <div class="formula-card">
+      <div class="formula-title">Main Directions</div>
+      <div class="formula-text">N, S, E, W. Cardinal: NE, NW, SE, SW</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Shadow Rule</div>
+      <div class="formula-text">Morning shadow → West, Evening shadow → East</div>
+    </div>
+  
+    <div class="formula-card">
+      <div class="formula-title">Sun Position</div>
+      <div class="formula-text">Sun rises in East, sets in West</div>
+    </div>
+  
+        </div>
+        <details style="margin-top:12px">
+          <summary style="cursor:pointer;color:var(--accent);font-weight:500">View Key Questions (26)</summary>
+          <div class="slide-content" style="margin-top:12px">
+            <p>• A man walks northwards. After a while he turns to his right and a little further to his left. Finall</p><p>• A man started walking positioning his back towards the sun. After sometime, he turned left, then tur</p><p>• A man went 10 Km towards south. Then turned East and covered 10 Km and turned to the right. Again af</p><p>• A man went 15 Km to the North. Then he turned West and covered 10 Km. Then he turned south and cover</p><p>• If South-East becomes North, North-East becomes West and so on. What will West become?</p>
+          </div>
+        </details>
+      </div>
+  </section>
+
+  <!-- Top 100 MCQs -->
+  <section id="mcqs">
+    <h2 style="margin:32px 0 20px">📝 Top 100 MCQs for Placement</h2>
+    <p style="color:var(--text-secondary);margin-bottom:20px">Must-practice questions covering all topics from your PEA course</p>
+    <div class="mcq-container">
+      
+        <div class="mcq-card">
+          <div class="mcq-question">1. [⚡] APPLICATIONS</div>
+          <div class="mcq-options">
+            <div class="mcq-option">A) 935		B) 765		C) 925			D) 245</div><div class="mcq-option">A) 3675  		B) 3075		C) 3125		D) 3175</div><div class="mcq-option">A) 35000		B) 54000		C) 33200			D) 52000</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">2. [⚡] Practice: MULTIPLICATION OF TWO DIGIT NUMBERS USING CRISS CROSS METHOD</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">3. [⚡] Practice: MULTIPLICATION OF THREE DIGIT NUMBERS</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">4. [⚡] Practice: APPLICATIONS</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">5. [⚡] Practice: APPLICATIONS</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">6. [⚡] Practice: SQUARE</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">7. [⚡] Practice: Base Method</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">8. [⚡] Practice: Base-100</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">9. [⚡] Practice: Base - 100</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">10. [⚡] Practice: SQUARE</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">11. [🔢] What should come in place of</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 7</div><div class="mcq-option">[B] 8</div><div class="mcq-option">[C] 9</div><div class="mcq-option">[D] 2</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">12. [🔢] For what values of P number 36345472P34 is exactly divisible by 9.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 3</div><div class="mcq-option">[B] 4</div><div class="mcq-option">[C] 6</div><div class="mcq-option">[D] 7</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">13. [🔢] For what values of N number 549724N is exactly divisible by 6.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 2 &amp;amp; 8</div><div class="mcq-option">[B] 4 &amp;amp; 6</div><div class="mcq-option">[C] 2 &amp;amp; 6</div><div class="mcq-option">[D] 6 &amp;amp; 8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">14. [🔢] For what values of</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1</div><div class="mcq-option">[B] 0</div><div class="mcq-option">[C] 3</div><div class="mcq-option">[D] 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">15. [🔢] What should come in place</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 6</div><div class="mcq-option">[B] 8</div><div class="mcq-option">[C] 2</div><div class="mcq-option">[D] 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">16. [🔢] Find number of trailing zeros in</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A]</div><div class="mcq-option">[B]</div><div class="mcq-option">[C]</div><div class="mcq-option">[D] 27</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">17. [🔢] Find number of trailing zeros in 154!</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 35</div><div class="mcq-option">[B] 31</div><div class="mcq-option">[C] 34</div><div class="mcq-option">[D] 37</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">18. [🔢] Find number of trailing zero in 100!+200!+300!</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 24</div><div class="mcq-option">[B] 49</div><div class="mcq-option">[C] 73</div><div class="mcq-option">[D] None of these</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">19. [🔢] Find number of trailing zero in 100! X 200!</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 24</div><div class="mcq-option">[B] 49</div><div class="mcq-option">[C] 73</div><div class="mcq-option">[D] None of these</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">20. [🔢] 9292N is divisible by 2. How many</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 4</div><div class="mcq-option">[B] 5</div><div class="mcq-option">[C] 3</div><div class="mcq-option">[D] 6</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">21. [📊] Question : Find the average of first 100 natural numbers</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">22. [📊] Question : Find the average of first 100 whole numbers</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">23. [📊] The average of first 10 even numbers is</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">24. [📊] Find the average of first 17 multiples of 5</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">25. [📊] The average age of a committee of 12 members is 48 Years. A member of age 62 retired and in place a new person aged 26 joined the committee. Find the new average of the committee.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">26. [📊] The average age of 10 members in a committee is increased by 3 years when two men whose ages are 25 years and 35 years are replaced by two new men. Find the average age of two new men</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">27. [📊] Question: If A batsman score 36 runs  in his 18th innings so that his average is reduced by 3 run. Find the average of batsman in 18th  inning.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">28. [📊] Question: A baller whose balling average is 12.4 runs/wicket. He played his next match and takes 5 wickets for 26 runs; therefore, his average is reduced by 0.4. Find the total number of wickets taken</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">29. [📊] There are 36 students in a class A whose average weight is 30kg and 24 students in class B whose average is 40kg. What will be the average if the classes are combined</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">30. [📊] There are 63 students in a class A whose average weight is 32kg and 21 students in class B whose average is 44kg. What will be the average if the classes are combined</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">31. [💯] Q. 16.66% of 300.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">32. [💯] Question : Find 45% of 133.33</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">33. [💯] Question : If A’s salary is 20 % more than B, then by how much</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">34. [💯] Question : If A’s marks in an exam is 40 % less than B then by how much % B’s marks are more than A.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">35. [💯] Question : If 16(2/3) % of a number is added to itself the number becomes 700. Find original number.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">36. [💯] Question: A student multiplied a number by 3/5 instead of  5/3 What is the percentage error in the calculation?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">37. [💯] Question: The number was being multiplied by 5/6. By mistake it is divided by 5/6. Find percentage error in result.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">38. [💯] Question : A student scored 140 Marks and still failed by 35 marks. If the passing criteria of that exam is 35%. Then find the maximum marks of that exam.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">39. [💯] Question : A student scored 25 % in an examination and still failed by 30 marks while another candidate scored 50% marks and get 20 marks more than the passing marks. Then find the  passing percentage</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">40. [💯] Question: In an Exam, 52% candidates failed in English, 42% in mathematics and 17% in both. What was the number of percentage of passed students in both subjects?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">41. [💰] : A TV is purchased at</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 10%</div><div class="mcq-option">[B] 20%</div><div class="mcq-option">[C] 25%</div><div class="mcq-option">[D] 28%</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">42. [💰] : CP = Rs.500</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">43. [💰] Question: CP = Rs.800</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">44. [💰] : SP = Rs.720</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">45. [💰] Question: SP =</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.21000</div><div class="mcq-option">[B] Rs.22500</div><div class="mcq-option">[C] Rs.25300</div><div class="mcq-option">[D] Rs.25800</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">46. [💰] :  A shopkeeper selling his goods at 20% profit. Had he purchase it 10% less and sold it for Rs.18 less then he would get 30% profit. Find the initial CP of that article.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 540</div><div class="mcq-option">[B] 600</div><div class="mcq-option">[C] 1200</div><div class="mcq-option">[D] 720</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">47. [💰] :  A shopkeeper selling his goods at 10% profit. Had he purchase it 20% less and sold it for Rs.20 more then he would get 40% profit. Find the initial SP of that article.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1000</div><div class="mcq-option">[B] 2000</div><div class="mcq-option">[C] 1100</div><div class="mcq-option">[D] 720</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">48. [💰] : A shopkeeper sold an article at 25% profit. If the CP and SP are decreased by Rs.20 and Rs.40 respectively then the profit percent would be decreased by 15 %. Find CP of the articles.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 120</div><div class="mcq-option">[B] 200</div><div class="mcq-option">[C] 180</div><div class="mcq-option">[D] 240</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">49. [💰] : A shopkeeper purchase 2 articles for Rs.9600. He sold the first article at 20% loss and second article at 60% profit then he find that both the articles being sold on the same price. Find the CP of </div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 6400</div><div class="mcq-option">[B] 3200</div><div class="mcq-option">[C] 6000</div><div class="mcq-option">[D] 5400</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">50. [💰] A shopkeeper sells 2 articles. He sold the first article at 15% loss and second article at 19% profit. During the whole transaction he earn a loss of Rs90. Find the CP of second article if the SP of b</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 5000</div><div class="mcq-option">[B] 4500</div><div class="mcq-option">[C] 2000</div><div class="mcq-option">[D] None</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">51. [🏦] A sum was invest for 2 years. It will give Rs. 300 more, if invested at 3% higher rate. Find the sum.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.4000</div><div class="mcq-option">[B] Rs.5000</div><div class="mcq-option">[C] Rs.6000</div><div class="mcq-option">[D] Rs.10000</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">52. [🏦] A sum amounts to Rs.1008 in 2 years and amounts to Rs.1112 in 3 years at SI. Find the sum and rate of interest per annum.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.800, 13% pa</div><div class="mcq-option">[B] Rs.600, 12 % pa</div><div class="mcq-option">[C] Rs.800, 12% pa</div><div class="mcq-option">[D] Rs.600, 13% pa</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">53. [🏦] A shopkeeper borrow Rs. 20,000 from two money lenders. For one loan, he paid 12% pa and for other 14% pa. After one year he paid Rs. 2560 as total interest. How much did he borrow each?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.8000, Rs.12000</div><div class="mcq-option">[B] Rs.12000, Rs.8000</div><div class="mcq-option">[C] Rs.6000, Rs.14000</div><div class="mcq-option">[D] Rs.14000, Rs.6000</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">54. [🏦] Rs. 950 is lend in two ways. The rate of S.I given on one part is 6% and on other part is 4%. If the S.I of 5 years is Rs. 200 then how much is given on 6%?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.500</div><div class="mcq-option">[B] Rs.400</div><div class="mcq-option">[C] Rs.200</div><div class="mcq-option">[D] Rs.100</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">55. [🏦] If a sum of money at simple interest doubles in 6 years, it will become 4 times in:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 12 years</div><div class="mcq-option">[B] 14 years</div><div class="mcq-option">[C] 16 years</div><div class="mcq-option">[D] 18 years</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">56. [🏦] Question: If P= Rs.1000, R=10% p.a. T=3 years. Find Compound Interest for 3 years.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">57. [🏦] Find the interest earned in the first year on Rs.400 at 20%p.a. compound interest, the interest being compounded half yearly.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.42</div><div class="mcq-option">[B] Rs.72</div><div class="mcq-option">[C] Rs.84</div><div class="mcq-option">[D] Rs.144</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">58. [🏦] Find CI. If P= Rs. 10000, r = 10 % p.a. and  T= 1 year and 73 days.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A]Rs.2220</div><div class="mcq-option">[B] Rs.3200</div><div class="mcq-option">[C] Rs.2120</div><div class="mcq-option">[D] Rs.1220</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">59. [🏦] Find C.I. on Rs. 8000, 20% P.A. For 9 month compounded quarterly.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Rs.262</div><div class="mcq-option">[B] Rs.1261</div><div class="mcq-option">[C] Rs.9261</div><div class="mcq-option">[D] Rs.831</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">60. [🏦] If Rs.2000 amounts to Rs.2880 in 2 years at compound interest, what is the rate of interest per annum if the interest is being compounded annually?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 10%</div><div class="mcq-option">[B] 20%</div><div class="mcq-option">[C] 15%</div><div class="mcq-option">[D] 25%</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">61. [⚖️] Question 5:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">62. [⚖️] Question 6:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">63. [⚖️] Question 7:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 75</div><div class="mcq-option">[B] 60</div><div class="mcq-option">[C] 50</div><div class="mcq-option">[D] 90</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">64. [⚖️] Question 8:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">65. [⚖️] Question 9:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">66. [⚖️] Question 10:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">67. [⚖️] Question 11:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">68. [⚖️] Question 12:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">69. [⚖️] Question 13:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">70. [⚖️] Question 14:</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">71. [🧪] How many kg of tea worth</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A]  36 Kg</div><div class="mcq-option">[B]  40 Kg</div><div class="mcq-option">[C]  32 Kg</div><div class="mcq-option">[A]  36 Kg</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">72. [🧪] Practice: How many kg of tea worth Rs. 25/kg must be blended with 30 kg of tea worth Rs. 30/kg so that by selling the blended variety at Rs. 30/kg there should </div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">73. [🧪] Practice: A dishonest milkman professes to sell his milk at cost price but he mixes it with water and thereby gains 25%. The percentage of water in the mixture </div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">74. [🧪] Practice: In what ratio must water be added to spirit to gain 10% by selling it at the cost price?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">75. [🧪] Practice: Sea water contains 5% salt by weight. How many kilograms of fresh water must be added to 40kg of sea water for the salt content of the solution to be </div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">76. [🧪] Practice: A mixture of 45 L of spirit and water contains 20% of water in it. How much water must be added to it to make the water 25% in the new mixture?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">77. [🧪] Practice: In a zoo, there are rabbits and pigeons. If head are counted, there are 200 and legs are 580. How many rabbits are there ?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">78. [🧪] Practice: A man has  90 pens. He sells some of these at profit of 15 % and rest at 9% profit. On the whole transaction he gets a profit of 11%.How many pens did</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">79. [🧪] Practice: A trader has 25 kg of rice. A part of which he sold at 4% profit and rest at 9% profit. His overall gain is 7%. What is the quantity he sold at 9% pro</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">80. [🧪] Practice: A man buys two cows for Rs. 1350 and sells one for loss of 6% and the other for gain of 7.5% and on the whole he neither gains nor loses. What does ea</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">81. [🔄] If suppose we have 3 objects A, B, C then find no. of ways in which any 2 items can be selected.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] Option 1</div><div class="mcq-option">[B] Option 2</div><div class="mcq-option">[C] Option 3</div><div class="mcq-option">[D] Option 4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">82. [🔄] If suppose we have 3 objects A, B, C then find no. of ways to arrange any 2 items.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1365</div><div class="mcq-option">[B] 1455</div><div class="mcq-option">[C] 1295</div><div class="mcq-option">[D] 1525</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">83. [🔄] Question: Let us assume you have 3 shirts, 4 pants, 3 shoes and 2 sandals to wear. Find in how many ways you can decide an outfit.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 34650</div><div class="mcq-option">[B] 32540</div><div class="mcq-option">[C] 28450</div><div class="mcq-option">[D] 24560</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">84. [🔄] Practice: 2. In a class there are 6 boys and 5 girls. In how many ways can a group of 5 members to be formed by selecting 3 boys and 2 girls.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">85. [🔄] Practice: 3. In how many ways 3 VIPs can be seated in 3 seats of first row of a function.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">86. [🔄] Practice: Note :</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">87. [🔄] Practice: 4. In how many ways 5 medals of different games can be arranged in a shelf.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">88. [🔄] Practice: 5. Suppose you have to choose a 3-letter password. First letter is an alphabet, followed by a number and last one is a special character. There are 5 </div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">89. [🔄] Practice: 6. How many 2-digit numbers can be made from the digits 1, 2, 3 and 4 without repetition?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">90. [🔄] Practice: Permutation</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] First option</div><div class="mcq-option">[B] Second option</div><div class="mcq-option">[C] Third option</div><div class="mcq-option">[D] Fourth option</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">91. [🎲] In a simultaneous toss of 2 coins find the probability of 2 Tails?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/2</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 2/3</div><div class="mcq-option">[D] 3/4</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">92. [🎲] In a simultaneous toss of 2 coins find the probability of Exactly 1 Tail?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/3</div><div class="mcq-option">[B] 2/3</div><div class="mcq-option">[C] 3/4</div><div class="mcq-option">[D] 1/2</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">93. [🎲] In a simultaneous toss of 2 coins find the probability of No Tail?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/3</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 1/2</div><div class="mcq-option">[D] 2/3</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">94. [🎲] In a simultaneous toss of 2 coins find the probability of No head?</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/2</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 1/3</div><div class="mcq-option">[D] 2/3</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">95. [🎲] Three coins are tossed simultaneously. Find the probability of all are heads.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/4</div><div class="mcq-option">[B] 1/8</div><div class="mcq-option">[C] 2/3</div><div class="mcq-option">[D] 5/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">96. [🎲] Three coins are tossed simultaneously. Find the probability of exactly two heads.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/4</div><div class="mcq-option">[B] 1/8</div><div class="mcq-option">[C] 3/8</div><div class="mcq-option">[D] 5/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">97. [🎲] Three coins are tossed simultaneously. Find the probability of at least two heads.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/3</div><div class="mcq-option">[B] 1/8</div><div class="mcq-option">[C]</div><div class="mcq-option">[D] 3/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: C</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">98. [🎲] Three coins are tossed simultaneously. Find the probability of no heads.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/8</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 1/2</div><div class="mcq-option">[D] 5/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: D</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">99. [🎲] Three coins are tossed simultaneously. Find the probability of at least 1 head and 1 tail.</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/8</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 3/4</div><div class="mcq-option">[D] 5/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: A</strong>
+          </div>
+        </div>
+        <div class="mcq-card">
+          <div class="mcq-question">100. [🎲] 4 coins are tossed simultaneously. Find the probability exactly 3 tails</div>
+          <div class="mcq-options">
+            <div class="mcq-option">[A] 1/8</div><div class="mcq-option">[B] 1/4</div><div class="mcq-option">[C] 1/2</div><div class="mcq-option">[D] 5/8</div>
+          </div>
+          <div class="mcq-answer show">
+            <strong>Answer: B</strong>
+          </div>
+        </div>
+    </div>
+  </section>
+
+  <!-- Important Questions -->
+  <section id="questions">
+    <h2 style="margin:32px 0 20px">❓ Top 100 Placement Questions</h2>
+    <p style="color:var(--text-secondary);margin-bottom:20px">Frequently asked questions in campus placements and competitive exams</p>
+    
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>1.</strong> APPLICATIONS</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>2.</strong> MULTIPLICATION OF TWO DIGIT NUMBERS USING CRISS CROSS METHOD</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>3.</strong> MULTIPLICATION OF THREE DIGIT NUMBERS </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>4.</strong> APPLICATIONS</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>5.</strong> APPLICATIONS</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>6.</strong> SQUARE</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>7.</strong> Base Method</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>8.</strong> Base-100</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>9.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>10.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>11.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>12.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>13.</strong> Question:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>14.</strong> Factorials</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>15.</strong> Question:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>16.</strong> Question:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>17.</strong> Question : Find the average of first 100 natural numbers</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>18.</strong> Question : Find the average of first 100 whole numbers</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>19.</strong> Question : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>20.</strong> Question : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>21.</strong> INCLUSION AND</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>22.</strong> Question : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>23.</strong> Question : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>24.</strong> Question: If A batsman score 36 runs  in his 18th innings so that his average is reduced by 3 run. Find the average of b</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>25.</strong> Q. 16.66% of 300.</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>26.</strong> X </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>27.</strong> Percentage Comparison</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>28.</strong> Question : If A’s salary is 20 % more than B, then by how much </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>29.</strong> Question : If A’s marks in an exam is 40 % less than B then by how much % B’s marks are more than A.</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>30.</strong> Question : If 16(2/3) % of a number is added to itself the number becomes 700. Find original number. </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>31.</strong> Question: A student multiplied a number by 3/5 instead of  5/3 What is the percentage error in the calculation?</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>32.</strong> Question: The number was being multiplied by 5/6. By mistake it is divided by 5/6. Find percentage error in result.</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>33.</strong> Questions</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>34.</strong> Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>35.</strong> Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>36.</strong> Questions</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>37.</strong> Questions</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>38.</strong> Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>39.</strong> Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>40.</strong> Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>41.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>42.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>43.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>44.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>45.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>46.</strong> Question: If P= Rs.1000, R=10% p.a. T=3 years. Find Compound Interest for 3 years.</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>47.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>48.</strong> Question: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>49.</strong> Question 5:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>50.</strong> Compound Ratio: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>51.</strong> Question 7:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>52.</strong> Question 8:  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>53.</strong> Question 9:  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>54.</strong> Question 10:  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>55.</strong> Question 11:  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>56.</strong> Question 12:  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>57.</strong> How many kg of tea worth </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>58.</strong> How many kg of tea worth Rs. 25/kg must be blended with 30 kg of tea worth Rs. 30/kg so that by selling the blended vari</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>59.</strong> A dishonest milkman professes to sell his milk at cost price but he mixes it with water and thereby gains 25%. The perce</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>60.</strong> In what ratio must water be added to spirit to gain 10% by selling it at the cost price?</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>61.</strong> Sea water contains 5% salt by weight. How many kilograms of fresh water must be added to 40kg of sea water for the salt </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>62.</strong> A mixture of 45 L of spirit and water contains 20% of water in it. How much water must be added to it to make the water </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>63.</strong> In a zoo, there are rabbits and pigeons. If head are counted, there are 200 and legs are 580. How many rabbits are there</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>64.</strong> A man has  90 pens. He sells some of these at profit of 15 % and rest at 9% profit. On the whole transaction he gets a p</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>65.</strong> Question:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>66.</strong> Question:</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>67.</strong> Practice Question</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>68.</strong> 2. In a class there are 6 boys and 5 girls. In how many ways can a group of 5 members to be formed by selecting 3 boys a</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>69.</strong> 3. In how many ways 3 VIPs can be seated in 3 seats of first row of a function. </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>70.</strong> Note : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>71.</strong> 4. In how many ways 5 medals of different games can be arranged in a shelf.  </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>72.</strong> 5. Suppose you have to choose a 3-letter password. First letter is an alphabet, followed by a number and last one is a s</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>73.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>74.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>75.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>76.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>77.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>78.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>79.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>80.</strong> Question </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>81.</strong> Question 8 : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>82.</strong> Question 9 : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>83.</strong> Question 10 : </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>84.</strong> Question 11: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>85.</strong> Question 12: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>86.</strong> Question 13: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>87.</strong> Question 14: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>88.</strong> Question 15: </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>89.</strong> Type 1: Indicating type Problems</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>90.</strong> If Kamal says ,&quot; Ravi's mother is the only daughter of my mother&quot;, how is Kamal related to Ravi ? </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>91.</strong> Pointing towards photograph, Vipul said, &quot;She is the daughter of my grandfather's only son.&quot; How is </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>92.</strong> Pointing towards a person in a photograph, Anjali said, &quot;He is the only son of the father of my sister's brother.&quot; How i</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>93.</strong> Pointing out to a lady, </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>94.</strong> If Neha says, &quot;Amrita's father Raj is the only son of my father-in-law Mahesh,” then how </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>95.</strong> The son of M is the father of N and grandfather of R. S is the daughter of N and sister of B. How is M related to B?</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>96.</strong> Type 2: Relation Puzzle</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>97.</strong> A man walks northwards. After a while he turns to his right and a little further to his left. Finally, after walking a d</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>98.</strong> A man started walking positioning his back towards the sun. After sometime, he turned left, then turned right and then t</p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>99.</strong> A man went 10 Km towards south. Then turned East and covered 10 Km and turned to the right. Again after 10 Km he turned </p>
+        </div>
+        <div class="content-section" style="padding:12px 20px">
+          <p><strong>100.</strong> A man went 15 Km to the North. Then he turned West and covered 10 Km. Then he turned south and covered 5 Km. Finally, tu</p>
+        </div>
+  </section>
+
+  <!-- Frequently Asked Interview Aptitude Questions -->
+  <section style="margin-top:32px">
+    <div class="content-section">
+      <h3>💬 Frequently Asked Interview Aptitude Questions</h3>
+      <div class="quick-tip"><strong>Q:</strong> What is the difference between CI and SI? <br><strong>A:</strong> CI earns interest on interest, SI earns only on principal</div>
+      <div class="quick-tip"><strong>Q:</strong> When to use Permutation vs Combination? <br><strong>A:</strong> Permutation = arrangement (order matters), Combination = selection (order doesn't)</div>
+      <div class="quick-tip"><strong>Q:</strong> How to find trailing zeros quickly? <br><strong>A:</strong> Count powers of 5 in factorial: floor(n/5) + floor(n/25) + floor(n/125) ...</div>
+      <div class="quick-tip"><strong>Q:</strong> What is the Alligation rule? <br><strong>A:</strong> (Dearer - Mean):(Mean - Cheaper) = Quantity of Cheaper:Quantity of Dearer</div>
+      <div class="quick-tip"><strong>Q:</strong> How to solve Blood Relation problems? <br><strong>A:</strong> Draw family tree: + for male, - for female, vertical for generations, horizontal for siblings</div>
+    </div>
+  </section>
+
+  <footer style="text-align:center;padding:32px;color:var(--text-secondary);margin-top:32px;border-top:1px solid var(--border)">
+    <p>PEA Placement Aptitude Study Portal | All 23 Lectures Processed | 6/14/2026</p>
+    <p style="font-size:0.9rem;margin-top:4px">Good luck with your placements! 🎯</p>
+  </footer>
+
+</main>
+
+<script>
+function toggleDarkMode() {
+  document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('themeToggle');
+  btn.textContent = document.body.classList.contains('light-mode') ? '☀️ Light' : '🌙 Dark';
+}
+
+// Auto-save checklist state
+document.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+  cb.addEventListener('change', function() {
+    localStorage.setItem('revision-' + this.nextSibling.textContent.trim(), this.checked);
+  });
+  const key = 'revision-' + cb.nextSibling.textContent.trim();
+  if (localStorage.getItem(key) === 'true') {
+    cb.checked = true;
+    cb.parentElement.classList.add('checked');
+  }
+});
+</script>
+
+</body>
+</html>

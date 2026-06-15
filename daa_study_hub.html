@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DAA Study Hub — Design & Analysis of Algorithms</title>
+<style>
+:root{--bg:#f4f5f7;--bg2:#ffffff;--text:#1a1a2e;--primary:#4361ee;--primary-light:#e8edff;--border:#dde1e7;--shadow:0 2px 8px rgba(0,0,0,0.08);--accent:#f72585;--code-bg:#f0f2f5;--hover:#3a56d4;--sidebar-w:280px;--header-h:60px}
+.dark-mode{--bg:#0f0f23;--bg2:#1a1a35;--text:#e0e0f0;--primary:#6c8cff;--primary-light:#1e1e3a;--border:#2a2a4a;--shadow:0 2px 8px rgba(0,0,0,0.3);--code-bg:#222244;--hover:#8aacff}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;transition:background 0.3s,color 0.3s}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+/* HEADER */
+.header{position:fixed;top:0;left:0;right:0;height:var(--header-h);background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 20px;z-index:100;box-shadow:var(--shadow);gap:12px}
+.header .logo{font-size:1.3rem;font-weight:700;color:var(--primary);white-space:nowrap}
+.header .logo small{font-weight:400;color:var(--text);opacity:.7}
+.search-bar{flex:1;max-width:400px;padding:8px 14px;border:2px solid var(--border);border-radius:20px;background:var(--bg);color:var(--text);font-size:.9rem;outline:none;transition:border .2s}
+.search-bar:focus{border-color:var(--primary)}
+.theme-toggle{padding:6px 12px;border:2px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);cursor:pointer;font-size:.85rem;white-space:nowrap}
+.theme-toggle:hover{border-color:var(--primary)}
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--header-h);left:0;bottom:0;width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;z-index:90;padding:12px 0;transition:transform .3s}
+.sidebar a{display:block;padding:8px 18px;color:var(--text);font-size:.88rem;border-left:3px solid transparent;transition:all .2s}
+.sidebar a:hover,.sidebar a.active{background:var(--primary-light);border-left-color:var(--primary);color:var(--primary);text-decoration:none}
+.sidebar .s-head{font-size:.75rem;text-transform:uppercase;color:var(--text);opacity:.5;padding:12px 18px 4px;font-weight:600;letter-spacing:.5px}
+.sidebar .s-sub{padding-left:28px;font-size:.82rem}
+/* MAIN */
+.main{margin-left:var(--sidebar-w);margin-top:var(--header-h);padding:24px 32px;max-width:1100px}
+.main h1{font-size:2rem;margin-bottom:8px;color:var(--primary)}
+.main .subtitle{font-size:1.05rem;opacity:.7;margin-bottom:24px}
+/* SECTIONS */
+.unit-section{margin-bottom:24px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.unit-title{font-size:1.2rem;padding:16px 20px;cursor:pointer;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:space-between;user-select:none;transition:background .2s;margin:0}
+.unit-title:hover{filter:brightness(1.05)}
+.unit-title::after{content:'\25BC';font-size:.8rem;transition:transform .3s}
+.unit-title.closed::after{transform:rotate(-90deg)}
+.unit-body{padding:0 20px 20px;display:block}
+.unit-title.closed + .unit-body{display:none}
+/* TOPICS */
+.topic{margin-top:16px;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.topic-title{font-size:1rem;padding:12px 16px;cursor:pointer;background:var(--bg);margin:0;display:flex;align-items:center;justify-content:space-between;user-select:none}
+.topic-title::after{content:'\25B6';font-size:.7rem;transition:transform .3s}
+.topic-title.open::after{transform:rotate(90deg)}
+.topic-body{padding:16px;display:none}
+.topic-body.open{display:block}
+.topic-body p{margin-bottom:10px}
+.topic-body ul,.topic-body ol{margin:8px 0 12px 20px}
+.topic-body li{margin-bottom:4px}
+.topic-body h4{margin:16px 0 8px;color:var(--primary);font-size:.95rem}
+.topic-body h3{margin:18px 0 10px;font-size:1.05rem}
+.topic-body pre{background:var(--code-bg);padding:14px 16px;border-radius:6px;overflow-x:auto;font-family:'Cascadia Code','Fira Code','Consolas',monospace;font-size:.85rem;line-height:1.5;margin:10px 0;border:1px solid var(--border)}
+/* TABLES */
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:.88rem}
+th,td{border:1px solid var(--border);padding:8px 12px;text-align:left}
+th{background:var(--primary-light);color:var(--primary);font-weight:600}
+tr:nth-child(even){background:var(--bg)}
+/* SPECIAL SECTIONS */
+.special-section{margin-bottom:24px;border-radius:12px;background:var(--bg2);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow);padding:20px}
+.special-section h2{font-size:1.2rem;color:var(--primary);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--primary-light)}
+.syllabus-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+.syllabus-card{padding:14px;background:var(--bg);border-radius:8px;border-left:4px solid var(--primary)}
+.syllabus-card h4{font-size:.95rem;color:var(--primary);margin-bottom:4px}
+.syllabus-card p{font-size:.85rem;opacity:.8}
+.mcq{padding:10px 14px;margin:8px 0;background:var(--bg);border-radius:6px;border-left:3px solid var(--accent)}
+.mcq p{margin:0 0 4px}
+.mcq em{color:var(--accent);font-size:.85rem}
+/* NAV */
+.page-nav{display:flex;justify-content:space-between;padding:16px 0;margin-bottom:16px}
+.page-nav button{padding:10px 20px;border:2px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);cursor:pointer;font-size:.9rem}
+.page-nav button:hover{border-color:var(--primary);color:var(--primary)}
+/* BACK TO TOP */
+#backToTop{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--primary);color:#fff;border:none;font-size:1.3rem;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:transform .2s}
+#backToTop:hover{transform:scale(1.1)}
+/* PROGRESS */
+.progress-bar{position:fixed;top:var(--header-h);left:0;right:0;height:3px;background:var(--border);z-index:95}
+.progress-fill{height:100%;background:var(--primary);width:0%;transition:width .3s}
+/* RESPONSIVE */
+@media(max-width:768px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0;padding:16px}
+.header .logo{font-size:1rem}
+.syllabus-grid{grid-template-columns:1fr}
+}
+/* SCROLLBAR */
+.sidebar::-webkit-scrollbar{width:5px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+/* PRINT */
+@media print{
+.sidebar,.header,.progress-bar,#backToTop,.theme-toggle,.search-bar,.page-nav{display:none!important}
+.main{margin-left:0;margin-top:0;padding:0}
+.unit-section{break-inside:avoid}
+.topic-body{display:block!important}
+}
+/* KEYBOARD SHORTCUT HINT */
+.kbd{display:inline-block;padding:2px 6px;border:1px solid var(--border);border-radius:4px;font-size:.75rem;font-family:monospace;background:var(--bg)}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<header class="header">
+    <div class="logo">📘 DAA Hub <small>Study Portal</small></div>
+    <input type="text" class="search-bar" id="search" placeholder="Search topics, algorithms, definitions..." oninput="searchTopics(this.value)">
+    <button class="theme-toggle" onclick="toggleTheme()">🌓 Dark/Light</button>
+    <button class="theme-toggle" onclick="document.getElementById('sidebar').classList.toggle('open')" style="display:none">☰</button>
+</header>
+
+<!-- Progress -->
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+    <div class="s-head">Dashboard</div>
+    <a href="#syllabus" onclick="scrollToId('syllabus')">📋 Syllabus Overview</a>
+    <div class="s-head">Units</div>
+    <a href="#unit1" onclick="scrollToId('unit1')">📘 Unit 1 — Fundamentals</a>
+    <a href="#unit2" onclick="scrollToId('unit2')">📘 Unit 2 — Brute Force & String</a>
+    <a href="#unit3" onclick="scrollToId('unit3')">📘 Unit 3 — Divide & Conquer</a>
+    <a href="#unit4" onclick="scrollToId('unit4')">📘 Unit 4 — DP & Greedy</a>
+    <a href="#unit5" onclick="scrollToId('unit5')">📘 Unit 5 — Backtracking & B&B</a>
+    <a href="#unit6" onclick="scrollToId('unit6')">📘 Unit 6 — Advanced Topics</a>
+    <div class="s-head">Reference</div>
+    <a href="#cheatsheet" onclick="scrollToId('cheatsheet')">📊 Algorithm Cheat Sheet</a>
+    <a href="#questions" onclick="scrollToId('questions')">❓ Important Questions</a>
+    <a href="#viva" onclick="scrollToId('viva')">🎤 Viva Questions</a>
+    <a href="#mcq" onclick="scrollToId('mcq')">✏️ MCQ Practice</a>
+    <a href="#truefalse" onclick="scrollToId('truefalse')">✅ True/False</a>
+    <a href="#revision" onclick="scrollToId('revision')">📝 One-Line Revision</a>
+    <a href="#glossary" onclick="scrollToId('glossary')">📖 Glossary</a>
+    <div class="s-head">Resources</div>
+    <a href="daa_master_revision.html" target="_blank">⚡ Master Revision File</a>
+    <a href="Fundamental%20of%20Algorithms-merged.pdf" target="_blank">📄 Merged Textbook PDF</a>
+</nav>
+
+<!-- Main Content -->
+<main class="main">
+
+<!-- Intro -->
+<div style="margin-bottom:24px">
+<h1>📚 DAA Study Hub</h1>
+<p class="subtitle">Design &amp; Analysis of Algorithms — Complete semester study portal with lecture content, algorithm references, exam questions, and revision aids.</p>
+<p>🔍 <kbd class="kbd">Ctrl+F</kbd> to search page · <kbd class="kbd">Alt+D</kbd> dark mode · Click unit/topic titles to expand</p>
+</div>
+
+<!-- Syllabus -->
+<section id="syllabus" class="special-section">
+<h2>📋 Syllabus Overview</h2>
+<div class="syllabus-grid"><div class="syllabus-card"><h4>Unit 1</h4><p>Fundamentals of Algorithms &amp; Data Structures, Asymptotic Notations (Big O, Ω, Θ), Efficiency Analysis</p></div>
+<div class="syllabus-card"><h4>Unit 2</h4><p>Brute Force &amp; String Matching — Selection Sort, Insertion Sort, Naive String Matching, KMP, Rabin-Karp, Exhaustive Search</p></div>
+<div class="syllabus-card"><h4>Unit 3</h4><p>Divide &amp; Conquer — Merge Sort, Quick Sort, Binary Search, Strassen&#x27;s Multiplication, Closest Pair, Convex Hull, Master Theorem, Recurrences, AVL Trees, Sorting in Linear Time</p></div>
+<div class="syllabus-card"><h4>Unit 4</h4><p>Dynamic Programming &amp; Greedy — Fibonacci, Knapsack, LCS, Warshall, Floyd, Optimal BST, Prim&#x27;s, Kruskal&#x27;s, Dijkstra, Huffman Codes</p></div>
+<div class="syllabus-card"><h4>Unit 5</h4><p>Backtracking &amp; Branch &amp; Bound — 8 Queens, Subset Sum, Assignment Problem, TSP, Knapsack, Vertex Cover, Bin Packing</p></div>
+<div class="syllabus-card"><h4>Unit 6</h4><p>Advanced Topics — Euclidean Algorithm, Modular Arithmetic, Chinese Remainder Theorem, Complexity Classes (P, NP, NPC)</p></div>
+</div></section>
+        <section id="unit1" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 1: Fundamentals of Algorithms &amp; Data Structures (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit1_What_is_an_Algorithm?">
+                <h3 class="topic-title" onclick="toggleTopic(this)">What is an Algorithm?</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> An algorithm is a sequence of unambiguous instructions for solving a problem, i.e., for obtaining a required output for any legitimate input in a finite amount of time.</p>
+                <h4>Properties of an Algorithm:</h4>
+                <ul>
+                    <li><strong>Finiteness:</strong> Terminates after a finite number of steps</li>
+                    <li><strong>Definiteness:</strong> Rigorously and unambiguously specified</li>
+                    <li><strong>Input:</strong> Zero or more quantities are externally supplied</li>
+                    <li><strong>Output:</strong> At least one quantity is produced</li>
+                    <li><strong>Effectiveness:</strong> Steps are sufficiently basic</li>
+                </ul>
+                <h4>Algorithm Design Strategies:</h4>
+                <ul>
+                    <li>Brute Force</li>
+                    <li>Divide and Conquer</li>
+                    <li>Decrease and Conquer</li>
+                    <li>Transform and Conquer</li>
+                    <li>Greedy Approach</li>
+                    <li>Dynamic Programming</li>
+                    <li>Backtracking and Branch-and-Bound</li>
+                    <li>Space and Time Tradeoffs</li>
+                </ul>
+                <h4>Important Problem Types:</h4>
+                <ul>
+                    <li>Sorting, Searching, String Processing</li>
+                    <li>Graph Problems, Combinatorial Problems</li>
+                    <li>Geometric Problems, Numerical Problems</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit1_Euclid&#x27;s_Algorithm_GCD">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Euclid&#x27;s Algorithm (GCD)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find gcd(m,n), the greatest common divisor of two nonnegative, not both zero integers m and n.</p>
+                <p><strong>Principle:</strong> gcd(m,n) = gcd(n, m mod n)</p>
+                <h4>Pseudocode:</h4>
+                <pre>while n ≠ 0 do
+    r ← m mod n
+    m ← n
+    n ← r
+return m</pre>
+                <h4>Dry Run:</h4>
+                <p>gcd(60,24) = gcd(24,12) = gcd(12,0) = 12</p>
+                <h4>Complexity:</h4>
+                <p><strong>Time:</strong> O(log n) — logarithmic</p>
+                <h4>Alternative Methods:</h4>
+                <ul>
+                    <li><strong>Consecutive integer checking:</strong> O(n)</li>
+                    <li><strong>Middle-school procedure:</strong> O(√n)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit1_Fundamental_Data_Structures">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Fundamental Data Structures</h3>
+                <div class="topic-body"><h4>Linear Data Structures:</h4>
+                <ul>
+                    <li><strong>Array:</strong> Fixed-length, contiguous memory, direct access — O(1) access, O(n) insert/delete</li>
+                    <li><strong>Linked List:</strong> Dynamic length, arbitrary memory, access by following links — Singly/Doubly linked</li>
+                    <li><strong>Stack:</strong> LIFO — Push/Pop operations</li>
+                    <li><strong>Queue:</strong> FIFO — Enqueue/Dequeue operations</li>
+                    <li><strong>Priority Queue / Heap:</strong> Elements with keys/priorities — find/delete max, insert</li>
+                </ul>
+                <h4>Graphs:</h4>
+                <p>G = &lt;V,E&gt; — finite set of vertices V and edges E</p>
+                <ul>
+                    <li><strong>Undirected/Directed</strong> graphs</li>
+                    <li><strong>Complete graph</strong> K<sub>|V|</sub>: every pair connected</li>
+                    <li><strong>Representation:</strong> Adjacency matrix (n×n), Adjacency linked lists</li>
+                    <li><strong>Weighted graphs:</strong> Numbers assigned to edges</li>
+                    <li><strong>Path:</strong> Sequence of adjacent vertices; <strong>Simple path:</strong> distinct edges</li>
+                    <li><strong>Connected graph:</strong> Path between every pair; <strong>Cycle:</strong> simple path starting & ending same vertex</li>
+                    <li><strong>Tree:</strong> Connected acyclic graph; |E| = |V| - 1</li>
+                </ul>
+                <h4>Binary Trees:</h4>
+                <ul>
+                    <li><strong>Binary Search Tree:</strong> Left subtree &lt; parent &lt; right subtree</li>
+                    <li>Height: ⌊log₂n⌋ ≤ h ≤ n−1</li>
+                    <li><strong>Tree properties:</strong> Depth, Height, Ancestors, Descendants, Leaves</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit1_Asymptotic_Notations">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Asymptotic Notations</h3>
+                <div class="topic-body"><p>The efficiency analysis framework concentrates on the <strong>order of growth</strong> of an algorithm's basic operation count.</p>
+                
+                <h4>Big O Notation (Upper Bound):</h4>
+                <p>f(n) = O(g(n)) if ∃ constants c &gt; 0, n₀ &gt; 0 such that 0 ≤ f(n) ≤ c·g(n) for all n ≥ n₀</p>
+                <p><em>"f(n) grows no faster than g(n)"</em></p>
+                
+                <h4>Big Omega Notation (Lower Bound):</h4>
+                <p>f(n) = Ω(g(n)) if ∃ constants c &gt; 0, n₀ &gt; 0 such that 0 ≤ c·g(n) ≤ f(n) for all n ≥ n₀</p>
+                <p><em>"f(n) grows at least as fast as g(n)"</em></p>
+                
+                <h4>Big Theta Notation (Tight Bound):</h4>
+                <p>f(n) = Θ(g(n)) if f(n) = O(g(n)) AND f(n) = Ω(g(n))</p>
+                <p><em>"f(n) grows at the same rate as g(n)"</em></p>
+                
+                <h4>Small o and ω Notations:</h4>
+                <ul>
+                    <li><strong>o(g(n)):</strong> For any c &gt; 0, ∃ n₀ &gt; 0 such that 0 ≤ f(n) &lt; c·g(n) — like &lt; (strictly less)</li>
+                    <li><strong>ω(g(n)):</strong> For any c &gt; 0, ∃ n₀ &gt; 0 such that 0 ≤ c·g(n) &lt; f(n) — like &gt; (strictly greater)</li>
+                </ul>
+                
+                <h4>Properties:</h4>
+                <ul>
+                    <li>f(n) ∈ O(f(n)) — Reflexivity</li>
+                    <li>f(n) ∈ O(g(n)) iff g(n) ∈ Ω(f(n)) — Transpose symmetry</li>
+                    <li>If f(n) ∈ O(g(n)) and g(n) ∈ O(h(n)), then f(n) ∈ O(h(n)) — Transitivity</li>
+                    <li>If f₁(n) ∈ O(g₁(n)) and f₂(n) ∈ O(g₂(n)), then f₁(n) + f₂(n) ∈ O(max{g₁(n), g₂(n)})</li>
+                </ul>
+                
+                <h4>Order of Growth (by limits):</h4>
+                <pre>lim<sub>n→∞</sub> T(n)/g(n) = 0  ⇒ T(n) &lt; g(n)
+                         = c &gt; 0 ⇒ T(n) = g(n)
+                         = ∞    ⇒ T(n) &gt; g(n)</pre>
+
+                <h4>Orders of Growth Hierarchy:</h4>
+                <p>1 &lt; log n &lt; n<sup>α</sup> (α&gt;0) &lt; a<sup>n</sup> &lt; n! &lt; n<sup>n</sup></p>
+                
+                <h4>Basic Efficiency Classes:</h4>
+                <table>
+                    <tr><th>Class</th><th>Name</th><th>Example</th></tr>
+                    <tr><td>1</td><td>Constant</td><td>Array access</td></tr>
+                    <tr><td>log n</td><td>Logarithmic</td><td>Binary Search</td></tr>
+                    <tr><td>n</td><td>Linear</td><td>Sequential Search</td></tr>
+                    <tr><td>n log n</td><td>n-log-n</td><td>Merge Sort</td></tr>
+                    <tr><td>n²</td><td>Quadratic</td><td>Selection Sort</td></tr>
+                    <tr><td>n³</td><td>Cubic</td><td>Matrix Multiplication</td></tr>
+                    <tr><td>2<sup>n</sup></td><td>Exponential</td><td>TSP (brute force)</td></tr>
+                    <tr><td>n!</td><td>Factorial</td><td>Permutations</td></tr>
+                </table>
+
+                <h4>L'Hôpital's Rule & Stirling's Formula:</h4>
+                <p>If lim f(n) = lim g(n) = ∞, then lim f(n)/g(n) = lim f'(n)/g'(n)</p>
+                <p><strong>Stirling's formula:</strong> n! ≈ √(2πn) · (n/e)<sup>n</sup></p></div>
+            </div>
+            <div class="topic" id="unit1_Selection_Sort">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Selection Sort</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong> Scan array to find smallest element, swap with first element. Repeat for remaining elements.</p>
+                <pre>Algorithm SelectionSort(A[0..n-1])
+for i ← 0 to n – 2 do
+    min ← i
+    for j ← i + 1 to n – 1 do
+        if A[j] < A[min]
+            min ← j
+    swap A[i] and A[min]</pre>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li><strong>Time:</strong> Θ(n²) — all cases</li>
+                    <li><strong>Space:</strong> Θ(1) — in place</li>
+                    <li><strong>Stable:</strong> Yes</li>
+                </ul></div>
+            </div></div>
+        </section>
+        <section id="unit2" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 2: Brute Force &amp; String Matching (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit2_Brute_Force_Approach">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Brute Force Approach</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> A straightforward approach, usually based directly on the problem's statement and definitions.</p>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>Computing a<sup>n</sup> (a &gt; 0, n ≥ 0)</li>
+                    <li>Computing n!</li>
+                    <li>Multiplying two matrices</li>
+                    <li>Searching for a key in a list</li>
+                </ul>
+                <h4>Strengths:</h4>
+                <ul>
+                    <li>Wide applicability, simplicity</li>
+                    <li>Yields reasonable algorithms for some important problems</li>
+                </ul>
+                <h4>Weaknesses:</h4>
+                <ul>
+                    <li>Rarely yields efficient algorithms</li>
+                    <li>Some brute-force algorithms are unacceptably slow</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit2_Brute-Force_String_Matching_Naive_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Brute-Force String Matching (Naive Algorithm)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find pattern P[1..m] in text T[1..n] where n &gt; m.</p>
+                <h4>Algorithm:</h4>
+                <pre>Step 1: Align pattern at beginning of text
+Step 2: Compare each character of pattern to text
+Step 3: If mismatch, realign pattern one position right & repeat</pre>
+                <h4>Complexity:</h4>
+                <p>Worst-case: Θ(mn) comparisons</p>
+                <p>Example: Pattern = 001011, Text = 10010101101001100101111010</p></div>
+            </div>
+            <div class="topic" id="unit2_Insertion_Sort">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Insertion Sort</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong> Build sorted array one element at a time by repeatedly swapping element i with the one to its left if smaller.</p>
+                <pre>Algorithm InsertionSort(A[0..n-1])
+for i ← 1 to n-1 do
+    v ← A[i]
+    j ← i-1
+    while j ≥ 0 and A[j] > v do
+        A[j+1] ← A[j]
+        j ← j-1
+    A[j+1] ← v</pre>
+                <h4>Dry Run (sorting: 7, 3, 2, 5):</h4>
+                <p>Initially: [7, 3, 2, 5]<br>
+                i=1: [3, 7, 2, 5] — 3 moves left of 7<br>
+                i=2: [2, 3, 7, 5] — 2 moves to front<br>
+                i=3: [2, 3, 5, 7] — 5 inserted correctly</p>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li><strong>Best:</strong> O(n) — already sorted</li>
+                    <li><strong>Average:</strong> O(n²)</li>
+                    <li><strong>Worst:</strong> O(n²) — reverse sorted</li>
+                    <li><strong>Space:</strong> O(1) — in place</li>
+                    <li><strong>Stable:</strong> Yes</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit2_Exhaustive_Search">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Exhaustive Search</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> A brute force solution to problems involving search for an element with a special property, usually among combinatorial objects (permutations, combinations, subsets).</p>
+                
+                <h4>Traveling Salesman Problem (TSP):</h4>
+                <p>Given n cities with known distances, find shortest tour visiting all cities exactly once and returning to start.</p>
+                <p><strong>Efficiency:</strong> Θ((n-1)!) — generates all permutations</p>
+                
+                <h4>Knapsack Problem:</h4>
+                <p>Given n items with weights wᵢ and values vᵢ, and capacity W, find most valuable subset that fits.</p>
+                <p><strong>Efficiency:</strong> Θ(2<sup>n</sup>) — generates all subsets</p>
+                
+                <h4>Assignment Problem:</h4>
+                <p>n people assigned to n jobs, one per person. Minimize total cost C[i,j].</p>
+                <p><strong>Efficiency:</strong> Θ(n!) — generates all permutations</p>
+                <p><strong>Better alternative:</strong> Hungarian method — O(n³)</p></div>
+            </div>
+            <div class="topic" id="unit2_Knuth-Morris-Pratt_KMP_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Knuth-Morris-Pratt (KMP) Algorithm</h3>
+                <div class="topic-body"><p><strong>Purpose:</strong> Linear-time string matching algorithm that avoids backtracking on the text.</p>
+                <p><strong>Key insight:</strong> When a mismatch occurs, use knowledge of pattern itself to determine next alignment — never re-examine matched characters in text.</p>
+                
+                <h4>Prefix Function Π:</h4>
+                <pre>Compute-Prefix-Function(p)
+1  m ← length[p]
+2  Π[1] ← 0
+3  k ← 0
+4  for q ← 2 to m
+5      do while k > 0 and p[k+1] ≠ p[q]
+6          do k ← Π[k]
+7      if p[k+1] = p[q]
+8          then k ← k + 1
+9      Π[q] ← k
+10 return Π</pre>
+                
+                <h4>KMP Matcher:</h4>
+                <pre>KMP-Matcher(S,p)
+1  n ← length[S]
+2  m ← length[p]
+3  Π ← Compute-Prefix-Function(p)
+4  q ← 0
+5  for i ← 1 to n
+6      do while q > 0 and p[q+1] ≠ S[i]
+7          do q ← Π[q]
+8      if p[q+1] = S[i]
+9          then q ← q + 1
+10     if q = m
+11         then print "Pattern occurs with shift" i – m
+12         q ← Π[q]</pre>
+                
+                <h4>Complexity:</h4>
+                <ul>
+                    <li>Prefix function: Θ(m)</li>
+                    <li>Matching: Θ(n)</li>
+                    <li>Total: O(m + n)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit2_Rabin-Karp_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Rabin-Karp Algorithm</h3>
+                <div class="topic-body"><p><strong>Idea:</strong> Use hashing to find pattern matches. Treat each character as a digit, compute hash of pattern and each text substring.</p>
+                <h4>Key Formulas:</h4>
+                <pre>p = P[m] + d(P[m-1] + d(P[m-2] + ... + d(P[2] + dP[1])))  // Horner's rule
+t<sub>s+1</sub> = d(t<sub>s</sub> - d<sup>m-1</sup>T[s+1]) + T[s+m+1]</pre>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li>Worst-case: O((n-m+1)m)</li>
+                    <li>Average-case: O(n+m) (with good hash)</li>
+                </ul>
+                <p><strong>Note:</strong> Spurious hits occur when hash matches but strings don't — use modulo to keep numbers manageable.</p></div>
+            </div></div>
+        </section>
+        <section id="unit3" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 3: Divide &amp; Conquer (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit3_Divide_&amp;_Conquer_Strategy">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Divide &amp; Conquer Strategy</h3>
+                <div class="topic-body"><p><strong>Principle:</strong></p>
+                <ol>
+                    <li><strong>Divide:</strong> Split problem into two or more smaller subproblems</li>
+                    <li><strong>Conquer:</strong> Solve smaller instances recursively</li>
+                    <li><strong>Combine:</strong> Combine solutions to get original solution</li>
+                </ol>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>Merge Sort, Quick Sort</li>
+                    <li>Binary Tree Traversals</li>
+                    <li>Binary Search</li>
+                    <li>Large Integer Multiplication</li>
+                    <li>Strassen's Matrix Multiplication</li>
+                    <li>Closest Pair, Convex Hull</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_Merge_Sort">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Merge Sort</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Split array A[0..n-1] into about equal halves</li>
+                    <li>Sort each half recursively</li>
+                    <li>Merge sorted halves</li>
+                </ol>
+                <pre>Algorithm MergeSort(A[0..n-1])
+if n > 1
+    copy A[0..⌊n/2⌋-1] to B[0..⌊n/2⌋-1]
+    copy A[⌊n/2⌋..n-1] to C[0..⌈n/2⌉-1]
+    MergeSort(B)
+    MergeSort(C)
+    Merge(B, C, A)</pre>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li><strong>Best:</strong> Θ(n log n)</li>
+                    <li><strong>Average:</strong> Θ(n log n)</li>
+                    <li><strong>Worst:</strong> Θ(n log n)</li>
+                    <li><strong>Space:</strong> O(n) — not in place</li>
+                    <li><strong>Stable:</strong> Yes</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_Quick_Sort">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Quick Sort</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Select a pivot element</li>
+                    <li>Partition array so elements &lt; pivot are left, &gt; pivot are right</li>
+                    <li>Recursively sort left and right subarrays</li>
+                </ol>
+                <pre>Algorithm QuickSort(A[l..r])
+if l < r
+    s ← Partition(A[l..r])  // s is split position
+    QuickSort(A[l..s-1])
+    QuickSort(A[s+1..r])</pre>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li><strong>Best:</strong> Θ(n log n) — balanced partition</li>
+                    <li><strong>Average:</strong> Θ(n log n)</li>
+                    <li><strong>Worst:</strong> Θ(n²) — already sorted array</li>
+                    <li><strong>Space:</strong> O(log n) — in place</li>
+                    <li><strong>Stable:</strong> No</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_Binary_Search">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Binary Search</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong> Very efficient algorithm for searching in sorted array.</p>
+                <pre>l ← 0; r ← n-1
+while l ≤ r do
+    m ← ⌊(l+r)/2⌋
+    if K = A[m] return m
+    else if K < A[m] r ← m-1
+    else l ← m+1
+return -1</pre>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li><strong>Worst-case:</strong> C<sub>w</sub>(n) = ⌈log₂(n+1)⌉</li>
+                    <li>C<sub>w</sub>(10⁶) = 20 — VERY fast!</li>
+                    <li><strong>Limitation:</strong> Must be sorted array (not linked list)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_Strassen&#x27;s_Matrix_Multiplication">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Strassen&#x27;s Matrix Multiplication</h3>
+                <div class="topic-body"><p><strong>Idea:</strong> Multiply two 2×2 matrices using 7 multiplications instead of 8.</p>
+                <pre>m₁ = (a₀₀ + a₁₁)(b₀₀ + b₁₁)
+m₂ = (a₁₀ + a₁₁)b₀₀
+m₃ = a₀₀(b₀₁ - b₁₁)
+m₄ = a₁₁(b₁₀ - b₀₀)
+m₅ = (a₀₀ + a₀₁)b₁₁
+m₆ = (a₁₀ - a₀₀)(b₀₀ + b₀₁)
+m₇ = (a₀₁ - a₁₁)(b₁₀ + b₁₁)
+
+c₀₀ = m₁ + m₄ - m₅ + m₇
+c₀₁ = m₃ + m₅
+c₁₀ = m₂ + m₄
+c₁₁ = m₁ + m₃ - m₂ + m₆</pre>
+                <h4>Complexity:</h4>
+                <p>M(n) = n<sup>log₂7</sup> ≈ n<sup>2.807</sup> vs. Θ(n³) of brute-force</p></div>
+            </div>
+            <div class="topic" id="unit3_Master_Theorem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Master Theorem</h3>
+                <div class="topic-body"><p><strong>For recurrences of form:</strong> T(n) = aT(n/b) + f(n), where a ≥ 1, b &gt; 1</p>
+                <p>Compare f(n) with n<sup>log<sub>b</sub>a</sup>:</p>
+                <table>
+                    <tr><th>Case</th><th>Condition</th><th>Solution</th></tr>
+                    <tr><td>1</td><td>f(n) = O(n<sup>log<sub>b</sub>a - ε</sup>)</td><td>T(n) = Θ(n<sup>log<sub>b</sub>a</sup>)</td></tr>
+                    <tr><td>2</td><td>f(n) = Θ(n<sup>log<sub>b</sub>a</sup> lg<sup>k</sup>n)</td><td>T(n) = Θ(n<sup>log<sub>b</sub>a</sup> lg<sup>k+1</sup>n)</td></tr>
+                    <tr><td>3</td><td>f(n) = Ω(n<sup>log<sub>b</sub>a + ε</sup>)<br>and af(n/b) ≤ cf(n) for c &lt; 1</td><td>T(n) = Θ(f(n))</td></tr>
+                </table>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>T(n) = 4T(n/2) + n ⇒ a=4,b=2 ⇒ n<sup>log₂4</sup> = n² ⇒ Case 1: T(n) = Θ(n²)</li>
+                    <li>T(n) = 4T(n/2) + n² ⇒ Case 2: T(n) = Θ(n² log n)</li>
+                    <li>T(n) = 4T(n/2) + n³ ⇒ Case 3: T(n) = Θ(n³)</li>
+                    <li>T(n) = 2T(n/2) + n ⇒ a=2,b=2 ⇒ n<sup>log₂2</sup> = n, f(n)=n ⇒ Case 2: T(n) = Θ(n log n) (Merge Sort)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_Recurrence_Relations:_Substitution_Method">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Recurrence Relations: Substitution Method</h3>
+                <div class="topic-body"><p><strong>Method:</strong> Guess the form of solution, verify by induction, solve for constants.</p>
+                <h4>Example: T(n) = 4T(n/2) + n</h4>
+                <ol>
+                    <li>Guess O(n³): Assume T(k) ≤ ck³ for k &lt; n</li>
+                    <li>T(n) = 4c(n/2)³ + n = (c/2)n³ + n = cn³ - ((c/2)n³ - n) ≤ cn³ (if c ≥ 2)</li>
+                    <li>Tighter: Prove O(n²) — strengthen hypothesis: T(k) ≤ c₁k² - c₂k</li>
+                </ol>
+                <h4>Recursion Tree Method:</h4>
+                <p>Solve T(n) = T(n/4) + T(n/2) + n²:</p>
+                <p>T(n) = n² + (5/16)n² + (25/256)n² + ... = n²(1 + 5/16 + (5/16)² + ...) = Θ(n²)</p></div>
+            </div>
+            <div class="topic" id="unit3_Closest_Pair_Problem_D&amp;C">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Closest Pair Problem (D&amp;C)</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Sort points by x-coordinate</li>
+                    <li>Divide into two halves by vertical line</li>
+                    <li>Recursively find closest pair in each half</li>
+                    <li>d = min(d₁, d₂); Check strip of width 2d across dividing line</li>
+                    <li>For each point in strip, check at most 6 points on other side</li>
+                </ol>
+                <h4>Complexity:</h4>
+                <p>T(n) = 2T(n/2) + Θ(n) ⇒ T(n) = Θ(n log n)</p></div>
+            </div>
+            <div class="topic" id="unit3_Quickhull_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Quickhull Algorithm</h3>
+                <div class="topic-body"><p><strong>Convex Hull:</strong> Smallest convex set containing given points.</p>
+                <p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Sort points by x-coordinate</li>
+                    <li>Identify extreme points P₁ (leftmost) and P₂ (rightmost)</li>
+                    <li>Compute upper hull: find P<sub>max</sub> farthest from line P₁P₂</li>
+                    <li>Recursively compute hull of points left of P₁P<sub>max</sub> and P<sub>max</sub>P₂</li>
+                    <li>Compute lower hull similarly</li>
+                </ol>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li>Worst-case: Θ(n²)</li>
+                    <li>Average-case: Θ(n)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit3_AVL_Trees">
+                <h3 class="topic-title" onclick="toggleTopic(this)">AVL Trees</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> A binary search tree where balance factor of every node (height of left subtree - height of right subtree) is -1, 0, or +1.</p>
+                <h4>Rotations:</h4>
+                <ul>
+                    <li><strong>R-rotation (single right):</strong> After insertion into left subtree of left child (balance = +2)</li>
+                    <li><strong>L-rotation (single left):</strong> After insertion into right subtree of right child (balance = -2)</li>
+                    <li><strong>LR-rotation (double):</strong> After insertion into right subtree of left child</li>
+                    <li><strong>RL-rotation (double):</strong> After insertion into left subtree of right child</li>
+                </ul>
+                <h4>Complexity:</h4>
+                <p>Search, Insert, Delete: Θ(log n)</p></div>
+            </div>
+            <div class="topic" id="unit3_2-3_Trees">
+                <h3 class="topic-title" onclick="toggleTopic(this)">2-3 Trees</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> Tree with two kinds of nodes:</p>
+                <ul>
+                    <li><strong>2-node:</strong> Contains single key K, has two children (left &lt; K &lt; right)</li>
+                    <li><strong>3-node:</strong> Contains two ordered keys K₁ &lt; K₂, has three children</li>
+                </ul>
+                <p><strong>Property:</strong> All leaves are on the same level — perfectly height-balanced.</p></div>
+            </div>
+            <div class="topic" id="unit3_Sorting_in_Linear_Time">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Sorting in Linear Time</h3>
+                <div class="topic-body"><h4>Bucket Sort (BinSort):</h4>
+                <p>If all keys are 1…K, place each key in its bin, then concatenate bins.</p>
+                <p><strong>Time:</strong> O(n+K) — linear if K = O(n)</p>
+                <p><strong>Stable:</strong> Yes</p>
+                
+                <h4>Radix Sort:</h4>
+                <p>Sort numbers digit by digit from least significant to most significant using a stable sort (like counting sort) for each digit.</p>
+                <p><strong>Time:</strong> O(d·(n+K)) where d = number of digits</p>
+                
+                <h4>Counting Sort:</h4>
+                <p>Count occurrences of each key value, compute prefix sums, place elements in correct positions.</p>
+                <p><strong>Time:</strong> O(n+K) — linear if K = O(n)</p>
+                <p><strong>Stable:</strong> Yes</p></div>
+            </div></div>
+        </section>
+        <section id="unit4" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 4: Dynamic Programming &amp; Greedy Techniques (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit4_Dynamic_Programming_Overview">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Dynamic Programming Overview</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> A general algorithm design technique for solving problems defined by recurrences with overlapping subinstances.</p>
+                <ul>
+                    <li>Invented by Richard Bellman in the 1950s</li>
+                    <li>"Programming" means "planning"</li>
+                </ul>
+                <h4>Main Idea:</h4>
+                <ol>
+                    <li>Set up recurrence relating larger instance to smaller instances</li>
+                    <li>Solve smaller instances once</li>
+                    <li>Record solutions in a table</li>
+                    <li>Extract solution to initial instance from table</li>
+                </ol>
+                <h4>Examples:</h4>
+                <ul>
+                    <li>Fibonacci numbers, Binomial coefficient</li>
+                    <li>Knapsack problem, LCS</li>
+                    <li>Warshall's algorithm (transitive closure)</li>
+                    <li>Floyd's algorithm (all-pairs shortest paths)</li>
+                    <li>Optimal BST</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit4_DP:_Knapsack_Problem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">DP: Knapsack Problem</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Given n items with weights w₁...wₙ and values v₁...vₙ, and capacity W, find most valuable subset.</p>
+                <p><strong>Recurrence:</strong></p>
+                <pre>V[i,j] = max{V[i-1,j], vᵢ + V[i-1,j-wᵢ]}  if j-wᵢ ≥ 0
+         V[i-1,j]                           if j-wᵢ < 0
+V[0,j] = 0, V[i,0] = 0</pre>
+                <h4>Example: W=5</h4>
+                <table>
+                    <tr><th>Item</th><th>Weight</th><th>Value</th></tr>
+                    <tr><td>1</td><td>2</td><td>$12</td></tr>
+                    <tr><td>2</td><td>1</td><td>$10</td></tr>
+                    <tr><td>3</td><td>3</td><td>$20</td></tr>
+                    <tr><td>4</td><td>2</td><td>$15</td></tr>
+                </table>
+                <p><strong>Optimal value:</strong> $37 (items 1,2,4)</p>
+                <h4>Complexity:</h4>
+                <p>Time &amp; Space: O(nW) — pseudopolynomial</p></div>
+            </div>
+            <div class="topic" id="unit4_DP:_Longest_Common_Subsequence_LCS">
+                <h3 class="topic-title" onclick="toggleTopic(this)">DP: Longest Common Subsequence (LCS)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find maximum length common subsequence between two sequences.</p>
+                <p><strong>Recurrence:</strong></p>
+                <pre>len(i,j) = 0                                    if i=0 or j=0
+         = len(i-1,j-1) + 1                     if aᵢ = bⱼ
+         = max(len(i,j-1), len(i-1,j))          if aᵢ ≠ bⱼ</pre>
+                <h4>Example:</h4>
+                <p>String 1: "president", String 2: "providence"<br>LCS: "priden"</p>
+                <h4>Complexity:</h4>
+                <p>Time &amp; Space: O(mn)</p></div>
+            </div>
+            <div class="topic" id="unit4_Warshall&#x27;s_Algorithm_Transitive_Closure">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Warshall&#x27;s Algorithm (Transitive Closure)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find transitive closure of a relation / existence of all paths in a digraph.</p>
+                <p><strong>Recurrence:</strong></p>
+                <pre>R⁽ᵏ⁾[i,j] = R⁽ᵏ⁻¹⁾[i,j] OR (R⁽ᵏ⁻¹⁾[i,k] AND R⁽ᵏ⁻¹⁾[k,j])</pre>
+                <p>R⁽⁰⁾ = adjacency matrix A, R⁽ⁿ⁾ = transitive closure T</p>
+                <h4>Complexity:</h4>
+                <p>Time: Θ(n³), Space: Θ(n²)</p></div>
+            </div>
+            <div class="topic" id="unit4_Floyd&#x27;s_Algorithm_All-Pairs_Shortest_Paths">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Floyd&#x27;s Algorithm (All-Pairs Shortest Paths)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find shortest paths between every pair of vertices in weighted graph.</p>
+                <p><strong>Recurrence:</strong></p>
+                <pre>D⁽ᵏ⁾[i,j] = min(D⁽ᵏ⁻¹⁾[i,j], D⁽ᵏ⁻¹⁾[i,k] + D⁽ᵏ⁻¹⁾[k,j])</pre>
+                <h4>Complexity:</h4>
+                <p>Time: Θ(n³), Space: Θ(n²)</p>
+                <p><strong>Note:</strong> Works with negative edges but not negative cycles.</p></div>
+            </div>
+            <div class="topic" id="unit4_Optimal_Binary_Search_Tree">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Optimal Binary Search Tree</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Given n keys a₁ &lt; … &lt; aₙ and probabilities p₁,…,pₙ, find BST with minimum average comparisons.</p>
+                <p><strong>Recurrence:</strong></p>
+                <pre>C[i,j] = min {C[i,k-1] + C[k+1,j]} + Σpₛ  for 1 ≤ i ≤ j ≤ n
+C[i,i] = pᵢ</pre>
+                <h4>Complexity:</h4>
+                <p>Time: Θ(n³) (can be reduced to Θ(n²)), Space: Θ(n²)</p></div>
+            </div>
+            <div class="topic" id="unit4_Greedy_Technique_Overview">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Greedy Technique Overview</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> Constructs solution piece by piece through locally optimal (greedy), feasible, and irrevocable choices.</p>
+                <h4>Optimal Solutions:</h4>
+                <ul>
+                    <li>Change making (normal denominations)</li>
+                    <li>Minimum Spanning Tree (Prim's, Kruskal's)</li>
+                    <li>Single-source shortest paths (Dijkstra's)</li>
+                    <li>Huffman codes</li>
+                </ul>
+                <h4>Approximations:</h4>
+                <ul>
+                    <li>TSP, Knapsack, other combinatorial optimization</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit4_Prim&#x27;s_MST_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Prim&#x27;s MST Algorithm</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Start with tree T₁ consisting of one vertex</li>
+                    <li>Grow tree one vertex at a time</li>
+                    <li>On each iteration, add vertex not in tree that is closest to those already in tree</li>
+                </ol>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li>O(n²) with weight matrix and array PQ</li>
+                    <li>O(m log n) with adjacency lists and min-heap PQ</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit4_Kruskal&#x27;s_MST_Algorithm">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Kruskal&#x27;s MST Algorithm</h3>
+                <div class="topic-body"><p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Sort edges in nondecreasing order of weight</li>
+                    <li>Add next edge unless it creates a cycle (skip if it does)</li>
+                </ol>
+                <h4>Complexity:</h4>
+                <p>O(m log m) — dominated by sorting</p>
+                <p><strong>Cycle checking:</strong> Union-Find data structure</p></div>
+            </div>
+            <div class="topic" id="unit4_Dijkstra&#x27;s_Algorithm_Shortest_Paths">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Dijkstra&#x27;s Algorithm (Shortest Paths)</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Single Source Shortest Paths in weighted graph.</p>
+                <p><strong>Algorithm:</strong> Similar to Prim's but different labeling: find vertex u with smallest d<sub>v</sub> + w(v,u) where v is already in tree.</p>
+                <h4>Complexity:</h4>
+                <ul>
+                    <li>O(|V|²) with weight matrix</li>
+                    <li>O(|E| log |V|) with adjacency lists and min-heap</li>
+                </ul>
+                <p><strong>Note:</strong> Does NOT work with negative weights (use Floyd's instead)</p></div>
+            </div>
+            <div class="topic" id="unit4_Huffman_Codes">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Huffman Codes</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Find optimal prefix-free binary code for given character frequencies.</p>
+                <p><strong>Algorithm:</strong></p>
+                <ol>
+                    <li>Initialize n one-node trees with characters and frequencies</li>
+                    <li>Repeat n-1 times: join two smallest-weight trees, sum their weights</li>
+                    <li>Label left edges 0, right edges 1</li>
+                </ol>
+                <p><strong>Example:</strong> A(0.35), B(0.1), C(0.2), D(0.2), _(0.15)</p>
+                <p>Codes: A=11, B=100, C=00, D=01, _=101<br>Average bits: 2.25 (vs 3 for fixed-length, 25% compression)</p></div>
+            </div></div>
+        </section>
+        <section id="unit5" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 5: Backtracking &amp; Branch &amp; Bound (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit5_Backtracking">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Backtracking</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> Technique for solving problems with a large search space by systematically trying and eliminating possibilities.</p>
+                <p><strong>Strategy:</strong></p>
+                <ol>
+                    <li>Try each choice at a junction (decision point)</li>
+                    <li>If stuck, "backtrack" to junction and try next choice</li>
+                    <li>If all choices tried and no solution, there is none</li>
+                </ol>
+                <p><strong>Analogy:</strong> Maze solving — try a path, backtrack when stuck, try another.</p></div>
+            </div>
+            <div class="topic" id="unit5_8_Queens_Problem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">8 Queens Problem</h3>
+                <div class="topic-body"><p><strong>Problem:</strong> Place 8 queens on chess board such that no two attack each other.</p>
+                <p><strong>Constraints:</strong> No two queens share same row, column, or diagonal.</p>
+                
+                <h4>Backtracking Solution:</h4>
+                <pre>void solveItRec(int perm[], int location, struct onesquare usedList[]) {
+    if (location == SIZE) { printSol(perm); return; }
+    for (int i = 0; i < SIZE; i++) {
+        if (usedList[i] == false) {
+            if (!conflict(perm, location, i)) {
+                perm[location] = i;
+                usedList[i] = true;
+                solveItRec(perm, location+1, usedList);
+                usedList[i] = false;
+            }
+        }
+    }
+}</pre>
+                <h4>Analysis:</h4>
+                <p>Brute force: 8! = 40,320 permutations<br>
+                Backtracking: ~15,720 placements examined<br>
+                With pruning: ~5,508 placements</p></div>
+            </div>
+            <div class="topic" id="unit5_Branch_and_Bound">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Branch and Bound</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> An algorithmic technique for solving optimization problems by systematically enumerating candidate solutions and pruning branches that cannot yield a better solution than the current best.</p>
+                <p><strong>Key concepts:</strong></p>
+                <ul>
+                    <li><strong>Bounding function:</strong> Estimates lower bound (for minimization) or upper bound (for maximization)</li>
+                    <li><strong>Pruning:</strong> Discard branches whose bound is worse than current best</li>
+                    <li>Used for: TSP, Knapsack, Assignment Problem</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit5_Vertex_Cover_Problem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Vertex Cover Problem</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> A vertex cover of a graph G = (V,E) is a subset V' ⊆ V such that for every edge (u,v) ∈ E, at least one of u or v is in V'.</p>
+                <p><strong>Decision problem:</strong> Does there exist a vertex cover of size k?</p>
+                <p><strong>Complexity:</strong> NP-Complete</p></div>
+            </div>
+            <div class="topic" id="unit5_Bin_Packing_Problem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Bin Packing Problem</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> Objects of different volumes must be packed into a finite number of bins of volume V, minimizing number of bins used.</p>
+                <p><strong>Variations:</strong> 2D packing, linear packing, packing by weight</p>
+                <p><strong>Heuristics:</strong> First-Fit Decreasing — sort items by decreasing size, then place each in first bin it fits.</p>
+                <p><strong>Complexity:</strong> NP-Hard; First-Fit: Θ(n log n)</p></div>
+            </div></div>
+        </section>
+        <section id="unit6" class="unit-section">
+            <h2 class="unit-title" onclick="toggleUnit(this)">Unit 6: Advanced Topics (Click to expand)</h2>
+            <div class="unit-body">
+            <div class="topic" id="unit6_Euclidean_Algorithm_Detailed">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Euclidean Algorithm (Detailed)</h3>
+                <div class="topic-body"><p><strong>Algorithm for GCD:</strong></p>
+                <pre>integer euclid(pos. integer m, pos. integer n)
+    x = m, y = n
+    while (y > 0)
+        r = x mod y
+        x = y
+        y = r
+    return x</pre>
+                <h4>Dry Run: gcd(244, 117)</h4>
+                <pre>Step 1: x=244, y=117, r=244 mod 117 = 10
+Step 2: x=117, y=10,  r=117 mod 10 = 7
+Step 3: x=10,  y=7,   r=10 mod 7 = 3
+Step 4: x=7,   y=3,   r=7 mod 3 = 1
+Step 5: x=3,   y=1,   r=3 mod 1 = 0
+Return: 1  (244 and 117 are relatively prime)</pre>
+                <h4>Correctness:</h4>
+                <p>gcd(x',y') = gcd(y, x mod y) = gcd(y, x - qy) = gcd(y, x) = gcd(x,y)</p></div>
+            </div>
+            <div class="topic" id="unit6_Modular_Arithmetic">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Modular Arithmetic</h3>
+                <div class="topic-body"><p><strong>Definition:</strong> System of arithmetic for integers where numbers "wrap around" upon reaching the modulus.</p>
+                <p>a ≡ b (mod n) iff n divides (a − b)</p>
+                <h4>Properties:</h4>
+                <ul>
+                    <li>If a ≡ b (mod n) and c ≡ d (mod n), then:</li>
+                    <li>a + c ≡ b + d (mod n)</li>
+                    <li>a − c ≡ b − d (mod n)</li>
+                    <li>a × c ≡ b × d (mod n)</li>
+                </ul></div>
+            </div>
+            <div class="topic" id="unit6_Chinese_Remainder_Theorem">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Chinese Remainder Theorem</h3>
+                <div class="topic-body"><p><strong>Statement:</strong> Suppose n₁,n₂,…,n<sub>k</sub> are pairwise coprime positive integers. For any integers a₁,a₂,…,a<sub>k</sub>, there exists integer x solving:</p>
+                <pre>x ≡ a₁ (mod n₁)
+x ≡ a₂ (mod n₂)
+...
+x ≡ a<sub>k</sub> (mod n<sub>k</sub>)</pre>
+                <h4>Example:</h4>
+                <p>Find n such that: n ≡ 2 (mod 3), n ≡ 3 (mod 5), n ≡ 2 (mod 7)<br>
+                <strong>Answer:</strong> n = 23</p></div>
+            </div>
+            <div class="topic" id="unit6_Complexity_Classes_P,_NP,_NPC">
+                <h3 class="topic-title" onclick="toggleTopic(this)">Complexity Classes (P, NP, NPC)</h3>
+                <div class="topic-body"><h4>Three Classes:</h4>
+                <ul>
+                    <li><strong>P:</strong> Problems solvable in polynomial time</li>
+                    <li><strong>NP:</strong> Problems verifiable in polynomial time</li>
+                    <li><strong>NPC (NP-Complete):</strong> Problems in NP and as hard as any problem in NP</li>
+                </ul>
+                <h4>Key Relationships:</h4>
+                <ul>
+                    <li>P ⊆ NP (sure)</li>
+                    <li>NPC ⊆ NP (sure)</li>
+                    <li>P = NP? — Millennium Prize Problem (likely P ≠ NP)</li>
+                </ul>
+                <h4>NP-Complete Problems Include:</h4>
+                <ul>
+                    <li>Circuit-SAT (first proven NPC)</li>
+                    <li>SAT (Formula Satisfiability)</li>
+                    <li>3-CNF-SAT</li>
+                    <li>CLIQUE</li>
+                    <li>Vertex Cover</li>
+                    <li>Hamiltonian Cycle</li>
+                    <li>TSP (Traveling Salesman Problem)</li>
+                    <li>Subset Sum</li>
+                    <li>Bin Packing</li>
+                </ul>
+                <h4>Implication of NPC:</h4>
+                <p>If a problem is NP-Complete, don't waste time trying to find an efficient (polynomial) algorithm. Instead, focus on approximate or heuristic solutions.</p></div>
+            </div>
+            <div class="topic" id="unit6_NP-Completeness_Proofs">
+                <h3 class="topic-title" onclick="toggleTopic(this)">NP-Completeness Proofs</h3>
+                <div class="topic-body"><h4>Steps to Prove a Problem X is NPC:</h4>
+                <ol>
+                    <li>Prove X ∈ NP (certificate can be verified in poly time)</li>
+                    <li>Prove X is NP-hard: Select known NPC problem P', construct polynomial reduction from P' to X</li>
+                </ol>
+                <h4>Reduction:</h4>
+                <p>A reduction from A to B transforms instance α of A to instance β of B such that:</p>
+                <ul>
+                    <li>Transformation takes polynomial time</li>
+                    <li>α has YES answer iff β has YES answer</li>
+                </ul>
+                <h4>Reduction Chain:</h4>
+                <p>Circuit-SAT → SAT → 3-CNF-SAT → CLIQUE → Vertex Cover → Hamiltonian Cycle → TSP → Subset Sum</p></div>
+            </div></div>
+        </section><section id="cheatsheet" class="special-section">
+<h2>📊 Algorithm Cheat Sheet — Complete Complexity Comparison</h2>
+<div style="overflow-x:auto"><table>
+<tr><th>Algorithm</th><th>Strategy</th><th>Time (Best)</th><th>Time (Avg)</th><th>Time (Worst)</th><th>Space</th><th>Stable</th></tr>
+<tr><td>Selection Sort</td><td>Brute Force</td><td>Θ(n²)</td><td>Θ(n²)</td><td>Θ(n²)</td><td>O(1)</td><td>Yes</td></tr>
+<tr><td>Insertion Sort</td><td>Decrease & Conquer</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+<tr><td>Bubble Sort</td><td>Brute Force</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td><td>O(1)</td><td>Yes</td></tr>
+<tr><td>Merge Sort</td><td>Divide & Conquer</td><td>Θ(n log n)</td><td>Θ(n log n)</td><td>Θ(n log n)</td><td>O(n)</td><td>Yes</td></tr>
+<tr><td>Quick Sort</td><td>Divide & Conquer</td><td>Θ(n log n)</td><td>Θ(n log n)</td><td>Θ(n²)</td><td>O(log n)</td><td>No</td></tr>
+<tr><td>Heap Sort</td><td>Transform & Conquer</td><td>Θ(n log n)</td><td>Θ(n log n)</td><td>Θ(n log n)</td><td>O(1)</td><td>No</td></tr>
+<tr><td>Binary Search</td><td>Decrease & Conquer</td><td>—</td><td>—</td><td>O(log n)</td><td>O(1)</td><td>—</td></tr>
+<tr><td>Linear Search</td><td>Brute Force</td><td>O(1)</td><td>O(n)</td><td>O(n)</td><td>O(1)</td><td>—</td></tr>
+<tr><td>Strassen's MM</td><td>D&C</td><td>—</td><td>—</td><td>O(n^2.807)</td><td>O(n²)</td><td>—</td></tr>
+<tr><td>Prim's MST</td><td>Greedy</td><td>—</td><td>—</td><td>O(m log n)</td><td>O(n)</td><td>—</td></tr>
+<tr><td>Kruskal's MST</td><td>Greedy</td><td>—</td><td>—</td><td>O(m log m)</td><td>O(m)</td><td>—</td></tr>
+<tr><td>Dijkstra's SPath</td><td>Greedy</td><td>—</td><td>—</td><td>O((V+E) log V)</td><td>O(V)</td><td>—</td></tr>
+<tr><td>Floyd's APSP</td><td>DP</td><td>—</td><td>—</td><td>Θ(n³)</td><td>Θ(n²)</td><td>—</td></tr>
+<tr><td>Warshall's TC</td><td>DP</td><td>—</td><td>—</td><td>Θ(n³)</td><td>Θ(n²)</td><td>—</td></tr>
+<tr><td>KMP String Match</td><td>—</td><td>—</td><td>—</td><td>O(m+n)</td><td>O(m)</td><td>—</td></tr>
+<tr><td>Rabin-Karp</td><td>Hashing</td><td>—</td><td>O(n+m)</td><td>O(nm)</td><td>O(1)</td><td>—</td></tr>
+<tr><td>Bucket Sort</td><td>Distribution</td><td>—</td><td>O(n+K)</td><td>O(n+K)</td><td>O(n+K)</td><td>Yes</td></tr>
+<tr><td>Radix Sort</td><td>Distribution</td><td>—</td><td>O(d(n+K))</td><td>O(d(n+K))</td><td>O(n+K)</td><td>Yes</td></tr>
+<tr><td>Counting Sort</td><td>Distribution</td><td>—</td><td>O(n+K)</td><td>O(n+K)</td><td>O(n+K)</td><td>Yes</td></tr>
+<tr><td>DP Knapsack</td><td>DP</td><td>—</td><td>—</td><td>O(nW)</td><td>O(nW)</td><td>—</td></tr>
+<tr><td>LCS</td><td>DP</td><td>—</td><td>—</td><td>O(mn)</td><td>O(mn)</td><td>—</td></tr>
+<tr><td>TSP (exhaustive)</td><td>Brute Force</td><td>—</td><td>—</td><td>O((n-1)!)</td><td>O(n)</td><td>—</td></tr>
+</table></div>
+</section><section id="questions" class="special-section">
+<h2>❓ Important Questions</h2>
+<h4>2-Mark Questions:</h4>
+<ol>
+<li>Define Algorithm. What are its properties?</li>
+<li>What is Big O notation? Give an example.</li>
+<li>Differentiate between Ω and Θ notations.</li>
+<li>What is a recurrence relation?</li>
+<li>State Master Theorem.</li>
+<li>What is the time complexity of Merge Sort and Quick Sort?</li>
+<li>Define stable and in-place sorting.</li>
+<li>What is the difference between DP and Greedy approach?</li>
+<li>Define transitive closure.</li>
+<li>What is the principle of optimality?</li>
+<li>Define P, NP, NP-Complete classes.</li>
+<li>What is the purpose of KMP algorithm?</li>
+<li>What is AVL tree? Define balance factor.</li>
+<li>State the optimality of Huffman coding.</li>
+<li>What is the use of Floyd-Warshall algorithm?</li>
+</ol>
+
+<h4>5-Mark Questions:</h4>
+<ol>
+<li>Explain asymptotic notations with examples.</li>
+<li>Solve T(n) = 4T(n/2) + n² using Master Theorem.</li>
+<li>Explain Merge Sort with example. Derive its complexity.</li>
+<li>Differentiate between Prim's and Kruskal's algorithm.</li>
+<li>Explain KMP algorithm with example.</li>
+<li>Explain the DP solution for 0/1 Knapsack problem.</li>
+<li>Explain Warshall's algorithm for transitive closure.</li>
+<li>Explain Strassen's matrix multiplication.</li>
+<li>Explain the concept of backtracking with 8-Queens problem.</li>
+<li>Describe the working of Dijkstra's algorithm with example.</li>
+</ol>
+
+<h4>10-Mark Questions:</h4>
+<ol>
+<li>Explain all asymptotic notations in detail with examples. Compare orders of growth.</li>
+<li>Explain Divide and Conquer strategy. Apply to Merge Sort and derive its time complexity.</li>
+<li>Explain Dynamic Programming with 0/1 Knapsack and LCS problems.</li>
+<li>Explain Floyd-Warshall algorithm for all-pairs shortest paths with example.</li>
+<li>Explain Huffman coding algorithm with example. Prove its optimality.</li>
+<li>Describe NP-Completeness. Prove that SAT or CLIQUE or TSP is NP-Complete.</li>
+<li>Compare all sorting algorithms (Selection, Insertion, Merge, Quick, Heap, Radix, Counting) with complexities.</li>
+<li>Explain Greedy approach. Solve MST using both Prim's and Kruskal's algorithms with examples.</li>
+<li>Explain string matching algorithms: Naive, Rabin-Karp, and KMP with complexities.</li>
+<li>Explain Backtracking and Branch & Bound for TSP or Knapsack problem.</li>
+</ol>
+</section><section id="viva" class="special-section">
+<h2>🎤 Viva Questions (30 Questions)</h2>
+<ol>
+<li>What is an algorithm? How is it different from a program?</li>
+<li>What are the characteristics of an algorithm?</li>
+<li>Explain the need for asymptotic analysis.</li>
+<li>What is the difference between Big O and Big Theta?</li>
+<li>When does Quick Sort perform worst?</li>
+<li>Why is Merge Sort preferred for linked lists?</li>
+<li>Can Binary Search be applied to a linked list? Why/why not?</li>
+<li>What is the advantage of AVL tree over BST?</li>
+<li>What is the difference between BFS and DFS?</li>
+<li>Explain the principle of Dynamic Programming.</li>
+<li>How is DP different from Divide and Conquer?</li>
+<li>What is overlapping subproblems?</li>
+<li>What is the difference between 0/1 Knapsack and Fractional Knapsack?</li>
+<li>Why is Dijkstra's algorithm considered greedy?</li>
+<li>What is the difference between Prim's and Dijkstra's algorithm?</li>
+<li>What is the significance of Huffman coding?</li>
+<li>What is backtracking? Give an example.</li>
+<li>What is the difference between Branch and Bound and Backtracking?</li>
+<li>What is P vs NP problem?</li>
+<li>Why is proving P ≠ NP important?</li>
+<li>How is KMP algorithm more efficient than naive string matching?</li>
+<li>What is the use of prefix function in KMP?</li>
+<li>Explain Strassen's algorithm complexity advantage.</li>
+<li>What is meant by "in-place" sorting?</li>
+<li>Explain the Master Theorem and its limitations.</li>
+<li>What is the closest pair problem?</li>
+<li>What is the Hungarian algorithm used for?</li>
+<li>Explain the concept of spanning tree and MST.</li>
+<li>What are spurious hits in Rabin-Karp?</li>
+<li>Why can't Dijkstra handle negative edges?</li>
+</ol>
+</section><section id="mcq" class="special-section">
+<h2>✏️ MCQ Practice (15 Questions)</h2>
+<div class="mcq-list">
+<div class="mcq"><p><strong>1.</strong> Which of the following is NOT a property of an algorithm?</p>
+<p>a) Finiteness  b) Definiteness  c) Ambiguity  d) Effectiveness</p>
+<p><em>Answer: c) Ambiguity</em></p></div>
+<div class="mcq"><p><strong>2.</strong> The time complexity of Binary Search is:</p>
+<p>a) O(n)  b) O(log n)  c) O(n²)  d) O(n log n)</p>
+<p><em>Answer: b) O(log n)</em></p></div>
+<div class="mcq"><p><strong>3.</strong> Which sorting algorithm has best-case time complexity O(n)?</p>
+<p>a) Merge Sort  b) Quick Sort  c) Insertion Sort  d) Selection Sort</p>
+<p><em>Answer: c) Insertion Sort</em></p></div>
+<div class="mcq"><p><strong>4.</strong> The Master Theorem solves recurrences of the form:</p>
+<p>a) T(n) = aT(n/b) + f(n)  b) T(n) = T(n-1) + n  c) T(n) = aT(n) + f(n)  d) T(n) = aT(n-1) + b</p>
+<p><em>Answer: a) T(n) = aT(n/b) + f(n)</em></p></div>
+<div class="mcq"><p><strong>5.</strong> The worst-case time complexity of Quick Sort is:</p>
+<p>a) O(n log n)  b) O(n²)  c) O(n)  d) O(log n)</p>
+<p><em>Answer: b) O(n²)</em></p></div>
+<div class="mcq"><p><strong>6.</strong> KMP algorithm has time complexity:</p>
+<p>a) O(mn)  b) O(m+n)  c) O(n²)  d) O(m²)</p>
+<p><em>Answer: b) O(m+n)</em></p></div>
+<div class="mcq"><p><strong>7.</strong> Which of the following is NOT a greedy algorithm?</p>
+<p>a) Prim's  b) Kruskal's  c) Floyd-Warshall  d) Dijkstra's</p>
+<p><em>Answer: c) Floyd-Warshall</em></p></div>
+<div class="mcq"><p><strong>8.</strong> The space complexity of Merge Sort is:</p>
+<p>a) O(1)  b) O(log n)  c) O(n)  d) O(n²)</p>
+<p><em>Answer: c) O(n)</em></p></div>
+<div class="mcq"><p><strong>9.</strong> Strassen's matrix multiplication reduces time from O(n³) to:</p>
+<p>a) O(n^2.807)  b) O(n²)  c) O(n² log n)  d) O(n^1.585)</p>
+<p><em>Answer: a) O(n^2.807)</em></p></div>
+<div class="mcq"><p><strong>10.</strong> The first problem proven to be NP-Complete is:</p>
+<p>a) SAT  b) Circuit-SAT  c) TSP  d) 3-CNF-SAT</p>
+<p><em>Answer: b) Circuit-SAT</em></p></div>
+<div class="mcq"><p><strong>11.</strong> Dijkstra's algorithm cannot handle:</p>
+<p>a) Positive weighted graphs  b) Negative edges  c) Directed graphs  d) Undirected graphs</p>
+<p><em>Answer: b) Negative edges</em></p></div>
+<div class="mcq"><p><strong>12.</strong> The AVL tree rotation complexity is:</p>
+<p>a) O(n)  b) O(log n)  c) O(1)  d) O(n²)</p>
+<p><em>Answer: c) O(1) — rotation is constant time</em></p></div>
+<div class="mcq"><p><strong>13.</strong> LCS stands for:</p>
+<p>a) Longest Common String  b) Longest Common Subsequence  c) Linear Comparison Sort  d) Linked Circular Stack</p>
+<p><em>Answer: b) Longest Common Subsequence</em></p></div>
+<div class="mcq"><p><strong>14.</strong> The problem of finding Hamiltonian cycle is:</p>
+<p>a) P  b) NP  c) NP-Complete  d) Both b and c</p>
+<p><em>Answer: d) Both b and c</em></p></div>
+<div class="mcq"><p><strong>15.</strong> Which data structure is used in Kruskal's algorithm for cycle detection?</p>
+<p>a) Stack  b) Queue  c) Union-Find  d) Heap</p>
+<p><em>Answer: c) Union-Find</em></p></div>
+</div>
+</section><section id="truefalse" class="special-section">
+<h2>✅ True/False Questions</h2>
+<ol>
+<li>An algorithm must always terminate. — <strong>True</strong></li>
+<li>Big O notation gives a lower bound on growth. — <strong>False</strong> (it gives upper bound)</li>
+<li>Merge sort is an in-place sorting algorithm. — <strong>False</strong></li>
+<li>Quick sort's worst case occurs when the array is already sorted. — <strong>True</strong></li>
+<li>Dijkstra's algorithm works with negative weights. — <strong>False</strong></li>
+<li>Huffman coding is a greedy algorithm. — <strong>True</strong></li>
+<li>Warshall's algorithm computes shortest paths. — <strong>False</strong> (it computes transitive closure)</li>
+<li>The 8-Queens problem has no solution. — <strong>False</strong> (it has 92 solutions)</li>
+<li>P ⊆ NP is an open question. — <strong>False</strong> (P ⊆ NP is proven)</li>
+<li>Radix sort is a comparison-based sorting algorithm. — <strong>False</strong></li>
+<li>AVL tree guarantees O(log n) search time. — <strong>True</strong></li>
+<li>Recursion tree method is always reliable. — <strong>False</strong></li>
+<li>Floyd's algorithm works for both undirected and directed graphs. — <strong>True</strong></li>
+<li>The knapsack problem can be solved optimally by greedy approach. — <strong>False</strong></li>
+<li>KMP algorithm never backtracks on the text. — <strong>True</strong></li>
+</ol>
+</section><section id="revision" class="special-section">
+<h2>📝 One-Line Revision Notes (30 Key Points)</h2>
+<ol>
+<li><strong>Algorithm:</strong> Sequence of finite, unambiguous instructions for solving a problem.</li>
+<li><strong>Big O:</strong> Upper bound on growth rate — f(n) ≤ c·g(n).</li>
+<li><strong>Big Ω:</strong> Lower bound — f(n) ≥ c·g(n).</li>
+<li><strong>Big Θ:</strong> Tight bound — both O and Ω.</li>
+<li><strong>Selection Sort:</strong> O(n²), stable, in-place — find min and swap.</li>
+<li><strong>Insertion Sort:</strong> O(n²), stable, in-place — insert into sorted portion.</li>
+<li><strong>Merge Sort:</strong> Θ(n log n), stable, O(n) space — divide, sort, merge.</li>
+<li><strong>Quick Sort:</strong> Θ(n log n) avg, O(n²) worst — partition around pivot.</li>
+<li><strong>Binary Search:</strong> O(log n) — requires sorted array.</li>
+<li><strong>Master Theorem:</strong> T(n) = aT(n/b) + f(n) — compare f(n) with n<sup>log<sub>b</sub>a</sup>.</li>
+<li><strong>Strassen's MM:</strong> O(n^2.807) — 7 multiplications instead of 8.</li>
+<li><strong>KMP:</strong> O(m+n) — uses prefix function to avoid backtracking on text.</li>
+<li><strong>Rabin-Karp:</strong> O(n+m) avg — hashing-based string matching.</li>
+<li><strong>DP Knapsack:</strong> O(nW) — fill table bottom-up.</li>
+<li><strong>LCS:</strong> O(mn) — use recurrence based on character match.</li>
+<li><strong>Floyd-Warshall:</strong> O(n³) — all-pairs shortest paths.</li>
+<li><strong>Warshall's:</strong> O(n³) — transitive closure.</li>
+<li><strong>Prim's MST:</strong> Grow tree by adding closest vertex.</li>
+<li><strong>Kruskal's MST:</strong> Sort edges, add non-cycle edges.</li>
+<li><strong>Dijkstra's:</strong> O((V+E)log V) — single source shortest paths.</li>
+<li><strong>Huffman:</strong> Greedy — merge smallest frequency nodes.</li>
+<li><strong>Backtracking:</strong> Try, if fail backtrack and try next.</li>
+<li><strong>AVL Tree:</strong> BST with balance -1,0,1 — rotations fix imbalance.</li>
+<li><strong>Radix Sort:</strong> Sort digit by digit, O(d(n+K)).</li>
+<li><strong>Bucket Sort:</strong> O(n+K) — distribute into K buckets.</li>
+<li><strong>P vs NP:</strong> Open problem — can verification = solution?</li>
+<li><strong>NP-Complete:</strong> Hardest NP problems — no poly solution known.</li>
+<li><strong>Chinese Remainder Theorem:</strong> Solves system of congruences with coprime moduli.</li>
+<li><strong>Euclid's GCD:</strong> O(log n) — gcd(m,n) = gcd(n, m mod n).</li>
+<li><strong>Modular Arithmetic:</strong> Numbers wrap at modulus — a ≡ b (mod n).</li>
+</ol>
+</section><section id="glossary" class="special-section">
+<h2>📖 Glossary of Terms</h2>
+<div style="overflow-x:auto"><table>
+<tr><th>Term</th><th>Definition</th></tr>
+<tr><td>Algorithm</td><td>Sequence of unambiguous instructions for solving a problem in finite time</td></tr>
+<tr><td>Asymptotic Notation</td><td>Mathematical notation to describe limiting behavior of functions</td></tr>
+<tr><td>Big O (O)</td><td>Upper bound — function grows no faster than g(n)</td></tr>
+<tr><td>Big Omega (Ω)</td><td>Lower bound — function grows at least as fast as g(n)</td></tr>
+<tr><td>Big Theta (Θ)</td><td>Tight bound — function grows at same rate as g(n)</td></tr>
+<tr><td>Recurrence</td><td>Equation describing function in terms of its values on smaller inputs</td></tr>
+<tr><td>Divide and Conquer</td><td>Strategy: divide into subproblems, solve recursively, combine</td></tr>
+<tr><td>Dynamic Programming</td><td>Solve problems by combining solutions to overlapping subproblems</td></tr>
+<tr><td>Greedy Algorithm</td><td>Makes locally optimal choice at each step</td></tr>
+<tr><td>Backtracking</td><td>Systematic trial-and-error with ability to undo choices</td></tr>
+<tr><td>Branch and Bound</td><td>Systematic enumeration with pruning using bounds</td></tr>
+<tr><td>Stable Sort</td><td>Preserves relative order of equal elements</td></tr>
+<tr><td>In-Place Algorithm</td><td>Uses O(1) extra space</td></tr>
+<tr><td>P vs NP</td><td>Whether problems verifiable in poly time are solvable in poly time</td></tr>
+<tr><td>NP-Complete</td><td>Hardest problems in NP; solving one would solve all NP problems</td></tr>
+<tr><td>Transitive Closure</td><td>Existence of paths between all vertex pairs in a graph</td></tr>
+<tr><td>Spanning Tree</td><td>Connected acyclic subgraph containing all vertices</td></tr>
+<tr><td>Prefix Code</td><td>No codeword is a prefix of another codeword</td></tr>
+<tr><td>AVL Tree</td><td>Self-balancing BST with balance factor -1,0,1</td></tr>
+<tr><td>Convex Hull</td><td>Smallest convex set containing all given points</td></tr>
+</table></div>
+</section><section id="book" class="special-section">
+<h2>📚 Book Reference</h2>
+<p><strong>Primary Textbook:</strong> A. Levitin — "Introduction to the Design & Analysis of Algorithms," 2nd ed., Pearson Addison-Wesley.</p>
+<ul>
+<li>📄 <a href="Fundamental%20of%20Algorithms-merged.pdf" target="_blank"><strong>Click to Open Merged PDF</strong></a> — Contains all lecture content from the semester</li>
+<li>All lecture PDFs are sourced from the textbook and organized by unit folders (Unit 1–6)</li>
+<li>Chapter mapping is embedded within each lecture PDF</li>
+</ul>
+<p><strong>Topic-to-Book Chapter References:</strong></p>
+<ul>
+<li>Chapter 1: Fundamentals of Algorithms & Data Structures</li>
+<li>Chapter 3: Brute Force & Exhaustive Search</li>
+<li>Chapter 4: Divide & Conquer</li>
+<li>Chapter 5: Decrease & Conquer</li>
+<li>Chapter 8: Dynamic Programming</li>
+<li>Chapter 9: Greedy Technique</li>
+<li>Chapters 11–12: Backtracking, Branch & Bound, Complexity Classes</li>
+</ul>
+</section>
+</main>
+
+<!-- Back to Top -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+// Theme Toggle
+function toggleTheme() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('daaTheme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+}
+if(localStorage.getItem('daaTheme')==='dark') document.body.classList.add('dark-mode');
+
+// Scroll Progress
+window.addEventListener('scroll', function() {
+    const h = document.documentElement.scrollHeight - window.innerHeight;
+    document.getElementById('progressFill').style.width = (window.scrollY / h * 100) + '%';
+    document.getElementById('backToTop').style.display = window.scrollY > 300 ? 'flex' : 'none';
+});
+
+// Unit Toggle
+function toggleUnit(el) {
+    el.classList.toggle('closed');
+}
+
+// Topic Toggle
+function toggleTopic(el) {
+    el.classList.toggle('open');
+    el.nextElementSibling.classList.toggle('open');
+}
+
+// Sidebar scroll
+function scrollToId(id) {
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('sidebar').classList.remove('open');
+}
+
+// Search
+function searchTopics(q) {
+    q = q.toLowerCase().trim();
+    document.querySelectorAll('.topic').forEach(t => {
+        const txt = t.textContent.toLowerCase();
+        t.style.display = (!q || txt.includes(q)) ? 'block' : 'none';
+        // auto-open matching topics
+        if(q && txt.includes(q)) {
+            t.querySelector('.topic-title').classList.add('open');
+            t.querySelector('.topic-body').classList.add('open');
+        }
+    });
+    document.querySelectorAll('.unit-section').forEach(u => {
+        const visible = [...u.querySelectorAll('.topic')].some(t => t.style.display !== 'none');
+        u.style.display = (!q || visible) ? 'block' : 'none';
+    });
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if(e.altKey && e.key === 'd') { e.preventDefault(); toggleTheme(); }
+    if(e.key === '/' && e.target.tagName !== 'INPUT') { e.preventDefault(); document.getElementById('search').focus(); }
+});
+
+// Auto-open first unit on page load
+document.querySelector('.unit-title').classList.remove('closed');
+
+// Sidebar active link tracking
+window.addEventListener('scroll', function() {
+    const links = document.querySelectorAll('.sidebar a');
+    let current = '';
+    document.querySelectorAll('.unit-section').forEach(s => {
+        const top = s.offsetTop - 100;
+        if(window.scrollY >= top) current = s.id;
+    });
+    links.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+    });
+});
+</script>
+</body>
+</html>

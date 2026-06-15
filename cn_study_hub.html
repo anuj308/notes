@@ -1,0 +1,2449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSE 306 - Computer Networks Study Hub</title>
+<style>
+/* ===== CSS ROOT VARIABLES ===== */
+:root { --bg:#f4f7fc; --bg2:#fff; --bg3:#e8edf5; --text:#1a2332; --text2:#4a5568; --accent:#2563eb; --accent2:#1d4ed8; --border:#d1d9e6; --shadow:0 2px 8px rgba(0,0,0,0.08); --hover:#f0f4ff; --tag-exam:#dc2626; --tag-interview:#059669; --tag-must:#d97706; --code-bg:#1e293b; --code-text:#e2e8f0; --sidebar-w:280px; --radius:12px; --transition:all 0.3s ease; }
+.dark { --bg:#0f172a; --bg2:#1e293b; --bg3:#334155; --text:#e2e8f0; --text2:#94a3b8; --accent:#3b82f6; --accent2:#60a5fa; --border:#334155; --shadow:0 2px 8px rgba(0,0,0,0.3); --hover:#1e293b; --code-bg:#0f172a; }
+
+/* ===== RESET & BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,Cantarell,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;transition:var(--transition)}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--text2)}
+
+/* ===== SIDEBAR ===== */
+.sidebar{position:fixed;top:0;left:0;bottom:0;width:var(--sidebar-w);background:var(--bg2);border-right:1px solid var(--border);overflow-y:auto;z-index:100;transition:var(--transition);padding:0}
+.sidebar-header{padding:20px 16px 12px;border-bottom:1px solid var(--border);background:var(--bg2);position:sticky;top:0;z-index:2}
+.sidebar-header h2{font-size:18px;color:var(--accent);display:flex;align-items:center;gap:8px}
+.sidebar-header h2 span{font-size:22px}
+.sidebar-header .sub{font-size:11px;color:var(--text2);margin-top:2px}
+.search-box{margin:12px 16px;position:relative}
+.search-box input{width:100%;padding:10px 12px 10px 36px;border:2px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;transition:var(--transition);outline:none}
+.search-box input:focus{border-color:var(--accent)}
+.search-box .icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:16px}
+.sidebar-nav{padding:8px 0 20px}
+.sidebar-nav .nav-section{margin:2px 0}
+.sidebar-nav .nav-section-title{padding:10px 16px 6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--text2);cursor:pointer;display:flex;justify-content:space-between;align-items:center;user-select:none}
+.sidebar-nav .nav-section-title:hover{color:var(--accent)}
+.sidebar-nav .nav-section-title .arrow{font-size:10px;transition:transform 0.2s}
+.sidebar-nav .nav-section-title .arrow.open{transform:rotate(90deg)}
+.sidebar-nav .nav-item{display:block;padding:8px 16px 8px 24px;font-size:13px;color:var(--text2);cursor:pointer;transition:var(--transition);border-left:3px solid transparent;text-decoration:none}
+.sidebar-nav .nav-item:hover{background:var(--hover);color:var(--text);border-left-color:var(--accent);text-decoration:none}
+.sidebar-nav .nav-item.active{color:var(--accent);background:var(--hover);border-left-color:var(--accent);font-weight:600}
+.sidebar-nav .nav-children{padding:0}
+.sidebar-nav .nav-child-item{display:block;padding:5px 16px 5px 36px;font-size:12px;color:var(--text2);cursor:pointer;transition:var(--transition);text-decoration:none;border-left:3px solid transparent}
+.sidebar-nav .nav-child-item:hover{background:var(--hover);color:var(--text);border-left-color:var(--accent2);text-decoration:none}
+
+/* ===== MAIN CONTENT ===== */
+.main{margin-left:var(--sidebar-w);padding:0;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:50;background:var(--bg2);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;justify-content:space-between;align-items:center}
+.topbar .title{font-size:16px;font-weight:700;color:var(--text)}
+.topbar .actions{display:flex;gap:8px;align-items:center}
+.theme-toggle{background:none;border:2px solid var(--border);border-radius:8px;padding:6px 12px;cursor:pointer;color:var(--text);font-size:13px;transition:var(--transition)}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent)}
+.content{padding:32px;max-width:1000px;margin:0 auto}
+.content-section{display:none}
+.content-section.active{display:block;animation:fadeIn 0.3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== SECTION HEADERS ===== */
+.unit-header{margin-bottom:32px;padding-bottom:16px;border-bottom:2px solid var(--accent)}
+.unit-header h1{font-size:32px;font-weight:800;color:var(--text);margin-bottom:4px}
+.unit-header .subtitle{font-size:14px;color:var(--text2)}
+.unit-header .tags{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tag{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:0.3px}
+.tag-exam{background:#fef2f2;color:var(--tag-exam);border:1px solid #fecaca}
+.tag-interview{background:#ecfdf5;color:var(--tag-interview);border:1px solid #a7f3d0}
+.tag-must{background:#fffbeb;color:var(--tag-must);border:1px solid #fde68a}
+.tag-exercise{background:#eef2ff;color:#4f46e5;border:1px solid #c7d2fe}
+.dark .tag-exam{background:#450a0a;color:#fca5a5;border-color:#7f1d1d}
+.dark .tag-interview{background:#022c22;color:#6ee7b7;border-color:#065f46}
+.dark .tag-must{background:#451a03;color:#fcd34d;border-color:#78350f}
+.dark .tag-exercise{background:#1e1b4b;color:#a5b4fc;border-color:#3730a3}
+
+/* ===== CARDS ===== */
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;transition:var(--transition)}
+.card:hover{box-shadow:var(--shadow)}
+.card h2{font-size:20px;font-weight:700;margin-bottom:16px;color:var(--text);display:flex;align-items:center;gap:10px}
+.card h2 .emoji{font-size:24px}
+.card h3{font-size:16px;font-weight:700;margin:20px 0 10px;color:var(--text)}
+.card h4{font-size:14px;font-weight:600;margin:16px 0 8px;color:var(--text2)}
+.card p, .card li{font-size:14px;color:var(--text2);margin-bottom:8px}
+.card ul, .card ol{padding-left:20px;margin:8px 0}
+.card li{margin-bottom:4px}
+
+/* ===== TABLES ===== */
+.table-wrap{overflow-x:auto;margin:16px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 14px;text-align:left;border:1px solid var(--border)}
+th{background:var(--bg3);font-weight:700;color:var(--text);font-size:12px;text-transform:uppercase;letter-spacing:0.3px}
+td{color:var(--text2)}
+tr:hover td{background:var(--hover)}
+
+/* ===== CODE ===== */
+code{background:var(--code-bg);color:var(--code-text);padding:2px 6px;border-radius:4px;font-size:13px;font-family:'Cascadia Code','Fira Code','JetBrains Mono',monospace}
+pre{background:var(--code-bg);color:var(--code-text);padding:16px;border-radius:8px;overflow-x:auto;margin:12px 0;font-size:13px;line-height:1.6;font-family:'Cascadia Code','Fira Code','JetBrains Mono',monospace}
+
+/* ===== INFO BOXES ===== */
+.info-box{background:var(--bg3);border-left:4px solid var(--accent);padding:16px 20px;margin:16px 0;border-radius:0 8px 8px 0}
+.info-box h4{color:var(--accent);margin-bottom:6px;font-size:14px}
+.info-box p{font-size:13px;color:var(--text2);margin:0}
+
+/* ===== DIAGRAM PLACEHOLDER ===== */
+.diagram-placeholder{background:var(--bg3);border:2px dashed var(--border);border-radius:var(--radius);padding:32px 20px;margin:16px 0;text-align:center;color:var(--text2);font-size:14px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.diagram-placeholder .icon{font-size:36px}
+.diagram-placeholder .caption{font-size:12px;font-style:italic;margin-top:4px}
+
+/* ===== MCQ ===== */
+.mcq-block{margin:16px 0;padding:16px;background:var(--bg3);border-radius:8px;border:1px solid var(--border)}
+.mcq-block .q{font-weight:600;margin-bottom:10px;font-size:14px}
+.mcq-block .opts{display:flex;flex-direction:column;gap:6px}
+.mcq-block .opt{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:6px;cursor:pointer;transition:var(--transition);font-size:13px;border:1px solid var(--border);background:var(--bg2)}
+.mcq-block .opt:hover{background:var(--hover);border-color:var(--accent)}
+.mcq-block .opt.correct{background:#dcfce7;border-color:#22c55e;color:#166534}
+.mcq-block .opt.wrong{background:#fef2f2;border-color:#ef4444;color:#991b1b}
+.dark .mcq-block .opt.correct{background:#022c22;border-color:#22c55e;color:#6ee7b7}
+.dark .mcq-block .opt.wrong{background:#450a0a;border-color:#ef4444;color:#fca5a5}
+.mcq-block .answer{display:none;margin-top:10px;padding:10px;background:var(--bg2);border-radius:6px;font-size:13px;border-left:3px solid var(--accent)}
+.mcq-block .answer.show{display:block}
+.mcq-block .show-btn{padding:6px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:12px;margin-top:8px;transition:var(--transition)}
+.mcq-block .show-btn:hover{background:var(--accent2)}
+
+/* ===== BOOKMARK ===== */
+.bookmark-btn{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text2);transition:var(--transition);padding:4px}
+.bookmark-btn:hover{color:var(--accent)}
+.bookmark-btn.active{color:#eab308}
+
+/* ===== PROGRESS ===== */
+.progress-bar{height:3px;background:var(--border);border-radius:2px;position:fixed;top:0;left:var(--sidebar-w);right:0;z-index:200}
+.progress-bar .fill{height:100%;background:var(--accent);border-radius:2px;width:0;transition:width 0.3s}
+
+/* ===== BACK TO TOP ===== */
+.back-to-top{position:fixed;bottom:24px;right:24px;width:44px;height:44px;border-radius:50%;background:var(--accent);color:#fff;border:none;cursor:pointer;font-size:20px;display:none;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(37,99,235,0.3);z-index:100;transition:var(--transition)}
+.back-to-top.show{display:flex}
+.back-to-top:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,99,235,0.4)}
+
+/* ===== KEY-VALUE LIST ===== */
+.kv-list{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:12px 0;font-size:13px}
+.kv-list .key{font-weight:700;color:var(--text);white-space:nowrap}
+.kv-list .value{color:var(--text2)}
+
+/* ===== HIGHLIGHT SEARCH ===== */
+.highlight{background:#fde68a;padding:0 2px;border-radius:2px}
+.dark .highlight{background:#92400e;color:#fef3c7}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+.sidebar{width:0;overflow:hidden;border-right:none}
+.sidebar.open{width:280px}
+.main{margin-left:0}
+.progress-bar{left:0}
+.content{padding:16px}
+.topbar{padding:12px 16px}
+.mobile-toggle{display:block!important}
+}
+.mobile-toggle{display:none;background:none;border:none;font-size:24px;cursor:pointer;color:var(--text);padding:4px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:99}
+.overlay.show{display:block}
+
+/* ===== PRINT ===== */
+@media print{
+.sidebar,.topbar,.back-to-top,.progress-bar,.overlay,.mobile-toggle,.theme-toggle,.bookmark-btn,.show-btn{display:none!important}
+.main{margin-left:0!important}
+.content-section{display:block!important;page-break-after:always}
+.card{break-inside:avoid;box-shadow:none;border:1px solid #ddd}
+}
+
+/* ===== KEYWORDS ===== */
+.keyword{display:inline-block;background:var(--bg3);padding:2px 8px;border-radius:4px;font-size:12px;font-weight:600;color:var(--accent)}
+.keyword-list{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+
+/* ===== TIMELINE ===== */
+.timeline{position:relative;padding-left:24px;margin:16px 0}
+.timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)}
+.timeline-item{position:relative;margin-bottom:16px}
+.timeline-item::before{content:'';position:absolute;left:-20px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid var(--bg2)}
+.timeline-item .title{font-weight:600;font-size:14px;color:var(--text)}
+.timeline-item .desc{font-size:13px;color:var(--text2);margin-top:2px}
+
+/* ===== GLOSSARY ===== */
+.glossary-term{padding:12px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:var(--transition)}
+.glossary-term:hover{background:var(--hover)}
+.glossary-term .term{font-weight:600;font-size:14px;color:var(--text)}
+.glossary-term .def{font-size:13px;color:var(--text2);margin-top:2px;display:none}
+.glossary-term.open .def{display:block}
+.glossary-term .expand{float:right;font-size:12px;color:var(--text2);transition:transform 0.2s}
+.glossary-term.open .expand{transform:rotate(180deg)}
+
+/* ===== COMPARISON GRID ===== */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:16px 0}
+.comp-card{padding:16px;border-radius:8px;border:1px solid var(--border)}
+.comp-card h4{font-size:14px;font-weight:700;margin-bottom:8px;color:var(--text);text-align:center;padding-bottom:8px;border-bottom:2px solid var(--accent)}
+.comp-card ul{padding-left:16px}
+.comp-card li{font-size:13px;margin-bottom:4px}
+@media(max-width:600px){.comp-grid{grid-template-columns:1fr}}
+
+.card ul li strong, .card p strong{color:var(--text)}
+</style>
+</head>
+<body>
+
+<!-- ===== OVERLAY (mobile) ===== -->
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<!-- ===== PROGRESS BAR ===== -->
+<div class="progress-bar"><div class="fill" id="progressFill"></div></div>
+
+<!-- ===== SIDEBAR ===== -->
+<nav class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<h2><span>&#128218;</span> CSE 306</h2>
+<div class="sub">Computer Networks Study Hub</div>
+</div>
+<div class="search-box">
+<span class="icon">&#128269;</span>
+<input type="text" id="searchInput" placeholder="Search topics, protocols..." oninput="handleSearch(this.value)">
+</div>
+<div class="sidebar-nav" id="sidebarNav">
+<a class="nav-item active" data-section="overview" onclick="navigateTo('overview')">&#127968; Dashboard</a>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 1: Introduction &amp; Models <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit1" onclick="navigateTo('unit1')">&#187; Unit 1 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit1-intro" onclick="navigateTo('unit1-intro')">&#187; Introduction to CN</a>
+<a class="nav-item nav-child-item" data-section="unit1-osi" onclick="navigateTo('unit1-osi')">&#187; OSI Model</a>
+<a class="nav-item nav-child-item" data-section="unit1-tcpip" onclick="navigateTo('unit1-tcpip')">&#187; TCP/IP Model</a>
+<a class="nav-item nav-child-item" data-section="unit1-topologies" onclick="navigateTo('unit1-topologies')">&#187; Network Topologies</a>
+<a class="nav-item nav-child-item" data-section="unit1-hardware" onclick="navigateTo('unit1-hardware')">&#187; Network Hardware</a>
+<a class="nav-item nav-child-item" data-section="unit1-protocols" onclick="navigateTo('unit1-protocols')">&#187; Protocols &amp; Software</a>
+</div></div>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 2: Physical Layer <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit2" onclick="navigateTo('unit2')">&#187; Unit 2 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit2-signals" onclick="navigateTo('unit2-signals')">&#187; Data &amp; Signals</a>
+<a class="nav-item nav-child-item" data-section="unit2-digital" onclick="navigateTo('unit2-digital')">&#187; Digital Transmission</a>
+<a class="nav-item nav-child-item" data-section="unit2-analog" onclick="navigateTo('unit2-analog')">&#187; Analog Transmission</a>
+<a class="nav-item nav-child-item" data-section="unit2-media" onclick="navigateTo('unit2-media')">&#187; Transmission Media</a>
+<a class="nav-item nav-child-item" data-section="unit2-impairments" onclick="navigateTo('unit2-impairments')">&#187; Impairments &amp; Multiplexing</a>
+</div></div>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 3: Data Link Layer <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit3" onclick="navigateTo('unit3')">&#187; Unit 3 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit3-framing" onclick="navigateTo('unit3-framing')">&#187; Framing &amp; Data Link Control</a>
+<a class="nav-item nav-child-item" data-section="unit3-error" onclick="navigateTo('unit3-error')">&#187; Error Detection &amp; Correction</a>
+<a class="nav-item nav-child-item" data-section="unit3-flow" onclick="navigateTo('unit3-flow')">&#187; Flow Control Protocols</a>
+<a class="nav-item nav-child-item" data-section="unit3-ethernet" onclick="navigateTo('unit3-ethernet')">&#187; Ethernet &amp; MAC</a>
+</div></div>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 4: Network Layer <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit4" onclick="navigateTo('unit4')">&#187; Unit 4 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit4-design" onclick="navigateTo('unit4-design')">&#187; Network Design Issues</a>
+<a class="nav-item nav-child-item" data-section="unit4-ipv4" onclick="navigateTo('unit4-ipv4')">&#187; IPv4 Addressing</a>
+<a class="nav-item nav-child-item" data-section="unit4-subnetting" onclick="navigateTo('unit4-subnetting')">&#187; Subnetting</a>
+<a class="nav-item nav-child-item" data-section="unit4-ipv6" onclick="navigateTo('unit4-ipv6')">&#187; IPv6 Addressing</a>
+<a class="nav-item nav-child-item" data-section="unit4-frag" onclick="navigateTo('unit4-frag')">&#187; Fragmentation &amp; Datagrams</a>
+</div></div>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 5: Routing &amp; Congestion <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit5" onclick="navigateTo('unit5')">&#187; Unit 5 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit5-routing" onclick="navigateTo('unit5-routing')">&#187; Routing Algorithms</a>
+<a class="nav-item nav-child-item" data-section="unit5-rip" onclick="navigateTo('unit5-rip')">&#187; RIP &amp; Distance Vector</a>
+<a class="nav-item nav-child-item" data-section="unit5-ospf" onclick="navigateTo('unit5-ospf')">&#187; OSPF &amp; Link State</a>
+<a class="nav-item nav-child-item" data-section="unit5-bgp" onclick="navigateTo('unit5-bgp')">&#187; BGP &amp; Path Vector</a>
+<a class="nav-item nav-child-item" data-section="unit5-congestion" onclick="navigateTo('unit5-congestion')">&#187; Congestion Control &amp; QoS</a>
+</div></div>
+<div class="nav-section">
+<div class="nav-section-title" onclick="toggleNavSection(this)">&#128218; Unit 6: Transport &amp; Application <span class="arrow open">&#9654;</span></div>
+<div class="nav-children" style="display:block">
+<a class="nav-item nav-child-item" data-section="unit6" onclick="navigateTo('unit6')">&#187; Unit 6 Overview</a>
+<a class="nav-item nav-child-item" data-section="unit6-transport" onclick="navigateTo('unit6-transport')">&#187; Transport Layer Overview</a>
+<a class="nav-item nav-child-item" data-section="unit6-udp" onclick="navigateTo('unit6-udp')">&#187; UDP</a>
+<a class="nav-item nav-child-item" data-section="unit6-tcp" onclick="navigateTo('unit6-tcp')">&#187; TCP</a>
+<a class="nav-item nav-child-item" data-section="unit6-email" onclick="navigateTo('unit6-email')">&#187; Email &amp; SMTP</a>
+<a class="nav-item nav-child-item" data-section="unit6-dns" onclick="navigateTo('unit6-dns')">&#187; DNS</a>
+</div></div>
+<a class="nav-item" data-section="protocols" onclick="navigateTo('protocols')">&#128220; Protocol Handbook</a>
+<a class="nav-item" data-section="comparison" onclick="navigateTo('comparison')">&#128196; OSI vs TCP/IP</a>
+<a class="nav-item" data-section="quickrev" onclick="navigateTo('quickrev')">&#9889; Quick Revision</a>
+<a class="nav-item" data-section="viva" onclick="navigateTo('viva')">&#128172; Viva Questions</a>
+<a class="nav-item" data-section="interview" onclick="navigateTo('interview')">&#128187; Interview Questions</a>
+<a class="nav-item" data-section="examq" onclick="navigateTo('examq')">&#128221; Exam Questions</a>
+<a class="nav-item" data-section="mcq" onclick="navigateTo('mcq')">&#128220; MCQ Practice</a>
+<a class="nav-item" data-section="glossary" onclick="navigateTo('glossary')">&#128214; Glossary</a>
+<a class="nav-item" data-section="formulas" onclick="navigateTo('formulas')">&#128200; Formulas &amp; Numericals</a>
+</div>
+</nav>
+
+<!-- ===== MAIN ===== -->
+<div class="main">
+<div class="topbar">
+<button class="mobile-toggle" onclick="toggleSidebar()">&#9776;</button>
+<div class="title" id="pageTitle">&#127968; Dashboard</div>
+<div class="actions">
+<button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">&#9790; Dark</button>
+</div>
+</div>
+<div class="progress-bar" style="position:static;height:0"><div class="fill" id="progressFill2"></div></div>
+<div class="content" id="mainContent">
+
+<!-- ============================================================ -->
+<!-- OVERVIEW / DASHBOARD -->
+<!-- ============================================================ -->
+<section class="content-section active" id="sec-overview">
+<div class="unit-header">
+<h1>&#127968; Computer Networks Study Hub</h1>
+<div class="subtitle">CSE 306 | Dr. Amandeep Singh | Comprehensive Study Portal</div>
+<div class="tags">
+<span class="tag tag-exam">&#127891; Exam Prep</span>
+<span class="tag tag-interview">&#128187; Placement Focused</span>
+<span class="tag tag-must">&#9889; Quick Revision</span>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128218;</span> Course Overview</h2>
+<p><strong>Course:</strong> CSE 306 - Computer Networks</p>
+<p><strong>Text Book:</strong> Data Communication and Networking by Behrouz Forouzan (5th Ed.)</p>
+<p><strong>Assessment:</strong> Attendance (5) + CA - best 2 of 3 (25) + MTE (20) + ETE (50) = 100</p>
+<p><strong>Course Goals:</strong> Understanding network architectures, protocols, layers, and data communication principles from physical to application layer.</p>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128200;</span> Course Coverage by Unit</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Unit</th><th>Title</th><th>Topics</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>Introduction &amp; Models</td><td>Data Communications, Network Types, OSI Model, TCP/IP Suite, Topologies, Network Hardware</td></tr>
+<tr><td>2</td><td>Physical Layer</td><td>Data &amp; Signals, Analog/Digital Transmission, Multiplexing, Transmission Media, Impairments</td></tr>
+<tr><td>3</td><td>Data Link Layer</td><td>Framing, Error Detection/Correction, Flow Control, Ethernet, MAC Addressing</td></tr>
+<tr><td>4</td><td>Network Layer</td><td>IP Addressing, IPv4/IPv6, Subnetting, Fragmentation, Network Design</td></tr>
+<tr><td>5</td><td>Routing &amp; Congestion</td><td>Routing Algorithms, RIP, OSPF, BGP, Congestion Control, QoS</td></tr>
+<tr><td>6</td><td>Transport &amp; Application</td><td>UDP, TCP, Process-to-Process Delivery, Email, DNS, SMTP</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128218;</span> Quick Navigation</h2>
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;margin-top:12px">
+<a onclick="navigateTo('unit1')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 1</a>
+<a onclick="navigateTo('unit2')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 2</a>
+<a onclick="navigateTo('unit3')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 3</a>
+<a onclick="navigateTo('unit4')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 4</a>
+<a onclick="navigateTo('unit5')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 5</a>
+<a onclick="navigateTo('unit6')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128218; Unit 6</a>
+<a onclick="navigateTo('protocols')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128220; Protocols</a>
+<a onclick="navigateTo('mcq')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128220; MCQ</a>
+<a onclick="navigateTo('interview')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128187; Interview</a>
+<a onclick="navigateTo('viva')" style="display:block;padding:16px;background:var(--bg3);border-radius:8px;text-align:center;font-weight:600;font-size:14px;cursor:pointer;transition:var(--transition);text-decoration:none;color:var(--text)">&#128172; Viva</a>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128202;</span> Key Statistics</h2>
+<div class="kv-list">
+<span class="key">PDFs Processed:</span><span class="value">24</span>
+<span class="key">Units Covered:</span><span class="value">6</span>
+<span class="key">Topics Covered:</span><span class="value">60+</span>
+<span class="key">MCQs Included:</span><span class="value">50+</span>
+<span class="key">Exam Questions:</span><span class="value">50+</span>
+<span class="key">Viva Questions:</span><span class="value">40+</span>
+<span class="key">Interview Questions:</span><span class="value">30+</span>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 1: Introduction & Models -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit1">
+<div class="unit-header">
+<h1>&#128218; Unit 1: Introduction to Computer Networks &amp; Models</h1>
+<div class="subtitle">CSE 306 | Presented by Dr. Amandeep Singh</div>
+<div class="tags"><span class="tag tag-exam">Exam Important</span><span class="tag tag-interview">Interview Important</span><span class="tag tag-must">Must Know</span></div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128196;</span> Data Communications</h2>
+<p><strong>Definition:</strong> Data communications is the exchange of data between two devices via some form of transmission medium (wire cable or wireless).</p>
+<h3>Four Fundamental Characteristics</h3>
+<ul>
+<li><strong>Delivery:</strong> Data must be delivered to the correct destination</li>
+<li><strong>Accuracy:</strong> Data must be delivered accurately (no corruption)</li>
+<li><strong>Timeliness:</strong> Data must be delivered in a timely manner (real-time)</li>
+<li><strong>Jitter:</strong> Variation in packet arrival time must be controlled</li>
+</ul>
+<h3>Five Components of a Data Communication System</h3>
+<ul>
+<li><strong>Message:</strong> Text, Number, Image, Audio, Video</li>
+<li><strong>Sender</strong></li>
+<li><strong>Receiver</strong></li>
+<li><strong>Transmission Medium</strong></li>
+<li><strong>Protocol</strong> - Set of rules governing communication</li>
+</ul>
+<h3>Data Flow Modes</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Mode</th><th>Direction</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><strong>Simplex</strong></td><td>One direction only (unidirectional)</td><td>Keyboard to monitor, Radio broadcast</td></tr>
+<tr><td><strong>Half-Duplex</strong></td><td>Both directions but one at a time</td><td>Walkie-talkie, Two-way radio</td></tr>
+<tr><td><strong>Full-Duplex</strong></td><td>Both directions simultaneously</td><td>Telephone, Video call</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#127760;</span> Network Definition</h2>
+<p>A <strong>network</strong> is a set of devices (often called <strong>nodes</strong>) connected by communication links. A node can be a computer, printer, or any device capable of sending/receiving data.</p>
+<h3>Network Criteria</h3>
+<ul>
+<li><strong>Performance:</strong> Measured by delay and throughput. Depends on transmit time, response time, number of users, type of medium</li>
+<li><strong>Reliability:</strong> Failure rate, time to recover, measured by availability/robustness</li>
+<li><strong>Security:</strong> Data protection against corruption, errors, unauthorized access</li>
+</ul>
+<h3>Categories of Networks</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Type</th><th>Distance</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>PAN</strong></td><td>Personal</td><td>Bluetooth, personal device connectivity</td></tr>
+<tr><td><strong>LAN</strong></td><td>Short (room/building)</td><td>Ethernet, Wi-Fi - high speed, local interconnectivity</td></tr>
+<tr><td><strong>MAN</strong></td><td>City/Campus</td><td>Cable TV, DSL-based metropolitan networks</td></tr>
+<tr><td><strong>WAN</strong></td><td>Long (country/world)</td><td>Internet backbone, point-to-point or switched</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128279;</span> Protocols</h2>
+<p><strong>Definition:</strong> A protocol is a set of rules that govern data communications. It determines <em>what</em> is communicated, <em>how</em> it is communicated, and <em>when</em> it is communicated.</p>
+<h3>Three Key Elements of a Protocol</h3>
+<ul>
+<li><strong>Syntax:</strong> Structure or format of data - how to read the bits (field delineation)</li>
+<li><strong>Semantics:</strong> Interprets the meaning of bits - which fields define what action</li>
+<li><strong>Timing:</strong> When data should be sent and at what speed</li>
+</ul>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128268;</span> Network Topologies</h2>
+<p><strong>Definition:</strong> Network topology defines how nodes of a network are connected. <strong>Physical topology</strong> is the cabling layout; <strong>logical topology</strong> is how signals/data pass through the network.</p>
+
+<div class="table-wrap">
+<table>
+<thead><tr><th>Topology</th><th>Description</th><th>Advantages</th><th>Disadvantages</th></tr></thead>
+<tbody>
+<tr><td><strong>Mesh</strong></td><td>Every device has point-to-point link to every other device</td><td>Robust, private, secure, easy fault isolation</td><td>Expensive, lots of cabling, n(n-1)/2 channels</td></tr>
+<tr><td><strong>Star</strong></td><td>All devices connect to central hub</td><td>Less expensive than mesh, easy installation/configuration</td><td>Single point of failure (hub)</td></tr>
+<tr><td><strong>Bus</strong></td><td>Single backbone cable with drop lines</td><td>Ease of installation, less cabling, inexpensive</td><td>Difficult reconfiguration/fault isolation, signal reflection</td></tr>
+<tr><td><strong>Ring</strong></td><td>Each device connected to two neighbors (closed loop)</td><td>Easy to install/reconfigure, easy fault ID</td><td>Unidirectional, single break breaks whole network</td></tr>
+<tr><td><strong>Tree</strong></td><td>Star bus hybrid - connects multiple star networks</td><td>Scalable, hierarchical</td><td>Dependent on backbone</td></tr>
+<tr><td><strong>Hybrid</strong></td><td>Combination of multiple topologies</td><td>Flexible, adaptable</td><td>Complex design</td></tr>
+</tbody>
+</table>
+</div>
+<div class="info-box">
+<h4>Formula for Mesh Topology</h4>
+<p>For n devices: Number of channels = n(n-1)/2, I/O ports per device = n-1</p>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128268;</span> Connecting Devices (Network Hardware)</h2>
+<table>
+<thead><tr><th>Device</th><th>Layer</th><th>Function</th></tr></thead>
+<tbody>
+<tr><td><strong>Repeater / Hub</strong></td><td>Physical (Layer 1)</td><td>Forwards every bit; no filtering capability; broadcast device; more collisions</td></tr>
+<tr><td><strong>Bridge</strong></td><td>Data Link (Layer 2)</td><td>Connects LAN segments; uses MAC addresses</td></tr>
+<tr><td><strong>Switch</strong></td><td>Data Link (Layer 2)</td><td>Intelligent device; learns addresses; forwards based on MAC address</td></tr>
+<tr><td><strong>Router</strong></td><td>Network (Layer 3)</td><td>Connects different networks; performs routing; 3-layer device (physical, data link, network)</td></tr>
+<tr><td><strong>Gateway</strong></td><td>All Layers</td><td>Connects networks with different protocols</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 1: Introduction -->
+<section class="content-section" id="sec-unit1-intro">
+<div class="unit-header"><h1>&#128218; Introduction to Computer Networks</h1></div>
+<div class="card">
+<h2>Types of Networks: Wired vs Mobile</h2>
+<div class="comp-grid">
+<div class="comp-card"><h4>Wired Networks</h4><ul><li>High bandwidth</li><li>Low bandwidth variability</li><li>Can listen on wire</li><li>High power machines</li><li>Low delay</li><li>Connected operation</li><li>No mobility</li></ul></div>
+<div class="comp-card"><h4>Mobile Networks</h4><ul><li>Low bandwidth</li><li>High bandwidth variability</li><li>Hidden terminal problem</li><li>Low power machines</li><li>Higher delay</li><li>Disconnected operation</li><li>Mobility</li></ul></div>
+</div>
+<h3>Uses of Computer Networks</h3>
+<ul><li><strong>Business:</strong> Resource sharing (printers, storage), Information exchange (Email, FTP)</li><li><strong>Home:</strong> P2P systems, E-commerce</li><li><strong>Mobile Users:</strong> Wireless + mobile computing</li><li><strong>Social Issues:</strong> Network neutrality, DMCA, Profiling, Phishing</li></ul>
+<h3>Challenges in Networking</h3>
+<ul><li>Bandwidth limitations</li><li>Security risks</li><li>Wide variety of terminals/devices</li><li>Fitting more functionality into smaller devices</li><li>Quality of Service (QoS)</li></ul>
+<h3>Limitations</h3>
+<ul><li>Cyber crime</li><li>Need for connectivity</li><li>Global protocol acceptance (IPv4 vs IPv6)</li><li>Power source for mobile devices</li><li>Cost</li></ul>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 1: OSI Model -->
+<section class="content-section" id="sec-unit1-osi">
+<div class="unit-header"><h1>&#128218; OSI Model</h1><div class="tags"><span class="tag tag-exam">Exam Important</span><span class="tag tag-interview">Interview Important</span></div></div>
+
+<div class="card">
+<h2>OSI Model Overview</h2>
+<p><strong>ISO</strong> (International Standards Organization) established the <strong>OSI</strong> (Open Systems Interconnection) model in the late 1970s. It is a standard that covers all aspects of network communications.</p>
+<p><em>ISO is the organization; OSI is the model.</em></p>
+<h3>Seven Layers of the OSI Model</h3>
+<table>
+<thead><tr><th>Layer</th><th>Name</th><th>Function</th><th>Data Unit</th></tr></thead>
+<tbody>
+<tr><td>7</td><td><strong>Application</strong></td><td>Provides services to the user (NVT, File Transfer, Mail, Directory Services)</td><td>Message</td></tr>
+<tr><td>6</td><td><strong>Presentation</strong></td><td>Translation, Encryption, Compression</td><td>Message</td></tr>
+<tr><td>5</td><td><strong>Session</strong></td><td>Dialog control, Synchronization (checkpoints)</td><td>Message</td></tr>
+<tr><td>4</td><td><strong>Transport</strong></td><td>Service-point addressing, Segmentation/reassembly, Connection/Flow/Error control</td><td>Segment</td></tr>
+<tr><td>3</td><td><strong>Network</strong></td><td>Logical addressing, Routing</td><td>Packet/Datagram</td></tr>
+<tr><td>2</td><td><strong>Data Link</strong></td><td>Framing, Physical addressing, Flow/Error/Access control</td><td>Frame</td></tr>
+<tr><td>1</td><td><strong>Physical</strong></td><td>Bit representation, Data rate, Synchronization, Line config, Topology, Transmission mode</td><td>Bit</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Layer-by-Layer Explanation</h2>
+
+<h3>1. Physical Layer</h3>
+<p>Responsible for movement of individual bits from one hop (node) to the next.</p>
+<ul><li>Type of transmission media</li><li>Representation of bits (encoding)</li><li>Data rate (bits per second)</li><li>Synchronization of bits (sender/receiver clock)</li><li>Line configuration (point-to-point / multipoint)</li><li>Topology</li><li>Transmission mode (simplex, half-duplex, full-duplex)</li></ul>
+
+<h3>2. Data Link Layer</h3>
+<p>Responsible for moving <strong>frames</strong> from one hop (node) to the next. Hop-to-hop delivery.</p>
+<ul><li><strong>Framing:</strong> Dividing bit stream into frames</li><li><strong>Physical addressing:</strong> MAC addresses</li><li><strong>Flow control:</strong> Preventing sender from overwhelming receiver</li><li><strong>Error control:</strong> Detection and retransmission of damaged/lost frames</li><li><strong>Access control:</strong> Managing which device transmits when</li></ul>
+
+<h3>3. Network Layer</h3>
+<p>Responsible for delivery of individual <strong>packets</strong> from source host to destination host. Source-to-destination delivery.</p>
+<ul><li><strong>Logical addressing:</strong> IP addresses</li><li><strong>Routing:</strong> Finding the best path</li></ul>
+
+<h3>4. Transport Layer</h3>
+<p>Responsible for delivery of a <strong>message</strong> from one process to another (process-to-process).</p>
+<ul><li>Service-point addressing (port numbers)</li><li>Segmentation and reassembly</li><li>Connection control</li><li>Flow control</li><li>Error control</li></ul>
+
+<h3>5. Session Layer</h3>
+<p>Responsible for dialog control and synchronization.</p>
+<ul><li><strong>Dialog control:</strong> Decides whose turn to transmit</li><li><strong>Synchronization:</strong> Introducing checkpoints to recover from failures</li></ul>
+
+<h3>6. Presentation Layer</h3>
+<p>Responsible for translation, compression, and encryption.</p>
+<ul><li><strong>Translation:</strong> Converting between different data formats</li><li><strong>Encryption:</strong> Securing data</li><li><strong>Compression:</strong> Reducing data size</li></ul>
+
+<h3>7. Application Layer</h3>
+<p>Responsible for providing services to the user.</p>
+<ul><li>Network Virtual Terminal (Telnet)</li><li>File transfer, access, and management (FTP)</li><li>Mail services (SMTP)</li><li>Directory Services (DNS)</li></ul>
+</div>
+
+<div class="card">
+<h2>OSI Model - Data Encapsulation</h2>
+<p>When data moves from the application layer down to the physical layer, each layer adds its own header (and sometimes trailer). This process is called <strong>encapsulation</strong>.</p>
+<div class="diagram-placeholder">
+<div class="icon">&#128220;</div>
+<div>
+<strong>Data Flow in OSI Model:</strong><br>
+Application &#8595; (Data)<br>
+Presentation &#8595; (Data)<br>
+Session &#8595; (Data)<br>
+Transport &#8595; (Segment = header + data)<br>
+Network &#8595; (Packet = header + segment)<br>
+Data Link &#8595; (Frame = header + packet + trailer)<br>
+Physical &#8595; (Bits)
+</div>
+<div class="caption">Each layer adds its own header during transmission (encapsulation). Headers are stripped at the receiving end (decapsulation).</div>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 1: TCP/IP Model -->
+<section class="content-section" id="sec-unit1-tcpip">
+<div class="unit-header"><h1>&#128218; TCP/IP Protocol Suite</h1><div class="tags"><span class="tag tag-exam">Exam Important</span><span class="tag tag-interview">Interview Important</span></div></div>
+
+<div class="card">
+<h2>TCP/IP Model</h2>
+<p>The TCP/IP protocol suite was originally defined as having <strong>four layers</strong>: host-to-network, internet, transport, and application. When compared to OSI, it can be seen as <strong>five layers</strong>: physical, data link, network, transport, and application.</p>
+<table>
+<thead><tr><th>Layer</th><th>TCP/IP</th><th>Equivalent OSI</th><th>Protocols</th></tr></thead>
+<tbody>
+<tr><td>5</td><td><strong>Application</strong></td><td>Application + Presentation + Session</td><td>HTTP, FTP, SMTP, DNS, Telnet</td></tr>
+<tr><td>4</td><td><strong>Transport</strong></td><td>Transport</td><td>TCP, UDP, SCTP</td></tr>
+<tr><td>3</td><td><strong>Network (Internet)</strong></td><td>Network</td><td>IP, ICMP, IGMP, ARP</td></tr>
+<tr><td>2</td><td><strong>Data Link</strong></td><td>Data Link</td><td>Ethernet, PPP</td></tr>
+<tr><td>1</td><td><strong>Physical</strong></td><td>Physical</td><td>Cabling, signaling</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Addressing in TCP/IP</h2>
+<p>Four levels of addresses are used:</p>
+<ol>
+<li><strong>Physical Address (MAC):</strong> Data Link Layer - 48-bit unique hardware address</li>
+<li><strong>Logical Address (IP):</strong> Network Layer - IPv4 (32-bit) or IPv6 (128-bit)</li>
+<li><strong>Port Address:</strong> Transport Layer - 16-bit (0-65535)</li>
+<li><strong>Specific Address:</strong> Application Layer - e.g., email address, URL</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>Key Differences: OSI vs TCP/IP</h2>
+<table>
+<thead><tr><th>Feature</th><th>OSI Model</th><th>TCP/IP Model</th></tr></thead>
+<tbody>
+<tr><td>Number of Layers</td><td>7</td><td>4 or 5</td></tr>
+<tr><td>Development</td><td>Model first, then protocols</td><td>Protocols first, then model</td></tr>
+<tr><td>Network Layer Mode</td><td>Both connection-oriented and connectionless</td><td>Connectionless only</td></tr>
+<tr><td>Transport Layer</td><td>Connection-oriented only</td><td>Both (TCP - oriented, UDP - connectionless)</td></tr>
+<tr><td>Approach</td><td>Vertical approach</td><td>Horizontal approach</td></tr>
+<tr><td>Protocols</td><td>Defined after model</td><td>Already existed</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- UNIT 1: Topologies & Hardware already included above -->
+
+<section class="content-section" id="sec-unit1-topologies">
+<div class="unit-header"><h1>&#128218; Network Topologies - Detailed</h1></div>
+<div class="card">
+<h2>Considerations for Choosing Topology</h2>
+<ul>
+<li><strong>Money:</strong> Bus is the least expensive</li>
+<li><strong>Length of cable needed:</strong> Linear bus uses shorter cables</li>
+<li><strong>Future growth:</strong> Star topology is easiest to expand</li>
+<li><strong>Cable type:</strong> Twisted pair (most common in commercial orgs) works with star topologies</li>
+<li><strong>Overall best:</strong> Full mesh is theoretically best (max speed/security) but expensive</li>
+<li><strong>Next best:</strong> Tree topology (connection of stars)</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit1-hardware">
+<div class="unit-header"><h1>&#128218; Network Hardware - Detailed</h1></div>
+<div class="card">
+<h2>Backbone Networks</h2>
+<ul><li><strong>Serial Backbone (Daisy Chain):</strong> Linked series of devices; hubs/switches connected to extend network</li><li>Hubs, gateways, routers, switches, and bridges can form part of backbone</li></ul>
+
+<h3>Repeater / Hub</h3>
+<ul><li>Physical layer device</li><li>Forwards every bit; no filtering capability</li><li>Broadcast device (sends to all ports)</li><li>More collisions</li><li>Connects same networking devices</li></ul>
+
+<h3>Switch</h3>
+<ul><li>Data Link layer (Layer 2) device</li><li>Intelligent device - learns MAC addresses</li><li>Forwards frames selectively</li><li>Works on MAC address</li><li>Also called <strong>two-layer switch</strong></li></ul>
+
+<h3>Router</h3>
+<ul><li>Network layer (Layer 3) device</li><li>Connects different networks</li><li>Performs routing</li><li>Also called <strong>three-layer switch</strong></li></ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit1-protocols">
+<div class="unit-header"><h1>&#128218; Network Software &amp; Protocol Hierarchies</h1></div>
+<div class="card">
+<h2>Network Software Architecture</h2>
+<h3>Protocol Hierarchies</h3>
+<ul><li>Layers, protocols, and interfaces = <strong>Network Architecture</strong></li>
+<li>Protocol is an agreement between communicating parties on how communication proceeds</li>
+<li>Entities at the same layer on different machines are called <strong>peers</strong></li>
+<li>List of protocols used by a system (one per layer) = <strong>Protocol Stack</strong></li></ul>
+
+<h3>Design Issues for the Layers</h3>
+<ul><li>Addressing or naming</li><li>Error Control</li><li>Flow Control / Congestion</li><li>Statistical Multiplexing</li><li>Routing</li><li>Scalability</li><li>Quality of Service (QoS) - real time</li><li>Reliability</li><li>Security</li></ul>
+
+<h3>Connection-Oriented vs Connectionless Services</h3>
+<div class="comp-grid">
+<div class="comp-card"><h4>Connection-Oriented</h4><ul><li>Like telephone network (circuit)</li><li>Connection established first</li><li>Data transferred sequentially</li><li>Reliable (acknowledgments)</li><li>Examples: TCP, Virtual Circuits</li></ul></div>
+<div class="comp-card"><h4>Connectionless</h4><ul><li>Like postal system</li><li>Each message carries full destination address</li><li>Each message routed independently</li><li>Unreliable = datagram service</li><li>Examples: UDP, IP</li></ul></div>
+</div>
+
+<h3>Service Primitives</h3>
+<p>For connection-oriented service: <strong>LISTEN, CONNECT, ACCEPT, RECEIVE, SEND, DISCONNECT</strong></p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 2: Physical Layer -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit2">
+<div class="unit-header"><h1>&#128218; Unit 2: Physical Layer</h1><div class="subtitle">Physical Layer: Signal &amp; Media</div></div>
+</section>
+
+<section class="content-section" id="sec-unit2-signals">
+<div class="unit-header"><h1>&#128218; Data &amp; Signals</h1></div>
+<div class="card">
+<h2>Analog and Digital Data</h2>
+<p><strong>Data</strong> can be <strong>analog</strong> (continuous values) or <strong>digital</strong> (discrete states).</p>
+<ul><li><strong>Analog data:</strong> Continuous - e.g., voice, video</li>
+<li><strong>Digital data:</strong> Discrete states - e.g., text, integers</li>
+<li><strong>Analog signals:</strong> Infinite number of values in a range</li>
+<li><strong>Digital signals:</strong> Limited number of values</li></ul>
+
+<h2>Periodic Analog Signals</h2>
+<p>A sine wave is represented by: <strong>Peak Amplitude, Frequency, Phase, Wavelength</strong></p>
+<ul>
+<li><strong>Peak Amplitude:</strong> Absolute value of highest intensity (measured in volts)</li>
+<li><strong>Period (T):</strong> Amount of time to complete one cycle (seconds)</li>
+<li><strong>Frequency (f):</strong> Number of periods in 1 second (Hertz). f = 1/T</li>
+<li><strong>Phase:</strong> Position of the waveform relative to time 0 (degrees or radians)</li>
+<li><strong>Wavelength (&#955;):</strong> Distance signal travels in one period. &#955; = propagation speed &#215; period</li>
+</ul>
+
+<div class="info-box">
+<h4>Key Formula</h4>
+<p><strong>Frequency &amp; Period:</strong> f = 1/T, T = 1/f</p>
+<p><strong>Wavelength:</strong> &#955; = c / f (where c = speed of light in the medium)</p>
+<p><strong>Bandwidth:</strong> Difference between highest and lowest frequencies in a composite signal</p>
+</div>
+
+<h3>Fourier Analysis</h3>
+<ul><li>Any composite signal is a combination of simple sine waves with different frequencies, amplitudes, and phases</li>
+<li>If the composite signal is periodic &#8594; decomposition gives discrete frequencies</li>
+<li>If the composite signal is nonperiodic &#8594; decomposition gives continuous frequencies</li></ul>
+</div>
+
+<div class="card">
+<h2>Digital Signals</h2>
+<p>A digital signal can have more than two levels. Each signal level represents multiple bits.</p>
+<p><strong>Bit Rate:</strong> Number of bits sent in 1 second (bps). Most digital signals are non-periodic.</p>
+<p><strong>Bit Length:</strong> Distance one bit occupies on transmission medium = propagation speed &#215; bit duration</p>
+
+<h3>Baseband vs Broadband Transmission</h3>
+<ul><li><strong>Baseband:</strong> Digital signal sent directly over a low-pass channel. Bandwidth required = bit rate/2</li>
+<li><strong>Broadband:</strong> Digital signal modulated onto an analog carrier for bandpass channels. Requires modulation (modem)</li></ul>
+
+<h3>Data Rate Limits</h3>
+<div class="info-box">
+<h4>Nyquist Bit Rate (Noiseless Channel)</h4>
+<p><strong>Bit Rate = 2 &#215; Bandwidth &#215; log&#8322;(L)</strong> where L = number of signal levels</p>
+<h4>Shannon Capacity (Noisy Channel)</h4>
+<p><strong>Capacity = Bandwidth &#215; log&#8322;(1 + SNR)</strong> where SNR = Signal-to-Noise Ratio</p>
+<h4>SNR in dB</h4>
+<p><strong>SNR&#8340;&#8344; = 10 log&#8321;&#8320;(SNR)</strong></p>
+</div>
+
+<h3>Examples</h3>
+<p><strong>Nyquist:</strong> Channel with 3000 Hz bandwidth, 2 signal levels &#8594; Max bit rate = 2 &#215; 3000 &#215; log&#8322;2 = 6000 bps</p>
+<p><strong>Shannon:</strong> Telephone line with 3000 Hz bandwidth, SNR = 3162 &#8594; Capacity = 3000 &#215; log&#8322;(1+3162) &#8776; 34,860 bps</p>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit2-digital">
+<div class="unit-header"><h1>&#128218; Digital Transmission</h1></div>
+<div class="card">
+<h2>Digital-to-Digital Conversion</h2>
+<h3>Line Coding Schemes</h3>
+<table>
+<thead><tr><th>Category</th><th>Scheme</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Unipolar</strong></td><td>NRZ (Non-Return to Zero)</td><td>All signal levels on one side of time axis. Prone to DC components, no synchronization</td></tr>
+<tr><td><strong>Polar</strong></td><td>NRZ-L</td><td>+V for 1, -V for 0. Voltage level determines bit value. DC component problem</td></tr>
+<tr><td><strong>Polar</strong></td><td>NRZ-I</td><td>Inversion = 1, no inversion = 0. Better than NRZ-L</td></tr>
+<tr><td><strong>Polar</strong></td><td>RZ (Return to Zero)</td><td>Three voltage levels (+, 0, -). Self-synchronizing, wider bandwidth</td></tr>
+<tr><td><strong>Polar</strong></td><td>Manchester</td><td>Combines NRZ-L + RZ. Transition in middle: high-low = 1, low-high = 0. Self-synchronizing</td></tr>
+<tr><td><strong>Polar</strong></td><td>Differential Manchester</td><td>Combines NRZ-I + RZ. Transition at middle always; beginning transition indicates bit value</td></tr>
+<tr><td><strong>Bipolar</strong></td><td>AMI / Pseudoternary</td><td>Three levels: zero for 0, alternating +V/-V for 1</td></tr>
+</tbody>
+</table>
+<div class="info-box"><h4>Key Point</h4><p>Manchester and Differential Manchester have a transition at the middle of each bit used for <strong>synchronization</strong>. Minimum bandwidth is 2&#215; that of NRZ. No DC component.</p></div>
+
+<h3>Analog-to-Digital Conversion: PCM</h3>
+<p><strong>Pulse Code Modulation (PCM)</strong> steps: <strong>Sampling &#8594; Quantization &#8594; Binary Encoding</strong></p>
+<ul>
+<li><strong>Sampling:</strong> Nyquist theorem - sampling rate must be at least 2x highest frequency</li>
+<li><strong>Quantization:</strong> Mapping infinite amplitude values to finite set. &#916; = (max - min)/L</li>
+<li><strong>Encoding:</strong> Each quantized value represented in binary</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit2-analog">
+<div class="unit-header"><h1>&#128218; Analog Transmission</h1></div>
+<div class="card">
+<h2>Digital-to-Analog Conversion</h2>
+<p>Digital data carried on analog signal using a carrier signal (frequency f&#8070;).</p>
+<table>
+<thead><tr><th>Technique</th><th>Description</th><th>Bandwidth</th></tr></thead>
+<tbody>
+<tr><td><strong>ASK</strong> (Amplitude Shift Keying)</td><td>Amplitude of carrier changed to reflect digital data</td><td>B = (1+d)S</td></tr>
+<tr><td><strong>FSK</strong> (Frequency Shift Keying)</td><td>Frequency of carrier changed</td><td>B = (1+d)S + 2&#916;f</td></tr>
+<tr><td><strong>PSK</strong> (Phase Shift Keying)</td><td>Phase of carrier changed. More robust than ASK</td><td>B = (1+d)S</td></tr>
+<tr><td><strong>QAM</strong> (Quadrature Amplitude Modulation)</td><td>Combination of ASK + PSK</td><td>B = (1+d)S</td></tr>
+</tbody>
+</table>
+<p><strong>Baud Rate:</strong> Number of signal elements per second. S = N &#215; 1/r bauds, where r = bits per signal element, N = bit rate.</p>
+
+<h2>Analog-to-Analog Conversion</h2>
+<table>
+<thead><tr><th>Technique</th><th>Description</th><th>Bandwidth</th></tr></thead>
+<tbody>
+<tr><td><strong>AM</strong> (Amplitude Modulation)</td><td>Carrier modulated in amplitude only</td><td>B<sub>AM</sub> = 2B (B = audio BW)</td></tr>
+<tr><td><strong>FM</strong> (Frequency Modulation)</td><td>Modulating signal changes carrier frequency</td><td>B<sub>FM</sub> = 2(1+&#946;)B, &#946; = 4</td></tr>
+<tr><td><strong>PM</strong> (Phase Modulation)</td><td>Modulating signal changes carrier phase</td><td>B<sub>PM</sub> = 2(1+&#946;)B, &#946; = 2</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit2-media">
+<div class="unit-header"><h1>&#128218; Transmission Media</h1></div>
+<div class="card">
+<h2>Guided Media (Wired)</h2>
+<h3>1. Twisted-Pair Cable</h3>
+<ul><li><strong>UTP (Unshielded):</strong> 4 pairs of color-coded copper wires, twisted, no shielding. Categories: Cat 3, Cat 5/5e, Cat 6</li>
+<li><strong>STP (Shielded):</strong> Metal casing prevents electromagnetic noise. Eliminates crosstalk</li>
+<li><strong>Connector:</strong> RJ-45 (Registered Jack)</li>
+<li>Cables twisted to reduce <strong>crosstalk</strong> and <strong>noise</strong></li>
+<li><strong>Crossover cable:</strong> Connects same-type devices (host-host, router-router, switch-switch)</li>
+<li><strong>Straight-through:</strong> Connects host to network device</li>
+</ul>
+
+<h3>2. Coaxial Cable</h3>
+<ul><li><strong>50-ohm:</strong> Digital transmission</li>
+<li><strong>75-ohm:</strong> Analog transmission, cable TV</li>
+<li>Used in telephone system, cable TV, MAN</li>
+<li>High bandwidth, excellent noise immunity</li>
+<li>Types: RG-59 (low power video), RG-58, RG-11 (wide broadband)</li>
+</ul>
+
+<h3>3. Optical Fiber</h3>
+<ul><li>Glass or plastic cable; signals as light</li>
+<li><strong>Core:</strong> Light travels through (glass/plastic)</li>
+<li><strong>Cladding:</strong> Reflects light back into core</li>
+<li>Total internal reflection: incidence angle &gt; critical angle</li>
+<li><strong>Advantages:</strong> Noise resistance, less signal attenuation, higher bandwidth</li>
+<li><strong>Disadvantages:</strong> Cost, installation/maintenance, fragility</li>
+</ul>
+
+<h2>Unguided Media (Wireless)</h2>
+<table>
+<thead><tr><th>Type</th><th>Frequency</th><th>Use</th><th>Antenna</th></tr></thead>
+<tbody>
+<tr><td><strong>Radio Waves</strong></td><td>3 kHz - 1 GHz</td><td>Multicast (radio, TV). Penetrates walls</td><td>Omnidirectional</td></tr>
+<tr><td><strong>Microwaves</strong></td><td>1 - 300 GHz</td><td>Unicast (cellular, wireless LAN). Cannot penetrate walls</td><td>Directional (point-to-point)</td></tr>
+<tr><td><strong>Infrared</strong></td><td>300 GHz - 400 THz</td><td>Short-range, closed area, line-of-sight</td><td>Directional</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit2-impairments">
+<div class="unit-header"><h1>&#128218; Transmission Impairments &amp; Multiplexing</h1></div>
+<div class="card">
+<h2>Transmission Impairments</h2>
+<p>Signal transmitted through imperfect media causes impairment: <strong>what is sent is not what is received</strong>.</p>
+
+<h3>Types of Impairment</h3>
+<table>
+<thead><tr><th>Impairment</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Attenuation</strong></td><td>Loss of energy = weaker signal. Compensated by amplifiers. Measured in decibels (dB).<br>dB = 10 log&#8321;&#8320;(P&#8322;/P&#8321;)</td></tr>
+<tr><td><strong>Distortion</strong></td><td>Signal changes shape. Each frequency component has different propagation speed &#8594; different delays</td></tr>
+<tr><td><strong>Noise</strong></td><td>Thermal noise, crosstalk, impulse noise (spikes from power lines, lightning), induced noise</td></tr>
+</tbody>
+</table>
+
+<h3>Signal-to-Noise Ratio (SNR)</h3>
+<p>SNR = Signal Power / Noise Power. SNR&#8340;&#8344; = 10 log&#8321;&#8320;(SNR). Higher SNR = better signal quality.</p>
+
+<h3>Decibel Examples</h3>
+<ul><li>Power reduced to half: dB = 10 log&#8321;&#8320;(0.5) = -3 dB (3 dB loss)</li>
+<li>Power increased 10&#215;: dB = 10 log&#8321;&#8320;(10) = 10 dB (10 dB gain)</li>
+<li>dBm: dBm = 10 log&#8321;&#8320;(P<sub>m</sub>) where P<sub>m</sub> is power in milliwatts</li>
+</ul>
+
+<h2>Multiplexing</h2>
+<p><strong>Definition:</strong> Set of techniques that allows simultaneous transmission of multiple signals across a single data link.</p>
+<table>
+<thead><tr><th>Type</th><th>Description</th><th>Use</th></tr></thead>
+<tbody>
+<tr><td><strong>FDM</strong> (Frequency Division)</td><td>Analog technique, combines analog signals using modulation</td><td>Radio, TV broadcasting</td></tr>
+<tr><td><strong>TDM</strong> (Time Division)</td><td>Digital technique, shares time slots</td><td>Telephone networks</td></tr>
+<tr><td><strong>WDM</strong> (Wavelength Division)</td><td>Analog technique for optical signals</td><td>Fiber optic communication</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 3: Data Link Layer -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit3">
+<div class="unit-header"><h1>&#128218; Unit 3: Data Link Layer</h1><div class="subtitle">Physical Addressing, Framing, Flow Control, Error Control</div></div>
+</section>
+
+<section class="content-section" id="sec-unit3-framing">
+<div class="unit-header"><h1>&#128218; Framing &amp; Data Link Control</h1></div>
+<div class="card">
+<h2>Data Link Layer Design Issues</h2>
+<ul>
+<li>Services provided to the Network Layer</li>
+<li><strong>Framing:</strong> Packing bits into frames</li>
+<li><strong>Error Control</strong></li>
+<li><strong>Flow Control</strong></li>
+</ul>
+
+<h2>Framing</h2>
+<p>The data link layer needs to pack bits into frames so each frame is distinguishable.</p>
+
+<h3>Types of Framing</h3>
+<table>
+<thead><tr><th>Type</th><th>Description</th><th>Technique</th></tr></thead>
+<tbody>
+<tr><td><strong>Fixed-Size Framing</strong></td><td>All frames same size</td><td>No boundary markers needed</td></tr>
+<tr><td><strong>Variable-Size Framing (Character-Oriented)</strong></td><td>Frames of varying size, uses flags and byte stuffing</td><td><strong>Byte stuffing:</strong> Add extra byte when flag or escape character appears in text</td></tr>
+<tr><td><strong>Variable-Size Framing (Bit-Oriented)</strong></td><td>Frames of varying size, uses flag 01111110</td><td><strong>Bit stuffing:</strong> Add extra 0 after five consecutive 1s</td></tr>
+</tbody>
+</table>
+
+<div class="info-box">
+<h4>Bit Stuffing Rule</h4>
+<p>When data contains pattern 01111110 (same as flag), add an extra 0 after five consecutive 1s: <strong>011111 &#8594; 0111110</strong>. Receiver removes the extra 0.</p>
+</div>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit3-error">
+<div class="unit-header"><h1>&#128218; Error Detection &amp; Correction</h1><div class="tags"><span class="tag tag-exam">Exam Important</span></div></div>
+<div class="card">
+<h2>Types of Errors</h2>
+<ul>
+<li><strong>Single-bit error:</strong> One bit changed. Rare in serial transmission (noise must be very short)</li>
+<li><strong>Burst error:</strong> Two or more bits changed. Measured from first corrupted to last corrupted bit. Most common in serial transmission</li>
+</ul>
+
+<h2>Error Detection Techniques</h2>
+<table>
+<thead><tr><th>Technique</th><th>Description</th><th>Performance</th></tr></thead>
+<tbody>
+<tr><td><strong>VRC</strong> (Vertical Redundancy Check)</td><td>Parity bit added to each data unit; makes total number of 1s even (or odd)</td><td>Detects burst errors only if odd number of errors</td></tr>
+<tr><td><strong>LRC</strong> (Longitudinal Redundancy Check)</td><td>Additional parity bits for each bit position across all data units</td><td>Higher likelihood of detecting burst errors. Fails if two bits in same position in different data units are damaged</td></tr>
+<tr><td><strong>CRC</strong> (Cyclic Redundancy Check)</td><td>Generator creates n-bit FCS so (k+n) bits are divisible by predetermined number. Receiver divides by same number</td><td>Very powerful; detects most common errors</td></tr>
+<tr><td><strong>Checksum</strong></td><td>Data divided into k sections of n bits; all sections added (1's complement); sum complemented = checksum</td><td>Detects all odd-numbered errors; most even-numbered errors</td></tr>
+</tbody>
+</table>
+
+<h2>Error Correction (Hamming Code)</h2>
+<p>For m data bits and r redundancy bits: <strong>2&#8310; &#8805; m + r + 1</strong></p>
+<p>Hamming Code can detect and correct single-bit errors.</p>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit3-flow">
+<div class="unit-header"><h1>&#128218; Flow Control Protocols</h1></div>
+<div class="card">
+<h2>Flow &amp; Error Control</h2>
+<p><strong>Flow control:</strong> Restricts amount of data sender can send before waiting for acknowledgment.<br>
+<strong>Error control:</strong> Based on Automatic Repeat Request (ARQ) - retransmission of data.</p>
+
+<h3>Protocol Taxonomy</h3>
+<table>
+<thead><tr><th>Channel Type</th><th>Protocol</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td rowspan="2"><strong>Noiseless</strong></td><td>Simplest Protocol</td><td>No flow or error control</td></tr>
+<tr><td>Stop-and-Wait</td><td>Sender sends one frame, waits for confirmation</td></tr>
+<tr><td rowspan="3"><strong>Noisy</strong></td><td>Stop-and-Wait ARQ</td><td>Uses sequence numbers (0,1,0,1...). Acknowledgment number is opposite of sequence number</td></tr>
+<tr><td>Go-Back-N ARQ</td><td>Sends multiple frames before receiving acknowledgment. Uses sliding window. Send window size &lt; 2&#8310;. Receiver window size = 1. On error, retransmits from that point</td></tr>
+<tr><td>Selective Repeat ARQ</td><td>Only retransmits damaged frames. Both sender and receiver windows must be &#8804; 2&#8310;&#8315;&#185;</td></tr>
+</tbody>
+</table>
+
+<h3>Pipelining</h3>
+<p>Task begins before end of first task. Stop-and-Wait doesn't use pipelining; Go-Back-N and Selective Repeat do. This improves efficiency.</p>
+
+<div class="info-box">
+<h4>Bandwidth-Delay Product</h4>
+<p>Bandwidth-Delay Product = Bandwidth &#215; Round-Trip Time. Measures number of bits that can be sent while waiting for acknowledgment.</p>
+<p>Utilization = (Frame Size) / (Bandwidth-Delay Product) if using Stop-and-Wait</p>
+</div>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit3-ethernet">
+<div class="unit-header"><h1>&#128218; Ethernet &amp; MAC Sublayer</h1></div>
+<div class="card">
+<h2>Standard Ethernet (IEEE 802.3)</h2>
+<p>Original Ethernet created in 1976 at Xerox PARC. Four generations.</p>
+
+<h3>802.3 MAC Frame Format</h3>
+<ul>
+<li><strong>Preamble:</strong> 7 bytes (10101010 pattern)</li>
+<li><strong>SFD:</strong> Start Frame Delimiter (1 byte = 10101011)</li>
+<li><strong>Destination Address:</strong> 6 bytes (MAC)</li>
+<li><strong>Source Address:</strong> 6 bytes (MAC)</li>
+<li><strong>Length/Type:</strong> 2 bytes</li>
+<li><strong>Data:</strong> 46-1500 bytes</li>
+<li><strong>CRC:</strong> 4 bytes</li>
+</ul>
+
+<div class="info-box">
+<h4>Frame Size Limits</h4>
+<p><strong>Minimum:</strong> 64 bytes (512 bits) | <strong>Maximum:</strong> 1518 bytes (12,144 bits)</p>
+</div>
+
+<h3>MAC Address Types</h3>
+<ul>
+<li><strong>Unicast:</strong> LSB of first byte = 0 (for a single destination)</li>
+<li><strong>Multicast:</strong> LSB of first byte = 1 (for a group)</li>
+<li><strong>Broadcast:</strong> All bits 1 (special case of multicast)</li>
+</ul>
+
+<h3>Address Notation</h3>
+<p>Example: <code>A0:B1:C2:D3:E4:F5</code> (6 bytes = 48 bits in hexadecimal)</p>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 4: Network Layer -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit4">
+<div class="unit-header"><h1>&#128218; Unit 4: Network Layer</h1><div class="subtitle">IP Addressing, Subnetting, Network Design</div></div>
+</section>
+
+<section class="content-section" id="sec-unit4-design">
+<div class="unit-header"><h1>&#128218; Network Layer Design Issues</h1></div>
+<div class="card">
+<h2>Network Layer Design Issues</h2>
+<ul>
+<li>Store-and-Forward Packet Switching</li>
+<li>Services to Transport Layer: Independent of router technology, shielded from router topology, uniform numbering plan</li>
+</ul>
+
+<h3>Packet Switching Approaches</h3>
+<div class="comp-grid">
+<div class="comp-card"><h4>Datagram (Connectionless)</h4><ul><li>Each packet routed independently</li><li>No connection setup</li><li>For transaction processing</li><li>More robust to failures</li></ul></div>
+<div class="comp-card"><h4>Virtual Circuit (Connection-Oriented)</h4><ul><li>Connection established first</li><li>Uses connection identifier</li><li>All packets follow same path</li><li>Better QoS guarantees</li></ul></div>
+</div>
+
+<h3>Network Layer Services</h3>
+<ul>
+<li><strong>Packetizing:</strong> Encapsulation at source, decapsulation at destination</li>
+<li><strong>Routing:</strong> Finding best path using routing protocols</li>
+<li><strong>Forwarding:</strong> Action applied by each router when packet arrives</li>
+</ul>
+
+<h3>Network Performance Metrics</h3>
+<table>
+<thead><tr><th>Metric</th><th>Formula</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td><strong>Transmission Delay</strong></td><td>D<sub>tr</sub> = Packet Length / Transmission Rate</td><td>Time to push bits onto the wire</td></tr>
+<tr><td><strong>Propagation Delay</strong></td><td>D<sub>pg</sub> = Distance / Propagation Speed</td><td>Time for signal to travel the medium</td></tr>
+<tr><td><strong>Processing Delay</strong></td><td>D<sub>pr</sub></td><td>Time to process packet in router</td></tr>
+<tr><td><strong>Queuing Delay</strong></td><td>D<sub>qu</sub></td><td>Time waiting in input/output queues</td></tr>
+<tr><td><strong>Total Delay</strong></td><td>(n+1)(D<sub>tr</sub>+D<sub>pg</sub>+D<sub>pr</sub>) + n(D<sub>qu</sub>)</td><td>For n routers</td></tr>
+<tr><td><strong>Throughput</strong></td><td>Min(TR&#8321;, TR&#8322;, ... TR<sub>n</sub>)</td><td>Limited by smallest transmission rate</td></tr>
+<tr><td><strong>Packet Loss</strong></td><td>Buffer overflow drops packets</td><td>Leads to retransmission, more congestion</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit4-ipv4">
+<div class="unit-header"><h1>&#128218; IPv4 Addressing</h1></div>
+<div class="card">
+<h2>IPv4 Address</h2>
+<ul>
+<li><strong>Length:</strong> 32 bits (4 bytes)</li>
+<li><strong>Address Space:</strong> 2&#179;&#178; = 4,294,967,296 addresses</li>
+<li><strong>Notation:</strong> Dotted-decimal (e.g., 192.168.1.1) or binary</li>
+<li><strong>Unique and universal</strong></li>
+</ul>
+
+<h3>Classful Addressing</h3>
+<table>
+<thead><tr><th>Class</th><th>Prefix</th><th>1st Byte Range</th><th>Network ID Bits</th><th>Host ID Bits</th><th>Blocks</th><th>Addresses/Block</th></tr></thead>
+<tbody>
+<tr><td>A</td><td>0</td><td>0-127</td><td>8</td><td>24</td><td>128</td><td>16,777,216</td></tr>
+<tr><td>B</td><td>10</td><td>128-191</td><td>16</td><td>16</td><td>16,384</td><td>65,536</td></tr>
+<tr><td>C</td><td>110</td><td>192-223</td><td>24</td><td>8</td><td>2,097,152</td><td>256</td></tr>
+<tr><td>D</td><td>1110</td><td>224-239</td><td colspan="3">Multicast</td></tr>
+<tr><td>E</td><td>1111</td><td>240-255</td><td colspan="3">Reserved for future</td></tr>
+</tbody>
+</table>
+<p><strong>Default Masks:</strong> Class A = /8 (255.0.0.0), Class B = /16 (255.255.0.0), Class C = /24 (255.255.255.0)</p>
+
+<h3>Classless Addressing (CIDR)</h3>
+<p>Notation: <strong>x.y.z.t /n</strong> where /n defines the prefix (network) length.</p>
+<ul>
+<li><strong>First address:</strong> Set rightmost 32-n bits to 0</li>
+<li><strong>Last address:</strong> Set rightmost 32-n bits to 1</li>
+<li><strong>Number of addresses:</strong> 2&#179;&#178;&#8315;&#8319;</li>
+<li><strong>Two-level hierarchy:</strong> Prefix (n bits) = network, Suffix (32-n bits) = host</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit4-subnetting">
+<div class="unit-header"><h1>&#128218; Subnetting</h1><div class="tags"><span class="tag tag-exam">Exam Important</span><span class="tag tag-exercise">Practice Problems</span></div></div>
+<div class="card">
+<h2>Subnetting Problems</h2>
+<p>Subnetting is applicable for both Classful and Classless addressing.</p>
+
+<h3>Example 1</h3>
+<p><strong>Q:</strong> What is the Network ID, Broadcast Address, First Usable IP, Last Usable IP for node 192.168.1.15/26?</p>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>/26 = 255.255.255.192 (128+64 = 192)</li>
+<li>Block size = 64</li>
+<li>Network ID = 192.168.1.0</li>
+<li>Broadcast = 192.168.1.63</li>
+<li>First Usable = 192.168.1.1</li>
+<li>Last Usable = 192.168.1.62</li>
+</ul>
+
+<h3>Example 2</h3>
+<p><strong>Q:</strong> How many subnets and hosts from 192.168.1.0 with mask 255.255.255.224?</p>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Class C default = /24 (255.255.255.0)</li>
+<li>224 = 128+64+32 &#8594; 3 subnet bits</li>
+<li>Host bits = 8 - 3 = 5</li>
+<li>Subnets = 2&#179; = 8</li>
+<li>Hosts per subnet = 2&#8301; - 2 = 30</li>
+</ul>
+
+<h3>Example 3 - Large Network</h3>
+<p><strong>Q:</strong> 172.16.0.0 network needs 900 subnets with at least 50 hosts/subnet.</p>
+<p><strong>Solution:</strong></p>
+<ul>
+<li>Class B default = /16</li>
+<li>Need 2&#8310; &#8805; 900 &#8594; 10 subnet bits (2&#185;&#8304; = 1024)</li>
+<li>Mask: /16 + 10 = /26 = 255.255.255.192</li>
+<li>Remaining host bits = 6 &#8594; 2&#8306; - 2 = 62 hosts/subnet &#10003;</li>
+</ul>
+
+<h3>Example 4 - ISP Block Allocation</h3>
+<p><strong>Q:</strong> ISP granted 190.100.0.0/16 (65,536 addresses). Distribute to:</p>
+<ul>
+<li>Group 1: 64 customers, 256 addresses each &#8594; /24 prefix</li>
+<li>Group 2: 128 customers, 128 addresses each &#8594; /25 prefix</li>
+<li>Group 3: 128 customers, 64 addresses each &#8594; /26 prefix</li>
+</ul>
+<p>Total allocated: 40,960. Available: 24,576.</p>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit4-ipv6">
+<div class="unit-header"><h1>&#128218; IPv6 Addressing</h1></div>
+<div class="card">
+<h2>IPv6</h2>
+<ul>
+<li><strong>Address length:</strong> 128 bits (16 bytes)</li>
+<li><strong>Notation:</strong> 8 groups of 4 hexadecimal digits, colon-separated</li>
+<li><strong>Abbreviation:</strong> Leading zeros omitted; consecutive zeros replaced by :: (once)</li>
+</ul>
+<p>Example: <code>0:15::1:12:1213</code> expands to <code>0000:0015:0000:0000:0000:0001:0012:1213</code></p>
+
+<h3>IPv6 Header</h3>
+<ul>
+<li>Fixed 40-byte base header</li>
+<li>Payload up to 65,535 bytes</li>
+<li>No checksum in base header (reduces processing)</li>
+<li>Flow labeling for QoS</li>
+<li>No fragmentation at intermediate routers</li>
+</ul>
+
+<h3>Transition from IPv4 to IPv6</h3>
+<ul>
+<li><strong>Dual Stack:</strong> Both IPv4 and IPv6 stacks on same device</li>
+<li><strong>Tunneling:</strong> IPv6 packet encapsulated within IPv4 packet</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit4-frag">
+<div class="unit-header"><h1>&#128218; IP Datagrams &amp; Fragmentation</h1></div>
+<div class="card">
+<h2>IP Datagram Format</h2>
+<p>Variable-length packet: Header (20-60 bytes) + Data. Header shown in 4-byte sections.</p>
+<table>
+<thead><tr><th>Field</th><th>Size (bits)</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Version</td><td>4</td><td>IPv4 = 4, IPv6 = 6</td></tr>
+<tr><td>HLEN</td><td>4</td><td>Header length in 32-bit words (min=5, max=15)</td></tr>
+<tr><td>Service Type</td><td>8</td><td>Differentiated services (ToS)</td></tr>
+<tr><td>Total Length</td><td>16</td><td>Total datagram length (header + data)</td></tr>
+<tr><td>Identification</td><td>16</td><td>For fragment reassembly identification</td></tr>
+<tr><td>Flags</td><td>3</td><td>M bit: 1 = more fragments, 0 = last</td></tr>
+<tr><td>Fragment Offset</td><td>13</td><td>Position of fragment in original datagram (&#215;8 bytes)</td></tr>
+<tr><td>Time to Live</td><td>8</td><td>Max hops before discarding</td></tr>
+<tr><td>Protocol</td><td>8</td><td>Upper layer protocol (TCP=6, UDP=17, ICMP=1, IGMP=2)</td></tr>
+<tr><td>Header Checksum</td><td>16</td><td>Error detection for header only</td></tr>
+<tr><td>Source Address</td><td>32</td><td>Source IP address</td></tr>
+<tr><td>Destination Address</td><td>32</td><td>Destination IP address</td></tr>
+<tr><td>Options</td><td>0-320</td><td>Variable (for testing, debugging)</td></tr>
+</tbody>
+</table>
+
+<h3>Fragmentation Details</h3>
+<ul>
+<li><strong>MTU:</strong> Maximum Transfer Unit - max data a network can carry in one frame</li>
+<li>Ethernet MTU = 1500 bytes</li>
+<li>Only <strong>data</strong> is fragmented (headers are copied)</li>
+<li>Fragment Offset = (first byte number)/8</li>
+<li>Identification field identifies which datagram a fragment belongs to</li>
+</ul>
+
+<div class="info-box">
+<h4>IPv4 vs IPv6 Comparison</h4>
+<p>IPv6 has no header checksum, no fragmentation at routers (handled by source), and flow labeling replaces ToS field.</p>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 5: Routing & Congestion -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit5">
+<div class="unit-header"><h1>&#128218; Unit 5: Routing &amp; Congestion Control</h1></div>
+</section>
+
+<section class="content-section" id="sec-unit5-routing">
+<div class="unit-header"><h1>&#128218; Routing Algorithms Overview</h1></div>
+<div class="card">
+<h2>Routing Fundamentals</h2>
+<ul>
+<li><strong>Static routing:</strong> Manual entries in routing table</li>
+<li><strong>Dynamic routing:</strong> Updated automatically when network changes</li>
+<li><strong>Metric:</strong> Cost assigned to passing through a network (e.g., hop count, delay, throughput)</li>
+</ul>
+
+<h3>Categories of Routing Protocols</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Protocol Type</th><th>Routing Algorithm</th><th>Example</th></tr></thead>
+<tbody>
+<tr><td><strong>Intradomain</strong></td><td>Distance Vector</td><td>RIP</td></tr>
+<tr><td><strong>Intradomain</strong></td><td>Link State</td><td>OSPF</td></tr>
+<tr><td><strong>Interdomain</strong></td><td>Path Vector</td><td>BGP</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit5-rip">
+<div class="unit-header"><h1>&#128218; Distance Vector Routing &amp; RIP</h1></div>
+<div class="card">
+<h2>Distance Vector Routing</h2>
+<ul>
+<li>Each node maintains a vector/table of minimum distances to every node</li>
+<li>Next-hop routing: table guides packets to next stop</li>
+<li>Each node shares its table with immediate neighbors periodically (every 30s) and on change (triggered update)</li>
+<li><strong>Limitation:</strong> Count-to-infinity problem (two-node and three-node instability)</li>
+</ul>
+
+<h3>Solutions to Instability</h3>
+<ul>
+<li><strong>Define Infinity:</strong> Set max hop count to a smaller number (e.g., 16 for RIP)</li>
+<li><strong>Split Horizon:</strong> Don't advertise a route back to the node it came from</li>
+<li><strong>Poison Reverse:</strong> Advertise the route with distance = infinity if source was that node</li>
+</ul>
+
+<h3>RIP (Routing Information Protocol)</h3>
+<ul>
+<li>Intradomain protocol based on distance vector</li>
+<li>Metric = <strong>hop count</strong> (number of links to destination)</li>
+<li><strong>Infinity = 16</strong> (max 15 hops)</li>
+<li>Simple protocol, suitable for small to medium networks</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit5-ospf">
+<div class="unit-header"><h1>&#128218; Link State Routing &amp; OSPF</h1></div>
+<div class="card">
+<h2>Link State Routing</h2>
+<ul>
+<li>Each node has <strong>entire topology</strong> of the domain</li>
+<li>Four steps:
+<ol>
+<li>Create Link State Packet (LSP): node identity, list of links, sequence number, age</li>
+<li>Flood LSPs to every router efficiently and reliably</li>
+<li>Form shortest path tree (using Dijkstra algorithm)</li>
+<li>Calculate routing table from shortest path tree</li>
+</ol>
+</li>
+<li>LSPs generated on topology change and periodically</li>
+</ul>
+
+<h3>OSPF (Open Shortest Path First)</h3>
+<ul>
+<li>Intradomain routing protocol based on link state</li>
+<li>Allows administrator to assign cost (metric) based on type of service</li>
+<li>Router can have multiple routing tables for different TOS</li>
+<li>Supports hierarchy through <strong>areas</strong> within autonomous system</li>
+<li>Link types: Point-to-point, Transient, Stub, Virtual</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit5-bgp">
+<div class="unit-header"><h1>&#128218; Path Vector Routing &amp; BGP</h1></div>
+<div class="card">
+<h2>Path Vector Routing</h2>
+<p><strong>Problem in Distance Vector:</strong> Node instability.<br>
+<strong>Problem in Link State:</strong> Heavy traffic due to flooding, extra resources needed.</p>
+<p><strong>Solution: Path Vector</strong> - Similar to distance vector but includes the complete path (list of ASs) in routing updates. This prevents loops.</p>
+<ul>
+<li>One <strong>speaker node</strong> per AS creates/ advertises routing table to neighboring ASs</li>
+<li>Steps: Initialization &#8594; Sharing &#8594; Updating (loop prevention, policy routing, optimum path)</li>
+</ul>
+
+<h3>BGP (Border Gateway Protocol)</h3>
+<ul>
+<li>Interdomain routing protocol using path vector routing</li>
+<li>First appeared in 1989; now on version 4</li>
+<li><strong>Path Attributes:</strong> Well-known (mandatory, discretionary) and Optional (transitive, non-transitive)</li>
+<li><strong>BGP Sessions:</strong> Use TCP connections (reliable). Called <strong>semi-permanent connections</strong></li>
+<li>Types: Internal BGP (iBGP) and External BGP (eBGP)</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit5-congestion">
+<div class="unit-header"><h1>&#128218; Congestion Control &amp; QoS</h1></div>
+<div class="card">
+<h2>Congestion</h2>
+<p><strong>Definition:</strong> Occurs when load on network &gt; capacity of network.</p>
+<p><strong>Congestion control:</strong> Mechanisms to keep load below capacity.</p>
+
+<h3>Traffic Descriptors</h3>
+<p>Three traffic profiles: <strong>Constant, Variable, Bursty</strong></p>
+
+<h3>Congestion Control Categories</h3>
+<div class="comp-grid">
+<div class="comp-card"><h4>Open-Loop (Prevention)</h4>
+<ul><li>Retransmission Policy</li><li>Window Policy</li><li>Discarding Policy</li><li>Acknowledgement Policy</li><li>Admission Policy</li></ul></div>
+<div class="comp-card"><h4>Closed-Loop (Removal)</h4>
+<ul><li>Backpressure</li><li>Choke Packet</li><li>Implicit Signaling</li><li>Explicit Signaling</li></ul></div>
+</div>
+
+<h3>Quality of Service (QoS)</h3>
+<p><strong>Flow Characteristics:</strong> Reliability, Delay, Jitter (variation in delay), Bandwidth</p>
+
+<h3>Techniques to Improve QoS</h3>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Category</th><th>Technique</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td rowspan="3"><strong>Scheduling</strong></td><td>FIFO Queuing</td><td>First-in-first-out</td></tr>
+<tr><td>Priority Queuing</td><td>High priority packets served first (starvation problem)</td></tr>
+<tr><td>Weighted Fair Queuing</td><td>Fair sharing based on weights</td></tr>
+<tr><td rowspan="2"><strong>Traffic Shaping</strong></td><td>Leaky Bucket</td><td>Shapes bursty traffic into fixed-rate traffic. May drop packets if bucket is full</td></tr>
+<tr><td>Token Bucket</td><td>Allows bursty traffic at regulated maximum rate. Tokens added at constant rate</td></tr>
+<tr><td colspan="2"><strong>Resource Reservation</strong></td><td>Reserve resources in advance (e.g., RSVP)</td></tr>
+<tr><td colspan="2"><strong>Admission Control</strong></td><td>Deny new connections if insufficient resources</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="info-box">
+<h4>Key Formulas</h4>
+<p><strong>Window size (sliding window):</strong> Max window = 1 + 2a where a = T<sub>p</sub>/T<sub>t</sub></p>
+<p>T<sub>t</sub> = Transmission Delay, T<sub>p</sub> = Propagation Delay</p>
+</div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- UNIT 6: Transport & Application -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-unit6">
+<div class="unit-header"><h1>&#128218; Unit 6: Transport &amp; Application Layer</h1></div>
+</section>
+
+<section class="content-section" id="sec-unit6-transport">
+<div class="unit-header"><h1>&#128218; Transport Layer Overview</h1></div>
+<div class="card">
+<h2>Process-to-Process Delivery</h2>
+<p>The transport layer is responsible for <strong>process-to-process delivery</strong> &#8212; delivery of a packet from one process to another.</p>
+<ul><li>Client, Server</li><li>Local host, Local process, Remote host, Remote process</li></ul>
+
+<h3>Port Numbers (IANA Ranges)</h3>
+<table>
+<thead><tr><th>Range</th><th>Category</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>0 - 1023</td><td><strong>Well-Known Ports</strong></td><td>Assigned/controlled by IANA (HTTP=80, FTP=21, SMTP=25, DNS=53)</td></tr>
+<tr><td>1024 - 49,151</td><td><strong>Registered Ports</strong></td><td>Not assigned/controlled by IANA</td></tr>
+<tr><td>49,152 - 65,535</td><td><strong>Dynamic/Ephemeral Ports</strong></td><td>Neither controlled nor registered. Used by any process</td></tr>
+</tbody>
+</table>
+
+<h3>Socket Address</h3>
+<p>Combination of <strong>IP Address + Port Number</strong>. Uniquely identifies a process on a host.</p>
+
+<h3>Connectionless vs Connection-Oriented</h3>
+<div class="comp-grid">
+<div class="comp-card"><h4>Connectionless (UDP)</h4><ul><li>No connection establishment/release</li><li>Packets not numbered, may be delayed/lost/out-of-order</li><li>No acknowledgment</li><li>Unreliable</li></ul></div>
+<div class="comp-card"><h4>Connection-Oriented (TCP)</h4><ul><li>Connection established first</li><li>Data transferred reliably</li><li>Acknowledged delivery</li><li>Flow and error control</li></ul></div>
+</div>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit6-udp">
+<div class="unit-header"><h1>&#128218; UDP (User Datagram Protocol)</h1></div>
+<div class="card">
+<h2>UDP Overview</h2>
+<ul>
+<li><strong>Connectionless, unreliable</strong> transport protocol</li>
+<li>Adds only process-to-process communication to IP (no flow/error control)</li>
+<li>Lower overhead &#8594; faster</li>
+</ul>
+
+<h3>UDP Datagram Format</h3>
+<table>
+<thead><tr><th>Field</th><th>Size</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Source Port</td><td>16 bits</td><td>Sender's port number</td></tr>
+<tr><td>Destination Port</td><td>16 bits</td><td>Receiver's port number</td></tr>
+<tr><td>Length</td><td>16 bits</td><td>Total length (header + data). UDP length = IP length - IP header length</td></tr>
+<tr><td>Checksum</td><td>16 bits</td><td>Optional; calculated using pseudoheader</td></tr>
+</tbody>
+</table>
+
+<h3>UDP Uses</h3>
+<ul>
+<li>Suitable for simple request-response with little concern for flow/error control</li>
+<li>Suitable for multicasting</li>
+<li>Used for SNMP, RIP, DNS, DHCP</li>
+</ul>
+
+<h3>Example</h3>
+<p>UDP header in hex: <code>06 32 00 0D 00 1C E2 17</code></p>
+<ul>
+<li>Source port: 0x0632 = 1586</li>
+<li>Destination port: 0x000D = 13</li>
+<li>Total length: 0x001C = 28 bytes</li>
+<li>Data length: 28 - 8 (header) = 20 bytes</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit6-tcp">
+<div class="unit-header"><h1>&#128218; TCP (Transmission Control Protocol)</h1><div class="tags"><span class="tag tag-exam">Exam Important</span><span class="tag tag-interview">Interview Important</span></div></div>
+<div class="card">
+<h2>TCP Overview</h2>
+<ul>
+<li><strong>Connection-oriented, reliable</strong> transport protocol</li>
+<li>Creates virtual connection between two TCP entities</li>
+<li>Uses flow and error control at the transport level</li>
+</ul>
+
+<h3>TCP Features</h3>
+<ul>
+<li><strong>Numbering System:</strong> Uses byte numbers (not segment numbers)</li>
+<li>Sequence number: Number of first data byte in segment (0 to 2&#179;&#178;-1, randomly generated start)</li>
+<li>Acknowledgment number: Next byte expected (cumulative)</li>
+<li>Flow control, Error control, Congestion control</li>
+</ul>
+
+<h3>TCP Segment Format</h3>
+<table>
+<thead><tr><th>Field</th><th>Size (bits)</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>Source Port</td><td>16</td><td>Sender's port</td></tr>
+<tr><td>Destination Port</td><td>16</td><td>Receiver's port</td></tr>
+<tr><td>Sequence Number</td><td>32</td><td>First data byte number</td></tr>
+<tr><td>Acknowledgment Number</td><td>32</td><td>Next expected byte</td></tr>
+<tr><td>HLEN</td><td>4</td><td>Header length in 32-bit words</td></tr>
+<tr><td>Reserved</td><td>6</td><td>Reserved for future</td></tr>
+<tr><td>Control Flags</td><td>6</td><td>URG, ACK, PSH, RST, SYN, FIN</td></tr>
+<tr><td>Window Size</td><td>16</td><td>Flow control window</td></tr>
+<tr><td>Checksum</td><td>16</td><td>Error detection</td></tr>
+<tr><td>Urgent Pointer</td><td>16</td><td>Points to urgent data</td></tr>
+<tr><td>Options</td><td>0-320</td><td>Variable</td></tr>
+</tbody>
+</table>
+
+<h3>TCP Flags</h3>
+<table>
+<thead><tr><th>Flag</th><th>Name</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>URG</td><td>Urgent</td><td>Urgent pointer field is valid</td></tr>
+<tr><td>ACK</td><td>Acknowledgment</td><td>Acknowledgment number is valid</td></tr>
+<tr><td>PSH</td><td>Push</td><td>Push data to application immediately</td></tr>
+<tr><td>RST</td><td>Reset</td><td>Reset/abort connection</td></tr>
+<tr><td>SYN</td><td>Synchronize</td><td>Establish connection (sequence number sync)</td></tr>
+<tr><td>FIN</td><td>Finish</td><td>Terminate connection</td></tr>
+</tbody>
+</table>
+
+<h3>TCP Connection Establishment (Three-Way Handshake)</h3>
+<ol>
+<li><strong>Client &#8594; Server:</strong> SYN (seq = x) - Client requests connection</li>
+<li><strong>Server &#8594; Client:</strong> SYN + ACK (seq = y, ack = x+1) - Server acknowledges and synchronizes</li>
+<li><strong>Client &#8594; Server:</strong> ACK (seq = x+1, ack = y+1) - Connection established</li>
+</ol>
+<p><em>SYN consumes one sequence number. ACK with no data consumes none.</em></p>
+
+<h3>TCP Connection Termination (Three-Way Handshake)</h3>
+<ol>
+<li>Client &#8594; Server: <strong>FIN</strong></li>
+<li>Server &#8594; Client: <strong>ACK</strong></li>
+<li>Server &#8594; Client: <strong>FIN</strong></li>
+<li>Client &#8594; Server: <strong>ACK</strong></li>
+</ol>
+<p><em>FIN consumes one sequence number. Half-close is possible when only one side terminates.</em></p>
+
+<h3>Example</h3>
+<p>TCP header in hex: <code>05320017 00000001 00000000 500207FF 00000000</code></p>
+<ul>
+<li>Source port: 0x0532 = 1330</li>
+<li>Dest port: 0x0017 = 23 (Telnet)</li>
+<li>Seq number: 1</li>
+<li>Ack number: 0</li>
+<li>HLEN: 5 (20 bytes header)</li>
+<li>Flags: 0x02 = SYN</li>
+<li>Window: 0x07FF = 2047</li>
+</ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit6-email">
+<div class="unit-header"><h1>&#128218; Email &amp; SMTP</h1></div>
+<div class="card">
+<h2>Electronic Mail (Email)</h2>
+<h3>Architecture</h3>
+<ul>
+<li><strong>User Agent (UA):</strong> Allows user to read/compose emails (e.g., Outlook, Gmail, pine, elm)</li>
+<li><strong>Message Transfer Agent (MTA):</strong> Uses SMTP (Simple Mail Transfer Protocol)</li>
+<li><strong>Message Access Agent (MAA):</strong> For pull protocols (POP3, IMAP)</li>
+</ul>
+
+<h3>Email Scenarios</h3>
+<ol>
+<li><strong>Same system:</strong> Two UAs only</li>
+<li><strong>Different systems:</strong> Two UAs + pair of MTAs (client + server)</li>
+<li><strong>Different systems (sender on LAN):</strong> Two UAs + two pairs of MTAs</li>
+<li><strong>Both on LAN/WAN:</strong> Two UAs + two pairs of MTAs + pair of MAAs (most common today)</li>
+</ol>
+
+<h3>Email Format</h3>
+<p>Envelope &#8594; Header (To, From, Subject, Date, etc.) &#8594; Body</p>
+<p>Email address format: <code>local-part@domain-name</code></p>
+
+<h3>SMTP Commands</h3>
+<ul><li>HELO, MAIL FROM, RCPT TO, DATA, QUIT</li></ul>
+</div>
+</section>
+
+<section class="content-section" id="sec-unit6-dns">
+<div class="unit-header"><h1>&#128218; DNS (Domain Name System)</h1></div>
+<div class="card">
+<h2>Domain Name Space</h2>
+<ul>
+<li><strong>Hierarchical name space</strong> with inverted-tree structure</li>
+<li>Max 128 levels (level 0 = root to level 127)</li>
+<li><strong>FQDN:</strong> Fully Qualified Domain Name (e.g., www.example.com.)</li>
+<li><strong>PQDN:</strong> Partially Qualified Domain Name</li>
+</ul>
+
+<h3>Generic Domains</h3>
+<table>
+<thead><tr><th>Label</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>.com</td><td>Commercial organizations</td></tr>
+<tr><td>.edu</td><td>Educational institutions</td></tr>
+<tr><td>.gov</td><td>Government agencies</td></tr>
+<tr><td>.org</td><td>Non-profit organizations</td></tr>
+<tr><td>.net</td><td>Network-related organizations</td></tr>
+<tr><td>.mil</td><td>Military</td></tr>
+<tr><td>.int</td><td>International organizations</td></tr>
+</tbody>
+</table>
+
+<h3>Distribution</h3>
+<ul>
+<li><strong>Primary server:</strong> Loads info from disk file</li>
+<li><strong>Secondary server:</strong> Loads from primary server (zone transfer)</li>
+<li><strong>Resolution:</strong> Mapping name to address or address to name (inverse domain)</li>
+<li>DNS uses UDP port 53</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- PROTOCOL HANDBOOK -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-protocols">
+<div class="unit-header"><h1>&#128220; Protocol Handbook</h1><div class="tags"><span class="tag tag-must">Must Know</span></div></div>
+
+<div class="card">
+<h2><span class="emoji">&#128220;</span> Port Number Reference</h2>
+<table>
+<thead><tr><th>Port</th><th>Protocol</th><th>Service</th><th>Transport</th></tr></thead>
+<tbody>
+<tr><td>20, 21</td><td>FTP</td><td>File Transfer Protocol</td><td>TCP</td></tr>
+<tr><td>22</td><td>SSH</td><td>Secure Shell</td><td>TCP</td></tr>
+<tr><td>23</td><td>Telnet</td><td>Remote Terminal</td><td>TCP</td></tr>
+<tr><td>25</td><td>SMTP</td><td>Simple Mail Transfer</td><td>TCP</td></tr>
+<tr><td>53</td><td>DNS</td><td>Domain Name System</td><td>UDP/TCP</td></tr>
+<tr><td>67, 68</td><td>DHCP</td><td>Dynamic Host Configuration</td><td>UDP</td></tr>
+<tr><td>69</td><td>TFTP</td><td>Trivial File Transfer</td><td>UDP</td></tr>
+<tr><td>80</td><td>HTTP</td><td>Hypertext Transfer</td><td>TCP</td></tr>
+<tr><td>110</td><td>POP3</td><td>Post Office Protocol 3</td><td>TCP</td></tr>
+<tr><td>143</td><td>IMAP</td><td>Internet Message Access</td><td>TCP</td></tr>
+<tr><td>161</td><td>SNMP</td><td>Simple Network Management</td><td>UDP</td></tr>
+<tr><td>443</td><td>HTTPS</td><td>HTTP Secure</td><td>TCP</td></tr>
+<tr><td>520</td><td>RIP</td><td>Routing Information Protocol</td><td>UDP</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128220;</span> Protocol Summary by Layer</h2>
+<table>
+<thead><tr><th>Layer</th><th>Protocols</th><th>Key Functions</th></tr></thead>
+<tbody>
+<tr><td>Application</td><td>HTTP, FTP, SMTP, DNS, DHCP, Telnet</td><td>User services, file transfer, email, name resolution</td></tr>
+<tr><td>Transport</td><td>TCP, UDP, SCTP</td><td>Process-to-process delivery, reliable/unreliable transport</td></tr>
+<tr><td>Network</td><td>IP, ICMP, IGMP, ARP, RARP</td><td>Logical addressing, routing, error reporting</td></tr>
+<tr><td>Data Link</td><td>Ethernet, PPP, HDLC</td><td>Framing, MAC addressing, error control</td></tr>
+<tr><td>Physical</td><td>RS-232, 10BaseT, 100BaseT</td><td>Bit representation, signaling, media</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128220;</span> Device-Layer Mapping</h2>
+<table>
+<thead><tr><th>Device</th><th>OSI Layers</th><th>Operates With</th></tr></thead>
+<tbody>
+<tr><td>Repeater / Hub</td><td>1 (Physical)</td><td>Bits</td></tr>
+<tr><td>Bridge</td><td>1, 2</td><td>Frames (MAC addresses)</td></tr>
+<tr><td>Switch</td><td>1, 2</td><td>Frames (MAC addresses)</td></tr>
+<tr><td>Router</td><td>1, 2, 3</td><td>Packets (IP addresses)</td></tr>
+<tr><td>Gateway</td><td>1-7 (All)</td><td>Protocol conversion</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- OSI vs TCP/IP COMPARISON -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-comparison">
+<div class="unit-header"><h1>&#128196; OSI vs TCP/IP Model</h1></div>
+
+<div class="card">
+<h2><span class="emoji">&#128196;</span> Side-by-Side Comparison</h2>
+<div class="comp-grid">
+<div class="comp-card"><h4>OSI Model (7 Layers)</h4>
+<ol style="padding-left:20px">
+<li><strong>Application</strong> - User services</li>
+<li><strong>Presentation</strong> - Translation, encryption</li>
+<li><strong>Session</strong> - Dialog control</li>
+<li><strong>Transport</strong> - Process-to-process</li>
+<li><strong>Network</strong> - Routing, addressing</li>
+<li><strong>Data Link</strong> - Framing, MAC</li>
+<li><strong>Physical</strong> - Bits, signaling</li>
+</ol>
+</div>
+<div class="comp-card"><h4>TCP/IP Model (5 Layers)</h4>
+<ol style="padding-left:20px">
+<li><strong>Application</strong> - Combines OSI 5,6,7</li>
+<li><strong>Transport</strong> - TCP, UDP</li>
+<li><strong>Network</strong> - IP, ICMP, ARP</li>
+<li><strong>Data Link</strong> - Ethernet, PPP</li>
+<li><strong>Physical</strong> - Cabling, signaling</li>
+</ol>
+</div>
+</div>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128196;</span> Detailed Comparison Table</h2>
+<table>
+<thead><tr><th>Criteria</th><th>OSI</th><th>TCP/IP</th></tr></thead>
+<tbody>
+<tr><td>Developed by</td><td>ISO</td><td>DARPA (US Dept. of Defense)</td></tr>
+<tr><td>Year</td><td>Late 1970s</td><td>1970s (protocols earlier)</td></tr>
+<tr><td>Layers</td><td>7</td><td>4 or 5</td></tr>
+<tr><td>Approach</td><td>Model &#8594; Protocols</td><td>Protocols &#8594; Model</td></tr>
+<tr><td>Transport Layer</td><td>Connection-oriented only</td><td>Both (TCP + UDP)</td></tr>
+<tr><td>Network Layer</td><td>Both connection-oriented and connectionless</td><td>Connectionless only</td></tr>
+<tr><td>Protocols</td><td>Defined after model</td><td>Already existed</td></tr>
+<tr><td>Header Overhead</td><td>More overhead due to separation</td><td>Less overhead</td></tr>
+<tr><td>Implementation</td><td>Theoretical model</td><td>Practical/actual internet</td></tr>
+<tr><td>Reliability</td><td>Better separation of concerns</td><td>Proven robust and scalable</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128196;</span> TCP/IP Layer Summary Table</h2>
+<table>
+<thead><tr><th>TCP/IP Layer</th><th>Responsibilities</th><th>Key Protocols</th><th>Addressing</th></tr></thead>
+<tbody>
+<tr><td>Application</td><td>User services, data representation</td><td>HTTP, FTP, SMTP, DNS</td><td>URL, email, domain name</td></tr>
+<tr><td>Transport</td><td>Process-to-process delivery</td><td>TCP, UDP, SCTP</td><td>Port number (16-bit)</td></tr>
+<tr><td>Network</td><td>Host-to-host delivery, routing</td><td>IP, ICMP, IGMP, ARP</td><td>IP address (32/128-bit)</td></tr>
+<tr><td>Data Link</td><td>Hop-to-hop delivery, framing</td><td>Ethernet, PPP, HDLC</td><td>MAC address (48-bit)</td></tr>
+<tr><td>Physical</td><td>Bit transmission over media</td><td>10BaseT, 100BaseTX</td><td>N/A (physical connectors)</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2><span class="emoji">&#128196;</span> OSI Layer Summary Table</h2>
+<table>
+<thead><tr><th>OSI Layer</th><th>Device</th><th>Data Unit</th><th>Function</th></tr></thead>
+<tbody>
+<tr><td>7. Application</td><td>Gateway</td><td>Message</td><td>Provides network services to user applications</td></tr>
+<tr><td>6. Presentation</td><td>Gateway</td><td>Message</td><td>Data translation, encryption, compression</td></tr>
+<tr><td>5. Session</td><td>Gateway</td><td>Message</td><td>Dialog control, synchronization checkpoints</td></tr>
+<tr><td>4. Transport</td><td>Gateway</td><td>Segment</td><td>Process-to-process delivery, flow/error control</td></tr>
+<tr><td>3. Network</td><td>Router</td><td>Packet</td><td>Logical addressing, routing, fragmentation</td></tr>
+<tr><td>2. Data Link</td><td>Switch/Bridge</td><td>Frame</td><td>Framing, MAC addressing, error control, flow control</td></tr>
+<tr><td>1. Physical</td><td>Hub/Repeater</td><td>Bit</td><td>Bit representation, data rate, synchronization, topology</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- QUICK REVISION -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-quickrev">
+<div class="unit-header"><h1>&#9889; Quick Revision</h1><div class="subtitle">Last-Minute Revision Notes - All Units</div><div class="tags"><span class="tag tag-must">One-Page Summary</span></div></div>
+
+<div class="card">
+<h2>&#9889; Unit 1: Introduction &amp; Models - Quick Recap</h2>
+<ul>
+<li><strong>4 Characteristics:</strong> Delivery, Accuracy, Timeliness, Jitter</li>
+<li><strong>5 Components:</strong> Message, Sender, Receiver, Medium, Protocol</li>
+<li><strong>Protocol Elements:</strong> Syntax, Semantics, Timing</li>
+<li><strong>ISO</strong> = Organization; <strong>OSI</strong> = Model (7 layers)</li>
+<li><strong>OSI Layers (mnemonic):</strong> Please Do Not Throw Sausage Pizza Away (Physical, Data Link, Network, Transport, Session, Presentation, Application)</li>
+<li><strong>TCP/IP:</strong> Application, Transport, Internet/Network, Data Link, Physical</li>
+<li><strong>Topologies:</strong> Mesh (n(n-1)/2), Star, Bus, Ring, Tree, Hybrid</li>
+<li><strong>Devices:</strong> Hub(L1), Switch(L2), Router(L3), Gateway(All)</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>&#9889; Unit 2: Physical Layer - Quick Recap</h2>
+<ul>
+<li><strong>Data Types:</strong> Analog (continuous), Digital (discrete)</li>
+<li><strong>Signal Properties:</strong> Amplitude, Frequency (f=1/T), Phase, Wavelength</li>
+<li><strong>Bandwidth:</strong> f<sub>high</sub> - f<sub>low</sub></li>
+<li><strong>Nyquist:</strong> BitRate = 2B log&#8322;L (noiseless)</li>
+<li><strong>Shannon:</strong> Capacity = B log&#8322;(1+SNR) (noisy)</li>
+<li><strong>Line Coding:</strong> Unipolar, Polar (NRZ-L, NRZ-I, RZ, Manchester), Bipolar</li>
+<li><strong>PCM:</strong> Sampling &#8594; Quantization &#8594; Encoding; Nyquist: f<sub>s</sub> &#8805; 2f<sub>max</sub></li>
+<li><strong>Modulation:</strong> ASK (B=2B<sub>a</sub>), FSK (B=2B<sub>a</sub>+2&#916;f), PSK, QAM = ASK+PSK</li>
+<li><strong>Media:</strong> Twisted pair (UTP/STP), Coaxial (50&#937;/75&#937;), Fiber optic, Wireless (Radio/Microwave/IR)</li>
+<li><strong>Impairments:</strong> Attenuation (dB=10logP<sub>2</sub>/P<sub>1</sub>), Distortion, Noise</li>
+<li><strong>Multiplexing:</strong> FDM (analog), TDM (digital), WDM (optical)</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>&#9889; Unit 3: Data Link Layer - Quick Recap</h2>
+<ul>
+<li><strong>Framing:</strong> Fixed-size, Variable-size (character-oriented: byte stuffing, bit-oriented: bit stuffing)</li>
+<li><strong>Error Types:</strong> Single-bit, Burst (most common in serial)</li>
+<li><strong>Error Detection:</strong> VRC (parity), LRC, CRC (polynomial division), Checksum</li>
+<li><strong>Error Correction:</strong> Hamming Code (2&#8310; &#8805; m + r + 1)</li>
+<li><strong>Flow Control:</strong> Simplest, Stop-and-Wait, Go-Back-N, Selective Repeat</li>
+<li><strong>Ethernet Frame:</strong> 64-1518 bytes, MAC addressing (48-bit)</li>
+<li><strong>MAC:</strong> Unicast (LSB=0), Multicast (LSB=1), Broadcast (all 1s)</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>&#9889; Unit 4: Network Layer - Quick Recap</h2>
+<ul>
+<li><strong>IPv4:</strong> 32-bit, dotted decimal, classes A-E</li>
+<li><strong>IPv4 Datagram:</strong> 20-60 byte header, version(4), HLEN(4), total length(16), TTL(8), protocol(8), checksum(16), source/dest(32 each)</li>
+<li><strong>Fragment:</strong> Identification + Flags (M bit) + Fragment Offset (&#215;8)</li>
+<li><strong>IPv6:</strong> 128-bit, hexadecimal colon notation, no checksum, no intermediate fragmentation</li>
+<li><strong>CIDR:</strong> x.y.z.t/n, first = AND with mask, last = OR with complement</li>
+<li><strong>Subnetting formula:</strong> #subnets = 2&#8310;, #hosts/subnet = 2<sup>(32-n)</sup> - 2</li>
+<li><strong>Performance:</strong> Transmission, Propagation, Processing, Queuing delay. Throughput = min(TRs)</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>&#9889; Unit 5: Routing &amp; Congestion - Quick Recap</h2>
+<ul>
+<li><strong>Distance Vector (RIP):</strong> Bellman-Ford, share table with neighbors, hop count metric, infinity=16, split horizon + poison reverse</li>
+<li><strong>Link State (OSPF):</strong> Dijkstra, LSP flooding, entire topology, metric configurable by admin</li>
+<li><strong>Path Vector (BGP):</strong> For interdomain routing, includes path (AS list), TCP-based, semi-permanent</li>
+<li><strong>Congestion:</strong> Open-loop (prevention: retransmission, window, discarding, admission) and Closed-loop (removal: backpressure, choke, implicit/explicit signaling)</li>
+<li><strong>QoS Techniques:</strong> FIFO, Priority queue, Weighted fair queue, Leaky bucket, Token bucket</li>
+</ul>
+</div>
+
+<div class="card">
+<h2>&#9889; Unit 6: Transport &amp; Application - Quick Recap</h2>
+<ul>
+<li><strong>UDP:</strong> Connectionless, unreliable, minimal overhead, no flow/error control, checksum only</li>
+<li><strong>TCP:</strong> Connection-oriented, reliable, byte-stream, flow/error/congestion control</li>
+<li><strong>TCP Flags:</strong> SYN, ACK, FIN, RST, PSH, URG</li>
+<li><strong>TCP Handshake:</strong> 3-way (SYN, SYN+ACK, ACK); Termination: (FIN, ACK, FIN, ACK)</li>
+<li><strong>Ports:</strong> Well-known (0-1023), Registered (1024-49151), Dynamic (49152-65535)</li>
+<li><strong>Email:</strong> UA + MTA (SMTP) + MAA (POP3/IMAP)</li>
+<li><strong>DNS:</strong> Hierarchical name space, UDP port 53, primary/secondary servers</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- VIVA QUESTIONS -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-viva">
+<div class="unit-header"><h1>&#128172; Viva Questions</h1><div class="tags"><span class="tag tag-exam">Viva Prep</span></div></div>
+
+<div class="card">
+<h2>&#128172; Unit-Wise Viva Questions</h2>
+
+<h3>Unit 1: Introduction &amp; Models</h3>
+<ol>
+<li><strong>Q:</strong> What are the four fundamental characteristics of data communication?<br><strong>A:</strong> Delivery, Accuracy, Timeliness, and Jitter.</li>
+<li><strong>Q:</strong> What are the five components of a data communication system?<br><strong>A:</strong> Message, Sender, Receiver, Transmission Medium, and Protocol.</li>
+<li><strong>Q:</strong> What are the three key elements of a protocol?<br><strong>A:</strong> Syntax (format), Semantics (meaning), Timing (when/speed).</li>
+<li><strong>Q:</strong> Differentiate between ISO and OSI.<br><strong>A:</strong> ISO is the organization that developed the OSI model. OSI is the model itself.</li>
+<li><strong>Q:</strong> How many layers does the OSI model have? Name them.<br><strong>A:</strong> 7 layers: Physical, Data Link, Network, Transport, Session, Presentation, Application.</li>
+<li><strong>Q:</strong> Which layers of OSI are merged in TCP/IP?<br><strong>A:</strong> Session and Presentation layers are merged into Application layer in TCP/IP.</li>
+<li><strong>Q:</strong> What is hop-to-hop delivery?<br><strong>A:</strong> Communication between directly connected nodes. Takes place at Data Link layer.</li>
+<li><strong>Q:</strong> What is the difference between a hub and a switch?<br><strong>A:</strong> Hub is a broadcast device (Layer 1) with no filtering. Switch is intelligent (Layer 2), learns MAC addresses, forwards selectively.</li>
+<li><strong>Q:</strong> Calculate channels needed for 5 devices in mesh topology.<br><strong>A:</strong> n(n-1)/2 = 5(4)/2 = 10 channels.</li>
+<li><strong>Q:</strong> What is the difference between physical and logical topology?<br><strong>A:</strong> Physical is actual cabling layout; logical is how signals/data pass through.</li>
+</ol>
+
+<h3>Unit 2: Physical Layer</h3>
+<ol>
+<li><strong>Q:</strong> What is the relationship between frequency and period?<br><strong>A:</strong> f = 1/T and T = 1/f.</li>
+<li><strong>Q:</strong> State Nyquist theorem.<br><strong>A:</strong> Sampling rate must be at least 2 times the highest frequency contained in the signal.</li>
+<li><strong>Q:</strong> What is the Nyquist bit rate formula?<br><strong>A:</strong> Bit Rate = 2 &#215; Bandwidth &#215; log&#8322;(L).</li>
+<li><strong>Q:</strong> What is the Shannon capacity formula?<br><strong>A:</strong> Capacity = Bandwidth &#215; log&#8322;(1 + SNR).</li>
+<li><strong>Q:</strong> What is the difference between baseband and broadband transmission?<br><strong>A:</strong> Baseband sends digital signal directly (requires low-pass channel). Broadband modulates digital onto analog signal (requires bandpass channel).</li>
+<li><strong>Q:</strong> What is attenuation and how is it measured?<br><strong>A:</strong> Loss of signal energy. Measured in decibels: dB = 10 log&#8321;&#8320;(P&#8322;/P&#8321;).</li>
+<li><strong>Q:</strong> What are the three main transmission impairments?<br><strong>A:</strong> Attenuation (loss of energy), Distortion (shape change), Noise (thermal, crosstalk, impulse).</li>
+<li><strong>Q:</strong> What is the difference between UTP and STP?<br><strong>A:</strong> UTP has no shielding (flexible, cheaper). STP has metal casing that prevents electromagnetic noise.</li>
+<li><strong>Q:</strong> Why are wires twisted in twisted-pair cable?<br><strong>A:</strong> To reduce crosstalk and external noise/EMI.</li>
+<li><strong>Q:</strong> What is total internal reflection in optical fiber?<br><strong>A:</strong> Light reflects within the core when incidence angle &gt; critical angle. This keeps light confined to the core.</li>
+</ol>
+
+<h3>Unit 3: Data Link Layer</h3>
+<ol>
+<li><strong>Q:</strong> What is framing?<br><strong>A:</strong> Packing bits into frames so each frame is distinguishable from another.</li>
+<li><strong>Q:</strong> What is byte stuffing?<br><strong>A:</strong> Adding an extra byte whenever a flag or escape character appears in the data text.</li>
+<li><strong>Q:</strong> What is bit stuffing?<br><strong>A:</strong> Adding an extra 0 after five consecutive 1s to prevent the pattern 01111110 from appearing in data.</li>
+<li><strong>Q:</strong> Differentiate between Go-Back-N ARQ and Selective Repeat ARQ.<br><strong>A:</strong> Go-Back-N retransmits all frames from the lost one. Selective Repeat retransmits only the damaged frames.</li>
+<li><strong>Q:</strong> What is the Hamming code rule for redundancy bits?<br><strong>A:</strong> 2&#8310; &#8805; m + r + 1, where m = data bits, r = redundancy bits.</li>
+<li><strong>Q:</strong> What are the minimum and maximum Ethernet frame lengths?<br><strong>A:</strong> Min = 64 bytes (512 bits), Max = 1518 bytes (12,144 bits).</li>
+<li><strong>Q:</strong> How do you identify a unicast vs multicast MAC address?<br><strong>A:</strong> LSB of first byte: 0 = unicast, 1 = multicast. Broadcast = all bits 1.</li>
+</ol>
+
+<h3>Unit 4: Network Layer</h3>
+<ol>
+<li><strong>Q:</strong> What is the size of an IPv4 address?<br><strong>A:</strong> 32 bits (4 bytes).</li>
+<li><strong>Q:</strong> What is the address space of IPv4?<br><strong>A:</strong> 2&#179;&#178; = 4,294,967,296 addresses.</li>
+<li><strong>Q:</strong> What is the IP datagram header size range?<br><strong>A:</strong> 20 to 60 bytes.</li>
+<li><strong>Q:</strong> What fields are used for fragmentation?<br><strong>A:</strong> Identification (16-bit), Flags (3-bit, M bit), Fragment Offset (13-bit, &#215;8).</li>
+<li><strong>Q:</strong> What is the size of an IPv6 address?<br><strong>A:</strong> 128 bits (16 bytes).</li>
+<li><strong>Q:</strong> How is CIDR notation written?<br><strong>A:</strong> x.y.z.t /n where n = prefix length (network bits).</li>
+<li><strong>Q:</strong> How do you find the first address of a CIDR block?<br><strong>A:</strong> Set the rightmost 32-n bits of the given address to 0 (AND with mask).</li>
+<li><strong>Q:</strong> What are the four delay types in network performance?<br><strong>A:</strong> Transmission, Propagation, Processing, Queuing.</li>
+</ol>
+
+<h3>Unit 5: Routing</h3>
+<ol>
+<li><strong>Q:</strong> What is the difference between static and dynamic routing?<br><strong>A:</strong> Static has manual entries; dynamic updates automatically.</li>
+<li><strong>Q:</strong> What is the metric used in RIP?<br><strong>A:</strong> Hop count. Infinity = 16 hops (max 15).</li>
+<li><strong>Q:</strong> What is split horizon?<br><strong>A:</strong> A node does not advertise a route back to the neighbor it learned it from.</li>
+<li><strong>Q:</strong> What is the difference between distance vector and link state routing?<br><strong>A:</strong> Distance vector shares table with neighbors only; link state shares topology with all nodes via flooding.</li>
+<li><strong>Q:</strong> What algorithm does OSPF use?<br><strong>A:</strong> Dijkstra's shortest path algorithm.</li>
+<li><strong>Q:</strong> What is BGP and what layer does it use?<br><strong>A:</strong> Border Gateway Protocol - interdomain routing. Uses TCP (reliable).</li>
+<li><strong>Q:</strong> What is the difference between open-loop and closed-loop congestion control?<br><strong>A:</strong> Open-loop prevents congestion; closed-loop removes congestion after it occurs.</li>
+</ol>
+
+<h3>Unit 6: Transport &amp; Application</h3>
+<ol>
+<li><strong>Q:</strong> What is the difference between TCP and UDP?<br><strong>A:</strong> TCP is connection-oriented, reliable, has flow/error control. UDP is connectionless, unreliable, minimal overhead.</li>
+<li><strong>Q:</strong> What is a socket?<br><strong>A:</strong> Combination of IP address and port number.</li>
+<li><strong>Q:</strong> What are the IANA port ranges?<br><strong>A:</strong> Well-known (0-1023), Registered (1024-49151), Dynamic (49152-65535).</li>
+<li><strong>Q:</strong> Describe the TCP three-way handshake.<br><strong>A:</strong> SYN &#8594; SYN+ACK &#8594; ACK.</li>
+<li><strong>Q:</strong> What does the SYN flag do?<br><strong>A:</strong> Synchronizes sequence numbers during connection establishment. Consumes one sequence number.</li>
+<li><strong>Q:</strong> What is an ephemeral port?<br><strong>A:</strong> Temporary port (49152-65535) used by client processes.</li>
+<li><strong>Q:</strong> What protocols are used in email?<br><strong>A:</strong> SMTP (sending), POP3/IMAP (receiving).</li>
+<li><strong>Q:</strong> What port does DNS use?<br><strong>A:</strong> UDP port 53 (and TCP for zone transfers).</li>
+</ol>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- INTERVIEW QUESTIONS -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-interview">
+<div class="unit-header"><h1>&#128187; Most Asked Networking Interview Questions</h1><div class="tags"><span class="tag tag-interview">Placement Focused</span></div></div>
+
+<div class="card">
+<h2>&#128187; Placement Interview Questions &amp; Answers</h2>
+
+<ol>
+<li><strong>Q: What is TCP?</strong><br>
+A: Transmission Control Protocol. A connection-oriented, reliable transport layer protocol that provides process-to-process delivery with flow control, error control, and congestion control. It ensures data is delivered in order and without loss.</li>
+
+<li><strong>Q: What is UDP?</strong><br>
+A: User Datagram Protocol. A connectionless, unreliable transport layer protocol. It's lightweight with minimal overhead, suitable for real-time applications (video streaming, VoIP) and simple request-response operations where speed matters more than reliability.</li>
+
+<li><strong>Q: Difference between Hub and Switch?</strong><br>
+A: Hub operates at Physical layer (Layer 1) - broadcasts data to all ports, no intelligence, more collisions. Switch operates at Data Link layer (Layer 2) - learns MAC addresses, forwards selectively to specific ports, reduces collisions, more efficient.</li>
+
+<li><strong>Q: Difference between Router and Gateway?</strong><br>
+A: Router operates at Network layer (Layer 3) - forwards packets based on IP addresses, connects different networks. Gateway can operate at all layers - translates between different protocol stacks (e.g., connect an IP network to an SNA network).</li>
+
+<li><strong>Q: What is ARP?</strong><br>
+A: Address Resolution Protocol. Used to map an IP address (logical) to its corresponding MAC address (physical) on a local network. Operates at the interface between Data Link and Network layers.</li>
+
+<li><strong>Q: What is DNS?</strong><br>
+A: Domain Name System. Hierarchical system that translates human-readable domain names (e.g., www.google.com) to IP addresses. Uses UDP port 53 by default, uses TCP for zone transfers.</li>
+
+<li><strong>Q: What is DHCP?</strong><br>
+A: Dynamic Host Configuration Protocol. Automatically assigns IP addresses, subnet masks, default gateways, and DNS servers to devices on a network. Uses UDP ports 67 (server) and 68 (client).</li>
+
+<li><strong>Q: What is NAT?</strong><br>
+A: Network Address Translation. Technique that allows multiple devices on a private network to share a single public IP address. Conserves IPv4 address space and adds a layer of security by hiding internal IP addresses.</li>
+
+<li><strong>Q: What is Subnetting?</strong><br>
+A: Dividing a large network into smaller subnetworks (subnets) to improve efficiency, security, and management. Uses subnet masks to identify the network and host portions of an IP address.</li>
+
+<li><strong>Q: What is the OSI model?</strong><br>
+A: Open Systems Interconnection model - a 7-layer conceptual framework that standardizes network communication functions: Physical, Data Link, Network, Transport, Session, Presentation, Application.</li>
+
+<li><strong>Q: What is HTTP vs HTTPS?</strong><br>
+A: HTTP (Hypertext Transfer Protocol, port 80) transmits data in plain text. HTTPS (HTTP Secure, port 443) encrypts data using SSL/TLS, providing secure communication.</li>
+
+<li><strong>Q: What is a MAC address?</strong><br>
+A: Media Access Control address - a unique 48-bit (6-byte) hardware identifier assigned to network interface cards (NICs). Written as 12 hexadecimal digits (e.g., A0:B1:C2:D3:E4:F5). Layer 2 addressing.</li>
+
+<li><strong>Q: What is the difference between IPv4 and IPv6?</strong><br>
+A: IPv4 = 32-bit address (~4.3 billion addresses), dotted decimal, has header checksum, supports fragmentation at intermediate routers. IPv6 = 128-bit address (huge address space), hex colon notation, no header checksum, no intermediate fragmentation, built-in security.</li>
+
+<li><strong>Q: What is the Three-Way Handshake in TCP?</strong><br>
+A: Process to establish TCP connection: 1) Client sends SYN, 2) Server responds with SYN+ACK, 3) Client sends ACK. Ensures both sides are ready for communication.</li>
+
+<li><strong>Q: What is the difference between Connection-Oriented and Connectionless service?</strong><br>
+A: Connection-oriented (e.g., TCP) establishes a connection before data transfer, ensures reliable delivery, uses acknowledgments. Connectionless (e.g., UDP) sends data without connection setup, unreliable, no acknowledgments, each packet independent.</li>
+
+<li><strong>Q: What is CSMA/CD?</strong><br>
+A: Carrier Sense Multiple Access with Collision Detection. Used by Ethernet. Devices listen before transmitting. If collision detected, they stop and retry after random backoff time.</li>
+
+<li><strong>Q: What is Firewall?</strong><br>
+A: Security device (hardware or software) that monitors and controls incoming/outgoing network traffic based on predetermined security rules. Can be packet-filter, stateful, or application-layer.</li>
+
+<li><strong>Q: What is Quality of Service (QoS)?</strong><br>
+A: Set of techniques to manage network resources and ensure performance for critical applications. Includes scheduling (FIFO, priority, WFQ), traffic shaping (leaky bucket, token bucket), and resource reservation.</li>
+
+<li><strong>Q: What is the difference between TCP and UDP in terms of header size?</strong><br>
+A: TCP header = 20-60 bytes (with options). UDP header = 8 bytes (fixed).</li>
+
+<li><strong>Q: Explain the concept of encapsulation.</strong><br>
+A: Each layer adds its own header (and trailer) as data moves down the protocol stack. At the receiving end, headers are stripped layer by layer (decapsulation). Ensures each layer gets the information it needs.</li>
+</ol>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- EXAM QUESTIONS -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-examq">
+<div class="unit-header"><h1>&#128221; Important Exam Questions</h1><div class="tags"><span class="tag tag-exam">University Exam Prep</span></div></div>
+
+<div class="card">
+<h2>&#128221; 2-Mark Questions</h2>
+<ol>
+<li>Define protocol. What are its key elements?</li>
+<li>Differentiate between simplex, half-duplex, and full-duplex transmission.</li>
+<li>What is the difference between a hub and a switch?</li>
+<li>Define bandwidth. How is it calculated?</li>
+<li>What is the Nyquist theorem?</li>
+<li>What is attenuation? How is it measured?</li>
+<li>What is framing?</li>
+<li>What is the difference between VRC and CRC?</li>
+<li>What is the minimum and maximum Ethernet frame size?</li>
+<li>What is the size of IPv4 and IPv6 addresses?</li>
+<li>What is subnetting?</li>
+<li>Define hop count in routing.</li>
+<li>What is the difference between TCP and UDP?</li>
+<li>What is a socket address?</li>
+<li>Define congestion in networks.</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>&#128221; 5-Mark Questions</h2>
+<ol>
+<li>Explain the seven layers of the OSI model with their functions.</li>
+<li>Compare and contrast OSI and TCP/IP models.</li>
+<li>Explain different network topologies with their advantages and disadvantages.</li>
+<li>Explain Pulse Code Modulation (PCM) with its steps.</li>
+<li>Explain different transmission media with examples.</li>
+<li>Explain Go-Back-N ARQ protocol with a diagram.</li>
+<li>Explain IPv4 datagram header format.</li>
+<li>Explain distance vector routing with an example.</li>
+<li>Explain TCP three-way handshake with a diagram.</li>
+<li>Explain the leaky bucket algorithm for traffic shaping.</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>&#128221; 10-Mark / Long Theory Questions</h2>
+<ol>
+<li>Explain the OSI model in detail with the function of each layer and data encapsulation process.</li>
+<li>Describe TCP/IP protocol suite with its layers, protocols, and addressing mechanism.</li>
+<li>Compare and contrast all error detection techniques (VRC, LRC, CRC, Checksum) with examples.</li>
+<li>Explain in detail: Stop-and-Wait ARQ, Go-Back-N ARQ, and Selective Repeat ARQ protocols.</li>
+<li>Explain IPv4 addressing, classful addressing (Classes A-E), and CIDR notation with examples.</li>
+<li>Solve subnetting problems: Given an IP block, find subnet mask, network ID, broadcast address, and valid host range.</li>
+<li>Explain Distance Vector (RIP), Link State (OSPF), and Path Vector (BGP) routing protocols in detail.</li>
+<li>Explain congestion control techniques: open-loop (retransmission, window, acknowledgment, discarding, admission policies) and closed-loop (backpressure, choke packet, signaling).</li>
+<li>Explain TCP in detail: segment format, connection management (three-way handshake, termination), flow control, error control.</li>
+<li>Explain quality of service (QoS) techniques including scheduling (FIFO, priority, WFQ) and traffic shaping (leaky bucket, token bucket).</li>
+<li>Explain the process-to-process delivery in transport layer including port numbers, UDP datagram format, and TCP segment format with examples.</li>
+<li>Explain DNS hierarchy, resolution process, and email architecture (UA, MTA, MAA) with SMTP.</li>
+</ol>
+</div>
+
+<div class="card">
+<h2>&#128221; Frequently Repeated Questions</h2>
+<ul>
+<li>OSI vs TCP/IP: Differences and comparisons</li>
+<li>IPv4 header format and fragmentation</li>
+<li>TCP three-way handshake and connection termination</li>
+<li>Subnetting numerical problems</li>
+<li>Error detection: CRC and Checksum</li>
+<li>Routing algorithms: Distance vector vs Link state</li>
+<li>Flow control: Stop-and-Wait, Go-Back-N, Selective Repeat</li>
+<li>Congestion control: Leaky bucket vs Token bucket</li>
+<li>Network topologies: Comparison and calculations</li>
+<li>Transmission media: Guided vs Unguided</li>
+</ul>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- MCQ PRACTICE -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-mcq">
+<div class="unit-header"><h1>&#128220; MCQ Practice</h1><div class="subtitle">Topic-wise Multiple Choice Questions from Lecture Content</div></div>
+
+<script>
+// MCQ Data - defined inline but loaded via function
+const mcqData = [
+// Unit 1 MCQs
+{q:"Which of the following is NOT an example of fundamental characteristics of communication?", opts:["Accuracy","Delivery","Jitter","Compression"], ans:3, unit:"Unit 1"},
+{q:"Bi-directional data communication possible only at two different time interval is associated with:", opts:["Simplex","Half-Duplex","Duplex","None"], ans:1, unit:"Unit 1"},
+{q:"A node is a representation of:", opts:["PC","Printer","Laptop","All of the above"], ans:3, unit:"Unit 1"},
+{q:"The Key elements of a Protocol is/are:", opts:["Syntax","Semantic","Timing","All of the above"], ans:3, unit:"Unit 1"},
+{q:"Which of the following is not an immediate layer to the network layer?", opts:["Transport Layer","Data Link Layer","Both","None"], ans:2, unit:"Unit 1"},
+{q:"Hop to Hop Communication takes place at:", opts:["Physical Layer","Data Link Layer","Network Layer","Transport Layer"], ans:1, unit:"Unit 1"},
+{q:"Which of the following layers is merged in TCP/IP protocol?", opts:["Session layer","Network layer","Transport layer","None"], ans:0, unit:"Unit 1"},
+{q:"Physical addressing takes place at:", opts:["Physical layer","Data Link layer","Network layer","Session layer"], ans:1, unit:"Unit 1"},
+{q:"Which of the following is NOT a type of topology?", opts:["Mesh","Bus","Truck","Star"], ans:2, unit:"Unit 1"},
+{q:"If there are 5 devices, how many channels are required in a mesh topology?", opts:["10","15","20","25"], ans:0, unit:"Unit 1"},
+{q:"Which topology is the most expensive in terms of installation?", opts:["Star","Bus","Mesh","Hub"], ans:2, unit:"Unit 1"},
+{q:"Hub is a:", opts:["Broadcast device","Unicast device","Multicast device","None"], ans:0, unit:"Unit 1"},
+{q:"Router is also known as:", opts:["Three Layer Switch","Two Layer Switch","None"], ans:0, unit:"Unit 1"},
+{q:"A connection-less service needs acknowledgement:", opts:["True","False"], ans:1, unit:"Unit 1"},
+// Unit 2 MCQs
+{q:"Data can be:", opts:["Digital Only","Analog Only","Both A and B","None"], ans:2, unit:"Unit 2"},
+{q:"All of following are representation of a wave except:", opts:["Amplitude","Frequency","Wavelength","All of the above"], ans:3, unit:"Unit 2"},
+{q:"If the signal doesn't change then its frequency is:", opts:["High","Low","Zero","Can't be determined"], ans:2, unit:"Unit 2"},
+{q:"A digital Signal can be represented by:", opts:["Two levels only","4 levels only","Finite levels in power of 2 only","Finite levels"], ans:3, unit:"Unit 2"},
+{q:"Multiplexing means:", opts:["Sharing BW between two users","Sharing BW between multiple users","None"], ans:1, unit:"Unit 2"},
+{q:"Which of the following is NOT an example of transmission Media?", opts:["Twisted-Pair Cable","Coaxial Cable","Microwave","None"], ans:3, unit:"Unit 2"},
+{q:"Cables are twisted to overcome the problem of:", opts:["Noise","Distortion","Attenuation","Cross-talk"], ans:3, unit:"Unit 2"},
+{q:"For Total internal reflection to take place:", opts:["Incidence angle > critical angle","Incidence angle < critical angle","Incidence angle = critical angle","Independent"], ans:0, unit:"Unit 2"},
+{q:"Which band is associated with Cellular phones and Pagers?", opts:["UHF","VHF","SHF","EHF"], ans:0, unit:"Unit 2"},
+{q:"Which of the following is NOT a type of impairment?", opts:["Distortion","Attenuation","Noise","Amplification"], ans:3, unit:"Unit 2"},
+{q:"Which of the following has the maximum Bandwidth?", opts:["AM","FM","PM","None"], ans:1, unit:"Unit 2"},
+{q:"QAM is a combination of:", opts:["ASK+PSK","ASK+FSK","PSK+FSK","None"], ans:0, unit:"Unit 2"},
+// Unit 3 MCQs
+{q:"Which is not an example of Error?", opts:["Single bit","Double bit","Burst","Rust"], ans:3, unit:"Unit 3"},
+{q:"Which is not an example of redundancy check?", opts:["CRC","VRC","LRC","NRC"], ans:3, unit:"Unit 3"},
+{q:"Is Hamming code:", opts:["Error detection Only","Error Correction Only","Both A and B","None"], ans:2, unit:"Unit 3"},
+{q:"In a MAC address, the address is broadcast if in first byte:", opts:["LSB is 1","MSB is 1","LSB is 0","MSB is 0"], ans:0, unit:"Unit 3"},
+// Unit 4 MCQs
+{q:"IP Datagram Header Size ranges from:", opts:["20-60 bits","20-60 bytes","20-60 nibbles","20-40 bytes"], ans:1, unit:"Unit 4"},
+{q:"Which field is needed for determining datagram belonging of fragments?", opts:["Identification","Fragment offset","Time to live","Header checksum"], ans:0, unit:"Unit 4"},
+{q:"Subnetting is applicable for:", opts:["Classful Addressing","Classless Addressing","Both","None"], ans:2, unit:"Unit 4"},
+{q:"In IPv4 header, which field prevents a datagram from looping infinitely?", opts:["Identification","TTL","Flags","Checksum"], ans:1, unit:"Unit 4"},
+{q:"In IPv6, the traffic class field is similar to which field in IPv4?", opts:["Fragmentation","Fast-switching","ToS field","Option field"], ans:2, unit:"Unit 4"},
+{q:"Datagram approach is:", opts:["Connection oriented service","Connectionless service","None"], ans:1, unit:"Unit 4"},
+{q:"Connection identifier is linked with:", opts:["Connectionless service","Connection oriented Service","None"], ans:1, unit:"Unit 4"},
+// Unit 5 MCQs
+{q:"Decision of path selection is based on:", opts:["Optimum pathway","Non-optimum pathway","Random pathway","None"], ans:0, unit:"Unit 5"},
+{q:"If a packet passes through 80 networks, total hop count is:", opts:["80","160","8","16"], ans:0, unit:"Unit 5"},
+{q:"In link state routing, each node has information of entire:", opts:["Topology","Adjacent node only","Next hop only","None"], ans:0, unit:"Unit 5"},
+{q:"Congestion control refers to:", opts:["Keep load below capacity","Keep load above capacity","Both","None"], ans:0, unit:"Unit 5"},
+{q:"Traffic profiles are:", opts:["Constant","Variable","Bursty","All of the above"], ans:3, unit:"Unit 5"},
+// Unit 6 MCQs
+{q:"Data reliability is a part of:", opts:["Data link layer","Physical layer","Application layer","Transport layer"], ans:3, unit:"Unit 6"},
+{q:"UDP is:", opts:["Connection-oriented","Connectionless","Both","None"], ans:1, unit:"Unit 6"},
+{q:"TCP uses which kind of numbering?", opts:["Segment numbering","Byte numbering","Packet numbering","None"], ans:1, unit:"Unit 6"},
+{q:"The FIN segment:", opts:["Consumes no sequence number","Consumes one sequence number","Depends","None"], ans:1, unit:"Unit 6"},
+{q:"SMTP is used in:", opts:["DNS","Email","FTP","HTTP"], ans:1, unit:"Unit 6"},
+{q:"DNS uses which transport protocol primarily?", opts:["TCP","UDP","Both","None"], ans:1, unit:"Unit 6"},
+{q:"Which port does HTTP use?", opts:["80","443","21","25"], ans:0, unit:"Unit 6"},
+{q:"Which port does HTTPS use?", opts:["80","443","21","25"], ans:1, unit:"Unit 6"},
+{q:"Which protocol is used for file transfer?", opts:["SMTP","HTTP","FTP","DNS"], ans:2, unit:"Unit 6"},
+// Additional general
+{q:"Which layer performs routing?", opts:["Physical","Data Link","Network","Transport"], ans:2, unit:"General"},
+{q:"Which layer deals with MAC addresses?", opts:["Physical","Data Link","Network","Transport"], ans:1, unit:"General"},
+{q:"Ethernet operates at which layers?", opts:["Physical only","Data Link only","Physical and Data Link","All layers"], ans:2, unit:"General"},
+{q:"What is the default mask for Class B network?", opts:["255.0.0.0","255.255.0.0","255.255.255.0","255.255.255.192"], ans:1, unit:"General"},
+];
+</script>
+
+<div id="mcqContainer"></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- GLOSSARY -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-glossary">
+<div class="unit-header"><h1>&#128214; Glossary of Computer Networks Terms</h1></div>
+<div class="card" id="glossaryContainer">
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">ACK <span class="expand">&#9660;</span></div><div class="def">Acknowledgement - A signal sent to confirm receipt of data.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">ARP <span class="expand">&#9660;</span></div><div class="def">Address Resolution Protocol - Maps IP addresses to MAC addresses.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">ASK <span class="expand">&#9660;</span></div><div class="def">Amplitude Shift Keying - Digital modulation by varying carrier amplitude.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">BGP <span class="expand">&#9660;</span></div><div class="def">Border Gateway Protocol - Interdomain routing protocol using path vector.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">CIDR <span class="expand">&#9660;</span></div><div class="def">Classless Inter-Domain Routing - Flexible IP addressing method replacing classful.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">CRC <span class="expand">&#9660;</span></div><div class="def">Cyclic Redundancy Check - Powerful error detection using polynomial division.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">CSMA/CD <span class="expand">&#9660;</span></div><div class="def">Carrier Sense Multiple Access with Collision Detection - Ethernet access method.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">DHCP <span class="expand">&#9660;</span></div><div class="def">Dynamic Host Configuration Protocol - Auto-assigns IP addresses to devices.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">DNS <span class="expand">&#9660;</span></div><div class="def">Domain Name System - Translates domain names to IP addresses.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">FDM <span class="expand">&#9660;</span></div><div class="def">Frequency Division Multiplexing - Analog multiplexing by dividing frequency spectrum.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">FTP <span class="expand">&#9660;</span></div><div class="def">File Transfer Protocol - Application protocol for file transfer.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">FSK <span class="expand">&#9660;</span></div><div class="def">Frequency Shift Keying - Digital modulation by varying carrier frequency.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">HLEN <span class="expand">&#9660;</span></div><div class="def">Header Length - Field in IP header indicating length in 32-bit words.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">HTTP/HTTPS <span class="expand">&#9660;</span></div><div class="def">HyperText Transfer Protocol (Secure) - Web communication protocol.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">ICMP <span class="expand">&#9660;</span></div><div class="def">Internet Control Message Protocol - Error reporting and diagnostic tool.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">IGMP <span class="expand">&#9660;</span></div><div class="def">Internet Group Management Protocol - Manages multicast group memberships.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">IMAP <span class="expand">&#9660;</span></div><div class="def">Internet Message Access Protocol - Email retrieval protocol (keeps messages on server).</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">IP <span class="expand">&#9660;</span></div><div class="def">Internet Protocol - Network layer protocol for host-to-host delivery.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">LAN <span class="expand">&#9660;</span></div><div class="def">Local Area Network - Network covering small geographic area.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">LRC <span class="expand">&#9660;</span></div><div class="def">Longitudinal Redundancy Check - Block parity check for error detection.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">MAC <span class="expand">&#9660;</span></div><div class="def">Media Access Control - 48-bit unique hardware address at Data Link layer.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">MAN <span class="expand">&#9660;</span></div><div class="def">Metropolitan Area Network - Network covering city or campus area.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">MTU <span class="expand">&#9660;</span></div><div class="def">Maximum Transfer Unit - Maximum data payload a network frame can carry.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">NAT <span class="expand">&#9660;</span></div><div class="def">Network Address Translation - Maps private IPs to a public IP.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">OSI <span class="expand">&#9660;</span></div><div class="def">Open Systems Interconnection - 7-layer network model by ISO.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">OSPF <span class="expand">&#9660;</span></div><div class="def">Open Shortest Path First - Link state intradomain routing protocol.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">PCM <span class="expand">&#9660;</span></div><div class="def">Pulse Code Modulation - Digitizing analog signals via sampling, quantization, encoding.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">POP3 <span class="expand">&#9660;</span></div><div class="def">Post Office Protocol 3 - Email retrieval protocol (downloads messages).</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">PSK <span class="expand">&#9660;</span></div><div class="def">Phase Shift Keying - Digital modulation by varying carrier phase.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">QAM <span class="expand">&#9660;</span></div><div class="def">Quadrature Amplitude Modulation - Combination of ASK and PSK.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">QoS <span class="expand">&#9660;</span></div><div class="def">Quality of Service - Network resource management for performance guarantees.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">RIP <span class="expand">&#9660;</span></div><div class="def">Routing Information Protocol - Distance vector intradomain routing protocol (hop count).</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">SMTP <span class="expand">&#9660;</span></div><div class="def">Simple Mail Transfer Protocol - Email sending protocol.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">SNMP <span class="expand">&#9660;</span></div><div class="def">Simple Network Management Protocol - Network monitoring and management.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">SNR <span class="expand">&#9660;</span></div><div class="def">Signal-to-Noise Ratio - Ratio of signal power to noise power.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">TCP <span class="expand">&#9660;</span></div><div class="def">Transmission Control Protocol - Connection-oriented reliable transport protocol.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">TDM <span class="expand">&#9660;</span></div><div class="def">Time Division Multiplexing - Digital multiplexing by dividing time into slots.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">TTL <span class="expand">&#9660;</span></div><div class="def">Time to Live - Limits packet lifetime/hops in IP header.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">UDP <span class="expand">&#9660;</span></div><div class="def">User Datagram Protocol - Connectionless unreliable transport protocol.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">VRC <span class="expand">&#9660;</span></div><div class="def">Vertical Redundancy Check - Single parity bit error detection.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">WAN <span class="expand">&#9660;</span></div><div class="def">Wide Area Network - Network covering large geographic area.</div></div>
+<div class="glossary-term" onclick="this.classList.toggle('open')"><div class="term">WDM <span class="expand">&#9660;</span></div><div class="def">Wavelength Division Multiplexing - Multiplexing technique for optical fiber.</div></div>
+</div>
+</section>
+
+<!-- ============================================================ -->
+<!-- FORMULAS & NUMERICALS -->
+<!-- ============================================================ -->
+<section class="content-section" id="sec-formulas">
+<div class="unit-header"><h1>&#128200; Formulas &amp; Numericals Section</h1><div class="tags"><span class="tag tag-exam">Must Know</span><span class="tag tag-exercise">Practice</span></div></div>
+
+<div class="card">
+<h2>Key Formulas</h2>
+<table>
+<thead><tr><th>Formula</th><th>Description</th></tr></thead>
+<tbody>
+<tr><td>f = 1/T</td><td>Frequency = 1/Period</td></tr>
+<tr><td>&#955; = c / f</td><td>Wavelength = Speed of light / Frequency</td></tr>
+<tr><td>dB = 10 log&#8321;&#8320;(P&#8322;/P&#8321;)</td><td>Decibel (power ratio)</td></tr>
+<tr><td>SNR&#8340;&#8344; = 10 log&#8321;&#8320;(SNR)</td><td>SNR in decibels</td></tr>
+<tr><td>Nyquist: BitRate = 2B log&#8322;L</td><td>Max bit rate on noiseless channel</td></tr>
+<tr><td>Shannon: C = B log&#8322;(1+SNR)</td><td>Channel capacity on noisy channel</td></tr>
+<tr><td>B<sub>AM</sub> = 2B</td><td>AM bandwidth</td></tr>
+<tr><td>B<sub>FM</sub> = 2(1+&#946;)B, &#946;=4</td><td>FM bandwidth</td></tr>
+<tr><td>B<sub>PM</sub> = 2(1+&#946;)B, &#946;=2</td><td>PM bandwidth</td></tr>
+<tr><td>S = N &#215; 1/r bauds</td><td>Baud rate from bit rate (r = bits/signal element)</td></tr>
+<tr><td>#channels (mesh) = n(n-1)/2</td><td>Channels needed for mesh topology</td></tr>
+<tr><td>2&#8310; &#8805; m + r + 1</td><td>Hamming code redundancy bits</td></tr>
+<tr><td>D<sub>tr</sub> = L / R</td><td>Transmission delay (length/rate)</td></tr>
+<tr><td>D<sub>pg</sub> = d / v</td><td>Propagation delay (distance/velocity)</td></tr>
+<tr><td>#Addresses CIDR = 2&#179;&#178;&#8315;&#8319;</td><td>Addresses in CIDR block</td></tr>
+<tr><td>#Hosts/subnet = 2&#8319; - 2</td><td>Usable hosts per subnet</td></tr>
+<tr><td>Window size (max) = 1+2a, a=T<sub>p</sub>/T<sub>t</sub></td><td>Maximum sliding window size</td></tr>
+<tr><td>UDP length = IP length - IP header length</td><td>UDP datagram length</td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="card">
+<h2>Solved Numerical Examples</h2>
+
+<h3>1. Digital Signal Levels</h3>
+<p><strong>Q:</strong> A digital signal has 8 levels. How many bits per level?<br>
+<strong>A:</strong> log&#8322;8 = 3 bits per level.</p>
+
+<h3>2. Download Bit Rate</h3>
+<p><strong>Q:</strong> Download 100 pages/min, each page has 24 lines of 80 chars, each char = 8 bits.<br>
+<strong>A:</strong> 100 &#215; 24 &#215; 80 &#215; 8 = 1,536,000 bps = 1.536 Mbps.</p>
+
+<h3>3. Digitized Voice Bit Rate</h3>
+<p><strong>Q:</strong> Voice channel 4 kHz, sample at 2x, each sample = 8 bits. Find bit rate.<br>
+<strong>A:</strong> 4000 &#215; 2 &#215; 8 = 64,000 bps = 64 kbps.</p>
+
+<h3>4. Receiver Clock Mismatch</h3>
+<p><strong>Q:</strong> Receiver clock 0.1% faster than sender at 1 kbps and 1 Mbps.<br>
+<strong>A:</strong> At 1 kbps: receives 1001 bps (1 extra). At 1 Mbps: receives 1,001,000 bps (1000 extra).</p>
+
+<h3>5. Nyquist Bit Rate</h3>
+<p><strong>Q:</strong> Channel 3000 Hz, 2 signal levels. Max bit rate?<br>
+<strong>A:</strong> 2 &#215; 3000 &#215; log&#8322;2 = 6000 bps. With 4 levels: 2 &#215; 3000 &#215; log&#8322;4 = 12,000 bps.</p>
+
+<h3>6. Shannon Capacity</h3>
+<p><strong>Q:</strong> Telephone line 3000 Hz, SNR = 3162. Capacity?<br>
+<strong>A:</strong> 3000 &#215; log&#8322;(1+3162) = 3000 &#215; log&#8322;(3163) &#8776; 3000 &#215; 11.62 = 34,860 bps.</p>
+
+<h3>7. Attenuation</h3>
+<p><strong>Q:</strong> Power reduced to half. Calculate dB.<br>
+<strong>A:</strong> dB = 10 log&#8321;&#8320;(0.5) = -3 dB (3 dB loss).</p>
+
+<h3>8. Mesh Topology</h3>
+<p><strong>Q:</strong> 5 devices in mesh. How many channels and I/O ports?<br>
+<strong>A:</strong> Channels = 5&#215;4/2 = 10. I/O ports per device = 5-1 = 4.</p>
+
+<h3>9. IPv4 HLEN Calculation</h3>
+<p><strong>Q:</strong> HLEN = 1000 in binary (8). How many bytes for options?<br>
+<strong>A:</strong> HLEN &#215; 4 = 32 bytes total header. Base = 20 bytes. Options = 12 bytes.</p>
+
+<h3>10. Fragment Offset</h3>
+<p><strong>Q:</strong> Offset = 100, HLEN = 5, Total Length = 100. First and last byte?<br>
+<strong>A:</strong> First = 100 &#215; 8 = 800. Header = 20 bytes. Data = 80 bytes. Last = 879.</p>
+
+<h3>11. Subnet Calculation</h3>
+<p><strong>Q:</strong> 192.168.1.15/26. Find network ID, broadcast, usable IPs.<br>
+<strong>A:</strong> /26 = 255.255.255.192, block=64, Net=192.168.1.0, BC=192.168.1.63, First=192.168.1.1, Last=192.168.1.62.</p>
+
+<h3>12. Baud Rate</h3>
+<p><strong>Q:</strong> Analog signal carries 4 bits/signal element, 1000 signal elements/sec. Find bit rate.<br>
+<strong>A:</strong> N = S &#215; r = 1000 &#215; 4 = 4000 bps.</p>
+
+<h3>13. IP Datagram Version/Header Check</h3>
+<p><strong>Q:</strong> IP packet first 8 bits: 0100 0010. Receiver discards. Why?<br>
+<strong>A:</strong> Version=4 (ok), HLEN=2 &#215; 4 = 8 bytes (invalid, min=20). Packet corrupted.</p>
+
+<h3>14. Network ID with Default Mask</h3>
+<p><strong>Q:</strong> IP 191.154.25.66. What is network ID with default mask? With /24?<br>
+<strong>A:</strong> Class B default: 191.154.0.0. With /24: 191.154.25.0.</p>
+
+<h3>15. Stop-and-Wait Utilization</h3>
+<p><strong>Q:</strong> Bandwidth = 1 Mbps, RTT = 20 ms, Frame = 1000 bits. Utilization?<br>
+<strong>A:</strong> Bandwidth-delay = 1Mbps &#215; 20ms = 20,000 bits. Utilization = 1000/20000 = 5%.</p>
+</div>
+</section>
+
+</div><!-- end .content -->
+</div><!-- end .main -->
+
+<!-- Back to Top -->
+
+<div id="prevNextNav" style="display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border)">
+<button id="prevBtn" onclick="navigatePrev()" style="padding:10px 20px;border:1px solid var(--border);border-radius:8px;background:var(--bg2);color:var(--text);cursor:pointer;transition:var(--transition);font-size:13px">&#8592; Previous Topic</button>
+<button id="nextBtn" onclick="navigateNext()" style="padding:10px 20px;border:1px solid var(--accent);border-radius:8px;background:var(--accent);color:#fff;cursor:pointer;transition:var(--transition);font-size:13px">Next Topic &#8594;</button>
+</div>
+<button class="back-to-top" id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">&#8593;</button>
+
+<script>
+// ===== NAVIGATION =====
+function navigateTo(sectionId) {
+document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+const target = document.getElementById('sec-' + sectionId);
+if(target) target.classList.add('active');
+document.querySelectorAll('.nav-item, .nav-child-item').forEach(n => n.classList.remove('active'));
+document.querySelectorAll(`[data-section="${sectionId}"]`).forEach(n => n.classList.add('active'));
+const title = document.querySelector(`[data-section="${sectionId}"]`);
+document.getElementById('pageTitle').textContent = title ? title.textContent.trim() : 'Dashboard';
+if(window.innerWidth <= 768) toggleSidebar();
+window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ===== SIDEBAR TOGGLE (mobile) =====
+function toggleSidebar() {
+document.getElementById('sidebar').classList.toggle('open');
+document.getElementById('overlay').classList.toggle('show');
+}
+
+// ===== THEME =====
+function toggleTheme() {
+document.body.classList.toggle('dark');
+const btn = document.getElementById('themeBtn');
+btn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌙 Dark';
+localStorage.setItem('cn-theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+}
+if(localStorage.getItem('cn-theme') === 'dark') { document.body.classList.add('dark');
+document.getElementById('themeBtn').textContent = '☀️ Light'; }
+
+// ===== PROGRESS =====
+window.addEventListener('scroll', function() {
+const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+const pct = scrollHeight > 0 ? (scrollTop/scrollHeight)*100 : 0;
+document.getElementById('progressFill').style.width = pct+'%';
+document.getElementById('backToTop').classList.toggle('show', scrollTop > 300);
+});
+
+// ===== SEARCH =====
+function handleSearch(val) {
+const q = val.toLowerCase().trim();
+// Remove old highlights
+document.querySelectorAll('.highlight').forEach(el => { const p = el.parentNode; p.replaceChild(document.createTextNode(el.textContent), el); p.normalize(); });
+if(!q) return;
+const allContent = document.querySelectorAll('.content-section .card p, .content-section .card li, .content-section .card td, .content-section .card h3');
+allContent.forEach(el => {
+if(el.textContent.toLowerCase().includes(q)) {
+el.innerHTML = el.textContent.replace(new RegExp(q, 'gi'), m => `<span class="highlight">${m}</span>`);
+}
+});
+}
+
+// ===== MCQ RENDER =====
+function renderMCQs() {
+const container = document.getElementById('mcqContainer');
+if(!container) return;
+const units = [...new Set(mcqData.map(m => m.unit))];
+units.forEach(unit => {
+const unitMCQs = mcqData.filter(m => m.unit === unit);
+if(!unitMCQs.length) return;
+let html = `<div class="card"><h3>${unit} MCQs</h3>`;
+unitMCQs.forEach((mcq, idx) => {
+html += `<div class="mcq-block" id="mcq-${unit}-${idx}">
+<div class="q">${idx+1}. ${mcq.q}</div>
+<div class="opts">`;
+mcq.opts.forEach((opt, oi) => {
+html += `<div class="opt" onclick="selectMCQ('mcq-${unit}-${idx}', ${oi}, ${mcq.ans})">${String.fromCharCode(65+oi)}. ${opt}</div>`;
+});
+html += `</div><div class="answer" id="ans-mcq-${unit}-${idx}">Answer: ${String.fromCharCode(65+mcq.ans)}. ${mcq.opts[mcq.ans]}</div>
+<button class="show-btn" onclick="document.getElementById('ans-mcq-${unit}-${idx}').classList.toggle('show')">Show Answer</button>
+</div>`;
+});
+html += '</div>';
+container.innerHTML += html;
+});
+}
+
+function selectMCQ(id, selected, correct) {
+const block = document.getElementById(id);
+block.querySelectorAll('.opt').forEach((el, i) => {
+el.classList.remove('correct','wrong');
+if(i === correct && i === selected) el.classList.add('correct');
+else if(i === selected) el.classList.add('wrong');
+else if(i === correct) el.classList.add('correct');
+});
+block.querySelector('.answer').classList.add('show');
+}
+
+
+// ===== PREV/NEXT NAVIGATION =====
+var navOrder = ['overview','unit1','unit1-intro','unit1-osi','unit1-tcpip','unit1-topologies','unit1-hardware','unit1-protocols','unit2','unit2-signals','unit2-digital','unit2-analog','unit2-media','unit2-impairments','unit3','unit3-framing','unit3-error','unit3-flow','unit3-ethernet','unit4','unit4-design','unit4-ipv4','unit4-subnetting','unit4-ipv6','unit4-frag','unit5','unit5-routing','unit5-rip','unit5-ospf','unit5-bgp','unit5-congestion','unit6','unit6-transport','unit6-udp','unit6-tcp','unit6-email','unit6-dns','protocols','comparison','quickrev','viva','interview','examq','mcq','glossary','formulas'];
+var currentSectionIdx = 0;
+
+function updateNavButtons() {
+  var pb = document.getElementById('prevBtn');
+  var nb = document.getElementById('nextBtn');
+  if (pb) pb.style.visibility = currentSectionIdx > 0 ? 'visible' : 'hidden';
+  if (nb) nb.style.visibility = currentSectionIdx < navOrder.length - 1 ? 'visible' : 'hidden';
+}
+
+function navigatePrev() { if(currentSectionIdx > 0) navigateTo(navOrder[currentSectionIdx - 1]); }
+function navigateNext() { if(currentSectionIdx < navOrder.length - 1) navigateTo(navOrder[currentSectionIdx + 1]); }
+
+// Enhanced navigateTo with prev/next tracking
+var origNavigateTo = window.navigateTo;
+window.navigateTo = function(sectionId) {
+  origNavigateTo(sectionId);
+  currentSectionIdx = navOrder.indexOf(sectionId);
+  updateNavButtons();
+};
+
+// Keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+  if((e.key === 'ArrowLeft' || e.key === 'ArrowUp') && (e.ctrlKey || e.metaKey)) { e.preventDefault(); navigatePrev(); }
+  if((e.key === 'ArrowRight' || e.key === 'ArrowDown') && (e.ctrlKey || e.metaKey)) { e.preventDefault(); navigateNext(); }
+});
+
+// ===== BOOKMARKS =====
+function toggleBookmark(sectionId) {
+  var bookmarks = JSON.parse(localStorage.getItem('cn-bookmarks') || '[]');
+  var idx = bookmarks.indexOf(sectionId);
+  if(idx >= 0) bookmarks.splice(idx,1); else bookmarks.push(sectionId);
+  localStorage.setItem('cn-bookmarks', JSON.stringify(bookmarks));
+  updateBookmarkUI();
+}
+
+function updateBookmarkUI() {
+  var bookmarks = JSON.parse(localStorage.getItem('cn-bookmarks') || '[]');
+  var btns = document.querySelectorAll('.bookmark-btn');
+  for(var i=0;i<btns.length;i++) {
+    var sec = btns[i].getAttribute('data-section');
+    if(bookmarks.indexOf(sec) >= 0) btns[i].classList.add('active');
+    else btns[i].classList.remove('active');
+  }
+}
+
+// Add bookmark buttons to section headers
+(function() {
+  var headers = document.querySelectorAll('.unit-header');
+  for(var i=0;i<headers.length;i++) {
+    var sec = headers[i].closest('.content-section');
+    if(!sec) continue;
+    var id = sec.id.replace('sec-', '');
+    if(!id) continue;
+    var btn = document.createElement('button');
+    btn.className = 'bookmark-btn';
+    btn.setAttribute('data-section', id);
+    btn.innerHTML = '&#9734;';
+    btn.title = 'Bookmark this section';
+    btn.onclick = function(e) { e.stopPropagation(); toggleBookmark(this.getAttribute('data-section')); };
+    var h1 = headers[i].querySelector('h1');
+    if(h1) h1.appendChild(btn);
+  }
+  updateBookmarkUI();
+})();
+
+// ===== INIT =====
+renderMCQs();
+navigateTo('overview');
+</script>
+</body>
+</html>

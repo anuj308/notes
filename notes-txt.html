@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Max Heap Insertion Notes</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #21262d;
+      --bg4: #30363d;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --radius: 12px;
+    }
+
+    [data-theme="light"] {
+      --bg: #f0f2f5;
+      --bg2: #ffffff;
+      --bg3: #f6f8fa;
+      --bg4: #d0d7de;
+      --text: #1f2328;
+      --text2: #656d76;
+      --accent: #0969da;
+      --green: #1a7f37;
+      --yellow: #9a6700;
+      --red: #cf222e;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace; }
+    .page { max-width: 1120px; margin: 0 auto; padding: 24px; }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      margin: -24px -24px 0;
+      padding: 16px 24px;
+      background: rgba(13, 17, 23, .88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--bg4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    [data-theme="light"] .topbar { background: rgba(240, 242, 245, .88); }
+    .brand h1 { font-size: clamp(1.4rem, 3vw, 2.2rem); letter-spacing: 0; }
+    .brand p { color: var(--text2); margin-top: 4px; max-width: 680px; }
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 38px;
+      padding: 8px 13px;
+      border-radius: 999px;
+      border: 1px solid var(--bg4);
+      background: var(--bg3);
+      color: var(--text);
+      cursor: pointer;
+      font-size: .9rem;
+    }
+    .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+    .hero {
+      padding: 34px 0 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(280px, .65fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+    .panel {
+      background: var(--bg2);
+      border: 1px solid var(--bg4);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .panel h2, .panel h3 { margin-bottom: 12px; color: var(--text); letter-spacing: 0; }
+    .panel p { color: var(--text2); margin-bottom: 12px; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .stat { background: var(--bg3); border: 1px solid var(--bg4); border-radius: 8px; padding: 12px; }
+    .stat strong { display: block; color: var(--accent); font-size: 1.25rem; }
+    .stat span { color: var(--text2); font-size: .82rem; }
+    .toc { display: grid; gap: 8px; }
+    .toc a { padding: 9px 10px; border-radius: 8px; background: var(--bg3); border: 1px solid transparent; }
+    .toc a:hover { border-color: var(--accent); text-decoration: none; }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    section { margin: 18px 0; }
+    h2 { font-size: 1.35rem; margin-bottom: 12px; }
+    ul, ol { padding-left: 22px; color: var(--text2); }
+    li { margin: 8px 0; }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: rgba(88, 166, 255, .08);
+      padding: 14px 16px;
+      border-radius: 8px;
+      color: var(--text2);
+      margin-top: 14px;
+    }
+    table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 8px; }
+    th, td { padding: 11px 12px; text-align: left; border-bottom: 1px solid var(--bg4); vertical-align: top; }
+    th { background: var(--bg3); color: var(--text); }
+    td { color: var(--text2); }
+    pre {
+      background: #090c10;
+      border: 1px solid var(--bg4);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      color: #d6e2f0;
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+    [data-theme="light"] pre { background: #f6f8fa; color: #1f2328; }
+    .raw {
+      width: 100%;
+      min-height: 360px;
+      border: 1px solid var(--bg4);
+      border-radius: 8px;
+      background: var(--bg3);
+    }
+    .tag {
+      display: inline-flex;
+      margin: 3px 4px 3px 0;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: rgba(63, 185, 80, .12);
+      color: var(--green);
+      font-size: .78rem;
+    }
+    @media (max-width: 820px) {
+      .hero, .grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: 1fr; }
+      .page { padding: 18px; }
+      .topbar { margin: -18px -18px 0; padding: 14px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <div class="brand">
+        <h1>Complete Heap Notes</h1>
+        <p>Clean study version of <code>notes.txt</code> plus the full heap knowledge needed for max heap, min heap, heap sort, priority queues, and exam revision.</p>
+      </div>
+      <nav class="actions" aria-label="Page links">
+        <button class="btn" type="button" onclick="toggleTheme()">Theme</button>
+        <a class="btn" href="heap-sort.html">Heap Sort / Max Heap Problems</a>
+        <a class="btn" href="index.html">Study Portal</a>
+      </nav>
+    </header>
+
+    <main>
+      <div class="hero">
+        <section class="panel">
+          <h2>What A Heap Is</h2>
+          <p>A heap is a complete binary tree stored mostly as an array. It is used when you need fast access to the highest priority value: maximum in a max heap or minimum in a min heap.</p>
+          <div class="stats">
+            <div class="stat"><strong>O(1)</strong><span>peek root</span></div>
+            <div class="stat"><strong>O(log n)</strong><span>insert/delete</span></div>
+            <div class="stat"><strong>O(n)</strong><span>build heap</span></div>
+          </div>
+          <div class="callout">
+            Read this in order: complete binary tree, array formulas, max heap vs min heap, heapify up, heapify down, build heap, insertion, deletion, then heap sort.
+          </div>
+        </section>
+
+        <aside class="panel">
+          <h3>Jump To</h3>
+          <div class="toc">
+            <a href="#read">What To Read First</a>
+            <a href="#types">Max Heap vs Min Heap</a>
+            <a href="#formula">Heap Formulas</a>
+            <a href="#operations">Heap Operations</a>
+            <a href="#complexity">Complexity</a>
+            <a href="#heap-sort">Heap Sort</a>
+            <a href="#dry-run">Dry Run</a>
+            <a href="#code">Array-Only C++ Code</a>
+            <a href="#min-code">Min Heap Code</a>
+            <a href="#uses">When To Use Heap</a>
+            <a href="#raw">Original notes.txt</a>
+          </div>
+        </aside>
+      </div>
+
+      <section id="read" class="grid">
+        <div class="panel">
+          <h2>What You Should Read</h2>
+          <ol>
+            <li><strong>Complete binary tree:</strong> heaps are filled level by level from left to right.</li>
+            <li><strong>Heap property:</strong> max heap keeps the largest value at root; min heap keeps the smallest value at root.</li>
+            <li><strong>Array representation:</strong> no pointer tree is needed; index formulas connect parent and child.</li>
+            <li><strong>Heapify up:</strong> fixes insertion by moving a new value upward.</li>
+            <li><strong>Heapify down:</strong> fixes deletion/building by moving a wrong root downward.</li>
+            <li><strong>Heap sort:</strong> repeatedly moves max/min to final position.</li>
+          </ol>
+        </div>
+        <div class="panel">
+          <h2>High-Value Exam Points</h2>
+          <span class="tag">Max heap</span>
+          <span class="tag">Min heap</span>
+          <span class="tag">Heapify</span>
+          <span class="tag">Array indexing</span>
+          <span class="tag">Insertion</span>
+          <span class="tag">Deletion</span>
+          <span class="tag">Priority queue</span>
+          <span class="tag">No extra spaces</span>
+          <ul>
+            <li>Output can have many valid heap arrangements, but online judges often expect the exact heap created by the given algorithm.</li>
+            <li>Build heap from index <code>n / 2 - 1</code> down to <code>0</code>.</li>
+            <li>For insertion, compare with parent <code>(i - 1) / 2</code> until the new value reaches its correct place.</li>
+            <li>Heap is not a sorted array. Only the parent-child heap rule is guaranteed.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="types" class="panel">
+        <h2>Max Heap vs Min Heap</h2>
+        <table>
+          <thead>
+            <tr><th>Topic</th><th>Max Heap</th><th>Min Heap</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Root value</td><td>Largest element</td><td>Smallest element</td></tr>
+            <tr><td>Parent rule</td><td><code>parent &gt;= children</code></td><td><code>parent &lt;= children</code></td></tr>
+            <tr><td>Use when</td><td>You need maximum quickly</td><td>You need minimum quickly</td></tr>
+            <tr><td>Example use</td><td>Top score, kth largest, descending priority</td><td>Shortest path, kth smallest, scheduling earliest task</td></tr>
+            <tr><td>C++ priority queue</td><td><code>priority_queue&lt;int&gt;</code></td><td><code>priority_queue&lt;int, vector&lt;int&gt;, greater&lt;int&gt;&gt;</code></td></tr>
+          </tbody>
+        </table>
+        <div class="callout">
+          In both heaps, the tree shape is complete. The only difference is the comparison direction.
+        </div>
+      </section>
+
+      <section id="formula" class="panel">
+        <h2>Heap Formulas</h2>
+        <table>
+          <thead>
+            <tr><th>Need</th><th>Formula</th><th>Meaning</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Left child</td><td><code>2 * i + 1</code></td><td>Index of left child of node <code>i</code>.</td></tr>
+            <tr><td>Right child</td><td><code>2 * i + 2</code></td><td>Index of right child of node <code>i</code>.</td></tr>
+            <tr><td>Parent</td><td><code>(i - 1) / 2</code></td><td>Index of parent of node <code>i</code>.</td></tr>
+            <tr><td>Last non-leaf</td><td><code>n / 2 - 1</code></td><td>Start building heap from here.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="operations" class="grid">
+        <div class="panel">
+          <h2>Max Heap Operations</h2>
+          <ul>
+            <li><strong>Peek maximum:</strong> return <code>arr[0]</code>.</li>
+            <li><strong>Insert value:</strong> put value at the end, then heapify up while parent is smaller.</li>
+            <li><strong>Delete maximum:</strong> replace root with last element, reduce size, then heapify down.</li>
+            <li><strong>Build heap:</strong> call heapify down from <code>n / 2 - 1</code> to <code>0</code>.</li>
+          </ul>
+          <pre><code>Max heap insert condition:
+while (i &gt; 0 &amp;&amp; arr[parent] &lt; arr[i]) swap(parent, i);
+
+Max heapify down:
+choose the larger child and swap if child &gt; parent.</code></pre>
+        </div>
+        <div class="panel">
+          <h2>Min Heap Operations</h2>
+          <ul>
+            <li><strong>Peek minimum:</strong> return <code>arr[0]</code>.</li>
+            <li><strong>Insert value:</strong> put value at the end, then heapify up while parent is larger.</li>
+            <li><strong>Delete minimum:</strong> replace root with last element, reduce size, then heapify down.</li>
+            <li><strong>Build heap:</strong> same loop, but compare using smaller child.</li>
+          </ul>
+          <pre><code>Min heap insert condition:
+while (i &gt; 0 &amp;&amp; arr[parent] &gt; arr[i]) swap(parent, i);
+
+Min heapify down:
+choose the smaller child and swap if child &lt; parent.</code></pre>
+        </div>
+      </section>
+
+      <section id="complexity" class="panel">
+        <h2>Complexity Cheat Sheet</h2>
+        <table>
+          <thead>
+            <tr><th>Operation</th><th>Time</th><th>Why</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Peek root</td><td><code>O(1)</code></td><td>Max/min value is always at index <code>0</code>.</td></tr>
+            <tr><td>Insert</td><td><code>O(log n)</code></td><td>New value may move from leaf to root.</td></tr>
+            <tr><td>Delete root</td><td><code>O(log n)</code></td><td>Replacement value may move from root to leaf.</td></tr>
+            <tr><td>Heapify one node</td><td><code>O(log n)</code></td><td>Height of a complete binary tree is <code>log n</code>.</td></tr>
+            <tr><td>Build heap</td><td><code>O(n)</code></td><td>Most nodes are near leaves, so total work is linear.</td></tr>
+            <tr><td>Heap sort</td><td><code>O(n log n)</code></td><td>Delete/extract root <code>n</code> times.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="heap-sort" class="panel">
+        <h2>Heap Sort Idea</h2>
+        <p>Heap sort uses heap structure to sort an array in-place. For ascending order, build a max heap, repeatedly swap the root with the last element, reduce heap size, and heapify the root.</p>
+        <ol>
+          <li>Build a max heap from the array.</li>
+          <li>Swap <code>arr[0]</code> with the last element of the active heap.</li>
+          <li>Reduce heap size by one because the largest element is now fixed.</li>
+          <li>Heapify down from root.</li>
+          <li>Repeat until the heap size becomes one.</li>
+        </ol>
+        <div class="callout">
+          Max heap gives ascending sorted output when sorted in-place. Min heap can be used for descending order with the same swap-to-end approach.
+        </div>
+      </section>
+
+      <section id="dry-run" class="panel">
+        <h2>Dry Run Value</h2>
+        <p>Input: <code>5</code>, scores <code>3 1 4 2 5</code>, new score <code>6</code>.</p>
+        <ol>
+          <li>Build max heap from <code>3 1 4 2 5</code>: result becomes <code>5 3 4 2 1</code>.</li>
+          <li>Insert <code>6</code> at the end: <code>5 3 4 2 1 6</code>.</li>
+          <li>Move <code>6</code> up because it is greater than parent <code>4</code>: <code>5 3 6 2 1 4</code>.</li>
+          <li>Move <code>6</code> up again because it is greater than parent <code>5</code>: <code>6 3 5 2 1 4</code>.</li>
+        </ol>
+        <div class="callout">Some solutions produce <code>6 4 5 1 2 3</code> depending on build order and swaps. Follow the exact algorithm your platform expects.</div>
+      </section>
+
+      <section id="code" class="panel">
+        <h2>Array-Only C++ Code</h2>
+        <pre><code>#include &lt;iostream&gt;
+using namespace std;
+
+void swapValue(int &a, int &b) {
+    int temp = a;
+    a = b;
+    b = temp;
+}
+
+void maxHeapify(int arr[], int n, int i) {
+    int largest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left &lt; n &amp;&amp; arr[left] &gt; arr[largest]) {
+        largest = left;
+    }
+
+    if (right &lt; n &amp;&amp; arr[right] &gt; arr[largest]) {
+        largest = right;
+    }
+
+    if (largest != i) {
+        swapValue(arr[i], arr[largest]);
+        maxHeapify(arr, n, largest);
+    }
+}
+
+void buildMaxHeap(int arr[], int n) {
+    for (int i = n / 2 - 1; i &gt;= 0; i--) {
+        maxHeapify(arr, n, i);
+    }
+}
+
+void insertIntoMaxHeap(int arr[], int &n, int value) {
+    arr[n] = value;
+    n++;
+
+    int i = n - 1;
+    while (i &gt; 0 &amp;&amp; arr[(i - 1) / 2] &lt; arr[i]) {
+        swapValue(arr[i], arr[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}
+
+int main() {
+    int n;
+    cin &gt;&gt; n;
+
+    int arr[16];
+    for (int i = 0; i &lt; n; i++) {
+        cin &gt;&gt; arr[i];
+    }
+
+    int d;
+    cin &gt;&gt; d;
+
+    buildMaxHeap(arr, n);
+    insertIntoMaxHeap(arr, n, d);
+
+    for (int i = 0; i &lt; n; i++) {
+        if (i &gt; 0) cout &lt;&lt; " ";
+        cout &lt;&lt; arr[i];
+    }
+
+    return 0;
+}</code></pre>
+      </section>
+
+      <section id="min-code" class="panel">
+        <h2>Min Heap Code Changes</h2>
+        <p>To convert max heap code into min heap code, change the comparisons. Pick the smallest child during heapify down, and move the inserted value upward while the parent is larger.</p>
+        <pre><code>void minHeapify(int arr[], int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left &lt; n &amp;&amp; arr[left] &lt; arr[smallest]) {
+        smallest = left;
+    }
+
+    if (right &lt; n &amp;&amp; arr[right] &lt; arr[smallest]) {
+        smallest = right;
+    }
+
+    if (smallest != i) {
+        swapValue(arr[i], arr[smallest]);
+        minHeapify(arr, n, smallest);
+    }
+}
+
+void insertIntoMinHeap(int arr[], int &n, int value) {
+    arr[n] = value;
+    n++;
+
+    int i = n - 1;
+    while (i &gt; 0 &amp;&amp; arr[(i - 1) / 2] &gt; arr[i]) {
+        swapValue(arr[i], arr[(i - 1) / 2]);
+        i = (i - 1) / 2;
+    }
+}</code></pre>
+      </section>
+
+      <section id="uses" class="panel">
+        <h2>When To Use Heap</h2>
+        <table>
+          <thead>
+            <tr><th>Problem Type</th><th>Heap Choice</th><th>Reason</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Find largest repeatedly</td><td>Max heap</td><td>Largest value is always at root.</td></tr>
+            <tr><td>Find smallest repeatedly</td><td>Min heap</td><td>Smallest value is always at root.</td></tr>
+            <tr><td>Kth largest</td><td>Min heap of size <code>k</code></td><td>Root stores the smallest among current top <code>k</code>.</td></tr>
+            <tr><td>Kth smallest</td><td>Max heap of size <code>k</code></td><td>Root stores the largest among current smallest <code>k</code>.</td></tr>
+            <tr><td>Merge sorted arrays/lists</td><td>Min heap</td><td>Always pick the next smallest item.</td></tr>
+            <tr><td>Dijkstra shortest path</td><td>Min heap</td><td>Always process the nearest unvisited distance.</td></tr>
+            <tr><td>CPU/task scheduling</td><td>Min or max heap</td><td>Depends on whether earliest, shortest, or highest priority is needed first.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="grid">
+        <div class="panel">
+          <h2>Common Mistakes</h2>
+          <ul>
+            <li>Forgetting to build the heap before inserting the new score.</li>
+            <li>Using wrong child formulas such as <code>2 * i</code> for zero-based arrays.</li>
+            <li>Printing an extra space after the last number.</li>
+            <li>Sorting the array instead of maintaining heap structure.</li>
+          </ul>
+        </div>
+        <div class="panel">
+          <h2>Practice Next</h2>
+          <ul>
+            <li>Delete the maximum value from a max heap.</li>
+            <li>Convert min heap logic into max heap logic.</li>
+            <li>Use heap sort to sort scores in ascending order.</li>
+            <li>Try the related page: <a href="heap-sort.html">Heap Sort / Max Heap Problems</a>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="raw" class="panel">
+        <h2>Original notes.txt</h2>
+        <p>The original file is embedded below for reference. Use the cleaned sections above for revision.</p>
+        <object class="raw" type="text/plain" data="notes.txt">Open <a href="notes.txt">notes.txt</a>.</object>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      const root = document.documentElement;
+      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
+      root.setAttribute("data-theme", next);
+      localStorage.setItem("notes-txt-theme", next);
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const saved = localStorage.getItem("notes-txt-theme");
+      if (saved) document.documentElement.setAttribute("data-theme", saved);
+    });
+  </script>
+</body>
+</html>

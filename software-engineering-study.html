@@ -1,0 +1,1919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Software Engineering - Study Companion</title>
+<style>
+  /* ===== CSS Variables / Theming ===== */
+  :root {
+    --bg: #f8f9fa;
+    --bg-card: #ffffff;
+    --bg-sidebar: #1a1a2e;
+    --bg-sidebar-hover: #16213e;
+    --bg-sidebar-active: #0f3460;
+    --text: #212529;
+    --text-muted: #6c757d;
+    --text-sidebar: #e0e0e0;
+    --text-sidebar-active: #ffffff;
+    --accent: #e94560;
+    --accent-hover: #d63851;
+    --border: #dee2e6;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .dark-mode {
+    --bg: #0f0f1a;
+    --bg-card: #1a1a2e;
+    --bg-sidebar: #0a0a15;
+    --bg-sidebar-hover: #12122a;
+    --bg-sidebar-active: #1a1a3e;
+    --text: #e8e8e8;
+    --text-muted: #9a9aae;
+    --text-sidebar: #b0b0c0;
+    --text-sidebar-active: #ffffff;
+    --accent: #ff6b6b;
+    --accent-hover: #ff5252;
+    --border: #2a2a3e;
+    --shadow: 0 2px 12px rgba(0,0,0,0.3);
+  }
+
+  /* ===== Reset & Base ===== */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    display: flex;
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ===== Scrollbar ===== */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--text-muted); border-radius: 3px; }
+
+  /* ===== Sidebar ===== */
+  .sidebar {
+    width: 280px;
+    min-width: 280px;
+    background: var(--bg-sidebar);
+    color: var(--text-sidebar);
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    transition: background var(--transition);
+  }
+  .sidebar-header {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-header h1 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -0.3px;
+  }
+  .sidebar-header p {
+    font-size: 12px;
+    color: var(--text-sidebar);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+  .sidebar-header .badge {
+    display: inline-block;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+  .sidebar-search {
+    padding: 12px 16px;
+  }
+  .sidebar-search input {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: var(--radius-sm);
+    background: rgba(255,255,255,0.06);
+    color: #fff;
+    font-size: 13px;
+    outline: none;
+    transition: border var(--transition);
+  }
+  .sidebar-search input::placeholder { color: rgba(255,255,255,0.35); }
+  .sidebar-search input:focus { border-color: var(--accent); }
+
+  .sidebar-nav { flex: 1; padding: 8px 0 16px; }
+  .nav-section { margin-bottom: 4px; }
+  .nav-section-title {
+    padding: 8px 18px 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: rgba(255,255,255,0.3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+  }
+  .nav-section-title:hover { color: rgba(255,255,255,0.5); }
+  .nav-section-title .arrow {
+    transition: transform 0.2s;
+    font-size: 8px;
+  }
+  .nav-section-title.collapsed .arrow { transform: rotate(-90deg); }
+  .nav-section-items { overflow: hidden; transition: max-height 0.3s ease; }
+  .nav-section-title.collapsed + .nav-section-items { max-height: 0; }
+
+  .nav-item {
+    display: block;
+    padding: 7px 18px 7px 24px;
+    font-size: 13px;
+    color: var(--text-sidebar);
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all var(--transition);
+    text-decoration: none;
+    position: relative;
+  }
+  .nav-item:hover {
+    background: var(--bg-sidebar-hover);
+    color: #fff;
+  }
+  .nav-item.active {
+    background: var(--bg-sidebar-active);
+    color: #fff;
+    border-left-color: var(--accent);
+  }
+  .nav-item .count {
+    float: right;
+    background: rgba(255,255,255,0.08);
+    font-size: 10px;
+    padding: 1px 7px;
+    border-radius: 8px;
+    opacity: 0.6;
+  }
+
+  .sidebar-footer {
+    padding: 12px 16px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .sidebar-footer button {
+    background: rgba(255,255,255,0.08);
+    border: none;
+    color: var(--text-sidebar);
+    padding: 6px 12px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-size: 12px;
+    transition: background var(--transition);
+  }
+  .sidebar-footer button:hover {
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+  }
+  .sidebar-footer button.active-mode {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* ===== Main Content ===== */
+  .main {
+    flex: 1;
+    padding: 32px 40px;
+    max-width: 960px;
+    transition: background var(--transition), color var(--transition);
+  }
+  @media (max-width: 768px) {
+    .sidebar { display: none; }
+    .sidebar.mobile-open { display: flex; position: fixed; width: 100%; z-index: 1000; }
+    .main { padding: 20px 16px; }
+  }
+
+  /* ===== View containers ===== */
+  .view { display: none; animation: fadeIn 0.35s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== Topic / Study Guide ===== */
+  .topic { display: none; }
+  .topic.active { display: block; }
+
+  .topic h2 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .topic .subtitle {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .content-card {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    transition: background var(--transition), box-shadow var(--transition);
+  }
+  .content-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .content-card h3 .icon { font-size: 20px; }
+  .content-card p, .content-card li {
+    line-height: 1.7;
+    font-size: 15px;
+    color: var(--text);
+  }
+  .content-card ul, .content-card ol { padding-left: 20px; }
+  .content-card li { margin-bottom: 4px; }
+  .content-card .highlight {
+    background: rgba(233,69,96,0.1);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  /* Definition box */
+  .def-box {
+    background: rgba(233,69,96,0.06);
+    border-left: 4px solid var(--accent);
+    padding: 16px 20px;
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    margin: 12px 0;
+  }
+  .def-box strong { color: var(--accent); }
+
+  /* Comparison table */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    font-size: 14px;
+  }
+  .cmp-table th, .cmp-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    text-align: left;
+    vertical-align: top;
+  }
+  .cmp-table th {
+    background: var(--bg-sidebar);
+    color: #fff;
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .cmp-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+  .dark-mode .cmp-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+  .cmp-table tr:hover { background: rgba(233,69,96,0.04); }
+
+  /* ===== Flashcards ===== */
+  .flash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+  }
+  .flashcard {
+    perspective: 800px;
+    height: 200px;
+    cursor: pointer;
+  }
+  .flashcard-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flashcard.flipped .flashcard-inner { transform: rotateY(180deg); }
+  .flashcard-front, .flashcard-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: var(--radius);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: var(--shadow);
+    transition: background var(--transition);
+  }
+  .flashcard-front {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+  }
+  .flashcard-front .term {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .flashcard-front .hint {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .flashcard-back {
+    background: var(--accent);
+    color: #fff;
+    transform: rotateY(180deg);
+  }
+  .flashcard-back .def {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .flashcard-back .topic-tag {
+    display: inline-block;
+    background: rgba(255,255,255,0.2);
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+  }
+  .flashcard-controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .flashcard-controls select, .flashcard-controls button {
+    padding: 8px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: all var(--transition);
+  }
+  .flashcard-controls button:hover, .flashcard-controls select:hover {
+    border-color: var(--accent);
+  }
+  .flashcard-controls .primary-btn {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .flashcard-controls .primary-btn:hover {
+    background: var(--accent-hover);
+  }
+
+  /* ===== Quiz ===== */
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .quiz-progress .bar {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .quiz-progress .bar-fill {
+    height: 100%;
+    background: var(--accent);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+  }
+  .quiz-progress .label {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .quiz-question {
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    padding: 28px;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+  }
+  .quiz-question .q-text {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+  .quiz-question .q-topic {
+    display: inline-block;
+    font-size: 11px;
+    background: rgba(233,69,96,0.1);
+    color: var(--accent);
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .quiz-option {
+    display: block;
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border: 2px solid var(--border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+  }
+  .quiz-option:hover { border-color: var(--accent); background: rgba(233,69,96,0.04); }
+  .quiz-option.selected { border-color: var(--accent); background: rgba(233,69,96,0.08); }
+  .quiz-option.correct { border-color: #28a745; background: rgba(40,167,69,0.1); }
+  .quiz-option.correct::after { content: " ✓"; color: #28a745; font-weight: 700; }
+  .quiz-option.wrong { border-color: #dc3545; background: rgba(220,53,69,0.1); }
+  .quiz-option.wrong::after { content: " ✗"; color: #dc3545; font-weight: 700; }
+  .quiz-option.disabled { cursor: default; opacity: 0.7; }
+
+  .quiz-result {
+    text-align: center;
+    padding: 40px 20px;
+  }
+  .quiz-result .score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .quiz-result .score-label {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+  }
+  .quiz-result .stars {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  .quiz-nav {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .quiz-nav button {
+    padding: 10px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+    color: var(--text);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all var(--transition);
+    font-weight: 600;
+  }
+  .quiz-nav button:hover { border-color: var(--accent); }
+  .quiz-nav .primary-btn { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .quiz-nav .primary-btn:hover { background: var(--accent-hover); }
+
+  /* ===== Comparison View ===== */
+  .comparison-section { margin-bottom: 32px; }
+  .comparison-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: var(--accent);
+  }
+
+  /* ===== Summary cards ===== */
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .summary-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid var(--border);
+  }
+  .summary-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .summary-card .num { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .summary-card .label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* ===== Mobile menu toggle ===== */
+  .mobile-toggle {
+    display: none;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1001;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 12px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    color: var(--text);
+    font-size: 18px;
+  }
+  @media (max-width: 768px) {
+    .mobile-toggle { display: block; }
+  }
+
+  /* ===== Search results ===== */
+  .search-results { margin-top: 16px; }
+  .search-result-item {
+    padding: 12px 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius-sm);
+    margin-bottom: 8px;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+  }
+  .search-result-item:hover { border-color: var(--accent); }
+  .search-result-item .sr-title { font-weight: 600; color: var(--accent); }
+  .search-result-item .sr-preview { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+  .search-result-item .sr-topic { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ===== Misc ===== */
+  .tag {
+    display: inline-block;
+    background: rgba(233,69,96,0.1);
+    color: var(--accent);
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    margin: 2px;
+  }
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-muted);
+  }
+  .empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<!-- Mobile Toggle -->
+<button class="mobile-toggle" onclick="toggleMobile()" aria-label="Toggle menu">☰</button>
+
+<!-- ==================== SIDEBAR ==================== -->
+<nav class="sidebar" id="sidebar">
+  <div class="sidebar-header">
+    <h1>📘 Software Engineering</h1>
+    <p>Study Companion</p>
+    <span class="badge" id="topicCount">0 topics</span>
+  </div>
+
+  <div class="sidebar-search">
+    <input type="text" id="searchInput" placeholder="Search topics, terms..." oninput="handleSearch(this.value)">
+  </div>
+
+  <div class="sidebar-nav" id="sidebarNav">
+    <!-- Populated by JS -->
+  </div>
+
+  <div class="sidebar-footer">
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
+    <button onclick="showView('study')">📖 Study</button>
+    <button onclick="showView('flashcards')">🃏 Cards</button>
+    <button onclick="showView('quiz')">✍️ Quiz</button>
+    <button onclick="showView('compare')">📊 Compare</button>
+  </div>
+</nav>
+
+<!-- ==================== MAIN CONTENT ==================== -->
+<main class="main" id="mainContent">
+
+  <!-- ===== STUDY GUIDE VIEW ===== -->
+  <div class="view active" id="view-study">
+    <div id="topicContent">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ===== FLASHCARDS VIEW ===== -->
+  <div class="view" id="view-flashcards">
+    <h2>🃏 Flashcards</h2>
+    <p class="subtitle" style="margin-bottom:12px">Click a card to flip it and reveal the definition.</p>
+    <div class="flashcard-controls">
+      <select id="flashTopicFilter" onchange="renderFlashcards()">
+        <option value="all">All Topics</option>
+      </select>
+      <button onclick="shuffleFlashcards()">🔀 Shuffle</button>
+      <button class="primary-btn" onclick="flipAllCards()">🔄 Flip All</button>
+    </div>
+    <div class="flash-grid" id="flashcardGrid">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ===== QUIZ VIEW ===== -->
+  <div class="view" id="view-quiz">
+    <h2>✍️ Practice Quiz</h2>
+    <p class="subtitle" style="margin-bottom:12px">Test your knowledge with these practice questions.</p>
+    <div class="flashcard-controls" style="margin-bottom:16px">
+      <select id="quizTopicFilter" onchange="startQuiz()">
+        <option value="all">All Topics</option>
+      </select>
+      <select id="quizCount">
+        <option value="5">5 Questions</option>
+        <option value="10" selected>10 Questions</option>
+        <option value="20">20 Questions</option>
+        <option value="0">All Questions</option>
+      </select>
+      <button class="primary-btn" onclick="startQuiz()">🔄 Start Quiz</button>
+    </div>
+    <div id="quizContent">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+
+  <!-- ===== COMPARISON VIEW ===== -->
+  <div class="view" id="view-compare">
+    <h2>📊 Comparison Tables</h2>
+    <p class="subtitle">Side-by-side comparisons of key concepts.</p>
+
+    <!-- Life Cycle Models -->
+    <div class="comparison-section">
+      <h3>🔄 Life Cycle Models</h3>
+      <div class="content-card">
+        <table class="cmp-table">
+          <thead>
+            <tr>
+              <th style="width:18%">Model</th>
+              <th style="width:22%">Key Idea</th>
+              <th style="width:30%">Advantages</th>
+              <th style="width:30%">Disadvantages</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Classical Waterfall</strong></td>
+              <td>Sequential phases: feasibility → req. analysis → design → coding → testing → maintenance</td>
+              <td>Simple, easy to understand, each phase has clear deliverables</td>
+              <td>No feedback paths, difficult to accommodate changes, no overlapping, limited customer interaction</td>
+            </tr>
+            <tr>
+              <td><strong>Iterative Waterfall</strong></td>
+              <td>Waterfall with feedback paths between phases</td>
+              <td>Errors can be corrected by going back, phase containment of errors, most widely used</td>
+              <td>Suitable only for well-understood problems</td>
+            </tr>
+            <tr>
+              <td><strong>Prototyping</strong></td>
+              <td>Build a working prototype first, refine based on customer feedback</td>
+              <td>Helps clarify unclear requirements, reduces overall cost for unclear systems</td>
+              <td>Additional cost of building prototype, may lead to poor design if prototype is kept</td>
+            </tr>
+            <tr>
+              <td><strong>Evolutionary</strong></td>
+              <td>Break system into modules, incrementally implement and deliver</td>
+              <td>Users get early access, core modules tested thoroughly, incremental delivery</td>
+              <td>Difficult to subdivide problems into functional units, useful only for large problems</td>
+            </tr>
+            <tr>
+              <td><strong>Spiral</strong></td>
+              <td>Iterative loops with risk assessment in each quadrant</td>
+              <td>Subsumes all models, handles risks explicitly, uses prototyping for risk reduction</td>
+              <td>Complex, requires risk assessment expertise, can be expensive</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Cohesion Types -->
+    <div class="comparison-section">
+      <h3>🔗 Cohesion Types (Best → Worst)</h3>
+      <div class="content-card">
+        <table class="cmp-table">
+          <thead>
+            <tr><th style="width:18%">Type</th><th>Description</th><th>Example</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Functional</strong> ✅</td><td>All elements cooperate to achieve a single task</td><td>Managing-book-lending module with issue-book, return-book, query-book</td></tr>
+            <tr><td><strong>Sequential</strong></td><td>Output of one element is input to the next</td><td>Sort → Search → Display</td></tr>
+            <tr><td><strong>Communicational</strong></td><td>All functions refer to/update the same data structure</td><td>Functions defined on an array or stack</td></tr>
+            <tr><td><strong>Procedural</strong></td><td>Functions are part of a procedure (algorithm) in a certain order</td><td>Order processing: login → check-order → print-bill → update-inventory</td></tr>
+            <tr><td><strong>Temporal</strong></td><td>Functions must be executed at the same time</td><td>Booting process, start-up/shut-down of system</td></tr>
+            <tr><td><strong>Logical</strong></td><td>Elements perform similar operations</td><td>Module containing print functions for grade sheet, salary slip, annual reports</td></tr>
+            <tr><td><strong>Coincidental</strong> ❌</td><td>Random collection of unrelated functions</td><td>Random-operations: Issue-book, create member, request librarian leave</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Coupling Types -->
+    <div class="comparison-section">
+      <h3>🔗 Coupling Types (Best → Worst)</h3>
+      <div class="content-card">
+        <table class="cmp-table">
+          <thead>
+            <tr><th style="width:18%">Type</th><th>Description</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Data</strong> ✅</td><td>Communication via elementary data items passed as parameters</td></tr>
+            <tr><td><strong>Stamp</strong></td><td>Communication via composite data items (records/structures)</td></tr>
+            <tr><td><strong>Control</strong></td><td>Data from one module controls the order of execution in another (e.g., flag)</td></tr>
+            <tr><td><strong>Common</strong></td><td>Modules share global data items</td></tr>
+            <tr><td><strong>Content</strong> ❌</td><td>One module shares code with another (e.g., jumps into another module's code)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- GUI vs Text-based -->
+    <div class="comparison-section">
+      <h3>🖥️ GUI vs Text-based User Interface</h3>
+      <div class="content-card">
+        <table class="cmp-table">
+          <thead>
+            <tr><th style="width:25%">Feature</th><th>GUI</th><th>Text-based</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Multiple windows</td><td>✅ Yes</td><td>❌ No</td></tr>
+            <tr><td>Iconic representation</td><td>✅ Yes</td><td>❌ No</td></tr>
+            <tr><td>Pointing device support</td><td>✅ Yes (mouse, light pen)</td><td>❌ No</td></tr>
+            <tr><td>Cost</td><td>Higher (graphics terminal)</td><td>Lower (alphanumeric terminal)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+
+const TOPICS = [
+  {
+    id: 'intro',
+    title: 'Introduction to SE',
+    section: 'Fundamentals',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">📌</span> What is Software Engineering?</h3>
+        <p>An engineering approach to develop software. A systematic collection of past experience including techniques, methodologies, and guidelines.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⚠️</span> Software Crisis</h3>
+        <p>Software products often:</p>
+        <ul>
+          <li>Fail to meet user requirements</li>
+          <li>Frequently crash</li>
+          <li>Are expensive</li>
+          <li>Are difficult to alter, debug, and enhance</li>
+          <li>Are often delivered late</li>
+          <li>Use resources non-optimally</li>
+        </ul>
+        <p style="margin-top:8px"><strong>Contributing factors:</strong> Larger problems, lack of training, increasing skill shortage, low productivity improvements.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📋</span> Programs vs Software Products</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Programs</th><th>Software Products</th></tr></thead>
+          <tbody>
+            <tr><td>Small in size</td><td>Large</td></tr>
+            <tr><td>Author himself is sole user</td><td>Large number of users</td></tr>
+            <tr><td>Single developer</td><td>Team of developers</td></tr>
+            <tr><td>Lacks proper user interface</td><td>Well-designed interface</td></tr>
+            <tr><td>Lacks proper documentation</td><td>Well documented & user-manual prepared</td></tr>
+            <tr><td>Ad hoc development</td><td>Systematic development</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📈</span> Modern Practices Shift</h3>
+        <ul>
+          <li>From <strong>error correction</strong> to <strong>error prevention</strong></li>
+          <li>Detection of errors as close to their point of introduction as possible</li>
+          <li>Periodic reviews during all stages</li>
+          <li>Systematic testing with standard techniques</li>
+          <li>Thorough planning: estimation, scheduling, monitoring</li>
+          <li>Use of CASE tools</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'lifecycle',
+    title: 'Life Cycle Models',
+    section: 'Fundamentals',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🔄</span> What is a Life Cycle Model?</h3>
+        <div class="def-box">
+          <strong>Definition:</strong> A descriptive and diagrammatic model of software life cycle that identifies all activities required for product development, establishes precedence ordering, and divides life cycle into phases.
+        </div>
+        <p style="margin-top:12px"><strong>Why model life cycle?</strong> Forms common understanding, helps identify inconsistencies and redundancies. Defines <strong>entry</strong> and <strong>exit criteria</strong> for every phase.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🌊</span> Classical Waterfall Model</h3>
+        <p>Phases: <strong>Feasibility Study → Requirements Analysis → Design → Coding & Unit Testing → Integration & System Testing → Maintenance</strong></p>
+        <p style="margin-top:8px"><strong>Drawbacks:</strong></p>
+        <ul>
+          <li>❌ No feedback paths</li>
+          <li>❌ Difficult to accommodate changes</li>
+          <li>❌ No overlapping of phases</li>
+          <li>❌ Limited customer interactions</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔄</span> Iterative Waterfall Model</h3>
+        <p>Same as classical waterfall but with <strong>feedback paths</strong> between phases. Most widely used model.</p>
+        <div class="def-box">
+          <strong>Phase Containment of Errors:</strong> The principle of detecting errors as close to their point of introduction as possible.
+        </div>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🧪</span> Prototyping Model</h3>
+        <p>Build a working <strong>prototype</strong> (toy implementation with limited capabilities) first. Submit to customer for evaluation. Refine requirements based on feedback. Then develop the actual system using waterfall approach.</p>
+        <p><em>"We must plan to throw away the first product if we want to develop a good product."</em></p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📦</span> Evolutionary Model</h3>
+        <p>Break system into modules. First develop <strong>core modules</strong>, then incrementally add new functionalities in successive versions. Each version is a functioning system.</p>
+        <p><strong>Advantages:</strong> Users get early access, core modules tested thoroughly.</p>
+        <p><strong>Disadvantages:</strong> Difficult to subdivide problems into functional units.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🌀</span> Spiral Model (Boehm, 1988)</h3>
+        <p>Each loop is a phase. Each loop has <strong>4 quadrants</strong>:</p>
+        <ol>
+          <li><strong>Objective Setting</strong> — Identify objectives and risks</li>
+          <li><strong>Risk Assessment & Reduction</strong> — Analyze and reduce risks</li>
+          <li><strong>Development & Validation</strong> — Develop next level of product</li>
+          <li><strong>Review & Planning</strong> — Review results and plan next iteration</li>
+        </ol>
+        <p style="margin-top:8px">Subsumes all other models. Suitable for technically challenging products with several risks.</p>
+      </div>
+    `
+  },
+  {
+    id: 'requirements',
+    title: 'Requirements & SRS',
+    section: 'Fundamentals',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">📋</span> Requirements Analysis & Specification</h3>
+        <p>Many projects fail because they start implementing without determining what the customer really wants.</p>
+        <p><strong>Two distinct activities:</strong></p>
+        <ol>
+          <li><strong>Requirements Gathering & Analysis</strong> — Collect data, analyze, remove inconsistencies</li>
+          <li><strong>Specification</strong> — Document requirements in SRS</li>
+        </ol>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔍</span> Requirements Gathering</h3>
+        <p>Methods: Observation, studying existing procedures, discussions with customer/end-users, analysis of needs.</p>
+        <p><strong>Desirable attributes of a good analyst:</strong> Good interaction skills, imagination & creativity, experience.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⚠️</span> Inconsistent vs Incomplete Requirements</h3>
+        <div class="def-box">
+          <strong>Inconsistent:</strong> One part contradicts another part.<br>
+          <em>Example: One says "turn off heater at 100°C", another says "turn on cooler at 100°C"</em>
+        </div>
+        <div class="def-box" style="margin-top:8px; border-left-color: #ffc107;">
+          <strong>Incomplete:</strong> Some requirements omitted due to oversight.<br>
+          <em>Example: Not recording what happens when temperature falls below 90°C</em>
+        </div>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📄</span> Software Requirements Specification (SRS)</h3>
+        <p>The SRS document is a <strong>black-box specification</strong> — only visible external behavior is documented.</p>
+        <p><strong>Uses:</strong> Statement of user needs, contract document, reference document, definition for implementation.</p>
+        <p><strong>Three main parts:</strong></p>
+        <ul>
+          <li><strong>Functional Requirements</strong> — What the system does (input → processing → output)</li>
+          <li><strong>Non-functional Requirements</strong> — Characteristics: maintainability, portability, usability, reliability, performance, security</li>
+          <li><strong>Constraints</strong> — Hardware, OS, DBMS, standards compliance</li>
+        </ul>
+        <p style="margin-top:12px"><strong>Properties of a good SRS:</strong> Concise, unambiguous, complete, consistent, modifiable, traceable, verifiable.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🚫</span> Examples of Bad SRS Documents</h3>
+        <ul>
+          <li><strong>Unstructured Specifications</strong> — Narrative essay style</li>
+          <li><strong>Forward References</strong> — Referencing aspects defined later</li>
+          <li><strong>Over-specification</strong> — Addressing "how to" instead of "what"</li>
+          <li><strong>Contradictions</strong></li>
+          <li><strong>Wishful Thinking</strong></li>
+          <li><strong>Noise</strong></li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'design',
+    title: 'Software Design',
+    section: 'Design',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🏗️</span> Design Phase Overview</h3>
+        <p>Transforms SRS document into a form suitable for implementation. <strong>Two stages:</strong></p>
+        <ul>
+          <li><strong>High-level (Preliminary) Design</strong> — Identify modules, control relationships, interfaces → Program Structure</li>
+          <li><strong>Detailed Design</strong> — Design data structures and algorithms for each module → Module Specification</li>
+        </ul>
+        <p><strong>Items designed:</strong> Module structure, control relationships, interfaces, data structures, algorithms.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">✅</span> What is Good Software Design?</h3>
+        <ul>
+          <li><strong>Correctness</strong> — Implements all functionalities correctly</li>
+          <li><strong>Understandable</strong> — Easy to understand → easy to maintain</li>
+          <li><strong>Efficient</strong></li>
+          <li><strong>Maintainable</strong> — Easy to change</li>
+        </ul>
+        <p><em>~60% of effort is spent in maintenance. If software is not easy to understand, maintenance effort increases many times.</em></p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🧩</span> Modularity</h3>
+        <p>Fundamental attribute of good design. Clean decomposition into <strong>almost independent</strong> modules (Divide and Conquer).</p>
+        <p>Modules should display:</p>
+        <ul>
+          <li><strong>High Cohesion</strong> — Functional strength of a module</li>
+          <li><strong>Low Coupling</strong> — Interdependence between modules</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔗</span> Cohesion (Best → Worst)</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Functional</strong> ✅</td><td>All elements cooperate for a single task</td></tr>
+            <tr><td><strong>Sequential</strong></td><td>Output of one is input to next</td></tr>
+            <tr><td><strong>Communicational</strong></td><td>Same data structure</td></tr>
+            <tr><td><strong>Procedural</strong></td><td>Part of a procedure/algorithm</td></tr>
+            <tr><td><strong>Temporal</strong></td><td>Same time span</td></tr>
+            <tr><td><strong>Logical</strong></td><td>Similar operations</td></tr>
+            <tr><td><strong>Coincidental</strong> ❌</td><td>Random collection</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔗</span> Coupling (Best → Worst)</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Data</strong> ✅</td><td>Elementary data items as parameters</td></tr>
+            <tr><td><strong>Stamp</strong></td><td>Composite data items (records/structures)</td></tr>
+            <tr><td><strong>Control</strong></td><td>Data controls execution order (e.g., flag)</td></tr>
+            <tr><td><strong>Common</strong></td><td>Shared global data</td></tr>
+            <tr><td><strong>Content</strong> ❌</td><td>Shared code (e.g., jumps)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📐</span> Design Approaches</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Function-Oriented</th><th>Object-Oriented</th></tr></thead>
+          <tbody>
+            <tr><td>System = set of functions</td><td>System = collection of objects</td></tr>
+            <tr><td>Functions refined into sub-functions</td><td>Objects manage own state info</td></tr>
+            <tr><td>Top-down decomposition</td><td>Real-world entities (employee, picture, etc.)</td></tr>
+            <tr><td>SA/SD methodology</td><td>UML modelling</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📊</span> Module Structure Characteristics</h3>
+        <ul>
+          <li><strong>Depth</strong> — Number of levels of control</li>
+          <li><strong>Fan-out</strong> — Number of modules directly controlled by a given module</li>
+          <li><strong>Fan-in</strong> — Number of modules that directly control a given module</li>
+          <li><strong>Visibility & Layering</strong> — Modules at a layer can only call modules immediately below</li>
+          <li><strong>Abstraction</strong> — Lower-level modules do not invoke higher-level modules</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'dfd',
+    title: 'DFD & Structure Charts',
+    section: 'Design',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">📊</span> Data Flow Diagrams (DFDs)</h3>
+        <p>A hierarchical graphical model showing different functions (processes) of the system and data interchange among them.</p>
+        <p><strong>SA/SD Methodology:</strong> Structured Analysis (DFDs) → Structured Design (Structure Charts)</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔣</span> DFD Symbols</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Symbol</th><th>Name</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td>▭</td><td>External Entity</td><td>Real physical entity supplying or consuming data</td></tr>
+            <tr><td>◯</td><td>Process/Bubble</td><td>Function that transforms data (verb name)</td></tr>
+            <tr><td>→</td><td>Data Flow</td><td>Data moving in arrow direction</td></tr>
+            <tr><td>▬</td><td>Data Store</td><td>Logical file, data structure, or physical file</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📐</span> DFD Levels</h3>
+        <ul>
+          <li><strong>Context Diagram (Level 0)</strong> — Entire system as single bubble, external entities</li>
+          <li><strong>Level 1 DFD</strong> — Each high-level function as a bubble</li>
+          <li><strong>Higher Level DFDs</strong> — Each bubble decomposed into sub-functions (3-7 bubbles per level)</li>
+        </ul>
+        <p><strong>Decomposition continues until</strong> a bubble can be described by a simple algorithm.</p>
+        <p><strong>Balancing:</strong> Data flowing into/out of a bubble must match the next level DFD.</p>
+        <p><strong>Numbering:</strong> Context=0, Level1=0.1, 0.2, Decomposition=0.1.1, 0.1.2, etc.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📖</span> Data Dictionary</h3>
+        <p>Lists all data items in a DFD with their definitions. Uses operators:</p>
+        <ul>
+          <li><strong>+</strong> Composition (a+b)</li>
+          <li><strong>[,,]</strong> Selection ([a,b] = a or b)</li>
+          <li><strong>( )</strong> Optional (a+(b))</li>
+          <li><strong>{}</strong> Iteration ({name}5)</li>
+          <li><strong>=</strong> Equivalence</li>
+          <li><strong>* *</strong> Comment</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🏛️</span> Structure Chart</h3>
+        <p>Represents software architecture — modules, dependencies (calls), and parameters passed.</p>
+        <p><strong>vs Flow Chart:</strong> Structure chart focuses on module structure, not flow of control. Suppresses sequential ordering.</p>
+        <p><strong>Elements:</strong> Rectangular boxes (modules), Module invocation arrows, Data flow arrows, Library modules (double-edged), Selection (diamond), Repetition (loop).</p>
+      </div>
+    `
+  },
+  {
+    id: 'ood',
+    title: 'OOD & UML',
+    section: 'Design',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🎯</span> Object-Oriented Concepts</h3>
+        <div class="def-box">
+          <strong>Object:</strong> A real-world entity with data (attributes) and functions (methods). Hides internal information (data abstraction).<br>
+          <strong>Class:</strong> Template for creating objects. Instances are objects.<br>
+          <strong>Inheritance:</strong> Define new class by extending existing class. Supports generalization-specialization.<br>
+          <strong>Polymorphism:</strong> Same message results in different actions by different objects.<br>
+          <strong>Encapsulation:</strong> Objects communicate through messages; data is encapsulated within methods.<br>
+          <strong>Dynamic Binding:</strong> Method call decided at runtime based on object type.
+        </div>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📐</span> UML Diagrams</h3>
+        <p><strong>UML</strong> — Unified Modeling Language, a graphical modelling tool, independent of any specific methodology.</p>
+        <p><strong>9 Diagrams across 5 views:</strong></p>
+        <table class="cmp-table">
+          <thead><tr><th>View</th><th>Diagrams</th></tr></thead>
+          <tbody>
+            <tr><td>User's View</td><td>Use Case Diagram</td></tr>
+            <tr><td>Structural View</td><td>Class Diagram, Object Diagram</td></tr>
+            <tr><td>Behavioral View</td><td>Sequence Diagram, Collaboration Diagram, State-chart Diagram, Activity Diagram</td></tr>
+            <tr><td>Implementation View</td><td>Component Diagram</td></tr>
+            <tr><td>Environmental View</td><td>Deployment Diagram</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">👤</span> Use Case Diagrams</h3>
+        <p>Represented by ellipses (use cases), rectangle (system boundary), stick person (actor). Can be factored via <strong>Generalization</strong>, <strong>Includes</strong> (<<include>>), <strong>Extends</strong> (<<extends>>).</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📊</span> Class & Object Diagrams</h3>
+        <p><strong>Class Diagram</strong> — Static structure: classes with attributes/operations, relationships (association, aggregation, composition, generalization, dependency).</p>
+        <p><strong>Object Diagram</strong> — Instance of a class diagram at a point in time.</p>
+        <p><strong>Relationships:</strong> Association (solid line), Aggregation (diamond at whole end), Composition (filled diamond, same lifetime).</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⏱️</span> Interaction Diagrams</h3>
+        <p><strong>Sequence Diagram</strong> — 2D chart showing interaction among objects over time. Objects at top, lifelines (dashed), activation boxes, messages as arrows.</p>
+        <p><strong>Collaboration Diagram</strong> — Shows structural and behavioral aspects. Objects as boxes, messages labeled with sequence numbers.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔄</span> State Chart & Activity Diagrams</h3>
+        <p><strong>State Chart Diagram</strong> — Based on FSM. Shows how state of an object changes. Elements: Initial state (filled circle), Final state (bullseye), State (rounded rectangle), Transitions (arrows with guards).</p>
+        <p><strong>Activity Diagram</strong> — Represents processing activity. Can represent parallel activity, synchronization, swim lanes (group activities by who performs them).</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🧩</span> Design Patterns</h3>
+        <p>Standard solutions to commonly recurring problems.</p>
+        <ul>
+          <li><strong>Expert</strong> — Assign responsibility to class with necessary information</li>
+          <li><strong>Creator</strong> — Class C1 creates class C2 if C1 aggregates/contains C2</li>
+          <li><strong>Controller</strong> — Separate controller object for each use case</li>
+          <li><strong>Facade</strong> — Common interface class for a service package</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'ui',
+    title: 'User Interface Design',
+    section: 'Design',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🖥️</span> Characteristics of a Good User Interface</h3>
+        <ol>
+          <li><strong>Speed of Learning</strong> — Easy to learn, no memorization required</li>
+          <li><strong>Attractiveness</strong> — Pleasant to use (GUI has advantage)</li>
+          <li><strong>Consistency</strong> — Commands are consistent, facilitates learning</li>
+          <li><strong>Feedback</strong> — Provides feedback to user actions</li>
+          <li><strong>Error Recovery (Undo)</strong> — Allows undoing mistakes</li>
+          <li><strong>User Guidance & Online Help</strong> — Available when needed</li>
+          <li><strong>Speed of Use</strong></li>
+          <li><strong>Speed of Recall</strong></li>
+          <li><strong>Error Prevention</strong></li>
+        </ol>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📱</span> Types of User Interfaces</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Type</th><th>Description</th><th>Advantage</th></tr></thead>
+          <tbody>
+            <tr>
+              <td><strong>Command Language</strong></td>
+              <td>User types commands in a language</td>
+              <td>Fast interaction, complex commands possible</td>
+            </tr>
+            <tr>
+              <td><strong>Menu-based</strong></td>
+              <td>User selects from menus</td>
+              <td>No need to remember syntax — recognition over recollection</td>
+            </tr>
+            <tr>
+              <td><strong>Direct Manipulation</strong></td>
+              <td>Visual models (icons/objects), user performs actions on them</td>
+              <td>Easy recognition, language-independent</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    `
+  },
+  {
+    id: 'coding',
+    title: 'Coding & Reviews',
+    section: 'Implementation',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">💻</span> Coding Phase</h3>
+        <p>Objective: Transform design into code and unit test the code. Good organizations formulate <strong>coding standards</strong>.</p>
+        <p><strong>Advantages of coding standards:</strong> Uniform appearance, enhances understanding, encourages good practices.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📏</span> Representative Coding Standards</h3>
+        <ul>
+          <li>Rules for limiting globals</li>
+          <li>Naming conventions (globals: capital letter, locals: small letters, constants: all caps)</li>
+          <li>Standard headers for modules (name, date, author, modification history, synopsis, functions, globals)</li>
+          <li>Error return conventions and exception handling</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📝</span> Coding Guidelines</h3>
+        <ul>
+          <li>Don't use overly clever or cryptic code</li>
+          <li>Avoid obscure side effects</li>
+          <li>At least 1 comment per 3 source lines</li>
+          <li>Function length ≤ 10 source lines</li>
+          <li>Don't use goto statements</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔍</span> Code Review Techniques</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Aspect</th><th>Code Walkthrough</th><th>Code Inspection</th></tr></thead>
+          <tbody>
+            <tr><td>Nature</td><td>Informal</td><td>Formal, checklist-based</td></tr>
+            <tr><td>Focus</td><td>Algorithmic & logical errors</td><td>Common errors, coding standards</td></tr>
+            <tr><td>Method</td><td>Hand-simulate with test cases</td><td>Check against error checklist</td></tr>
+            <tr><td>Team</td><td>3-7 members, coder present</td><td>Reviewers with error statistics</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px"><strong>Common errors checked:</strong> Uninitialized variables, non-terminating loops, array index out of bounds, parameter mismatch, improper storage, jumps into loops, incorrect logical operators.</p>
+      </div>
+    `
+  },
+  {
+    id: 'up',
+    title: 'Unified Process',
+    section: 'Process Models',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🔄</span> Unified Process (UP)</h3>
+        <p>A popular iterative modern process model (framework) derived from UML work. The leading OO methodology for large-scale software.</p>
+        <div class="def-box">
+          <strong>Key Idea: Iterative Development</strong> — Short, fixed-length mini-projects (2-6 weeks) called <strong>iterations</strong>. Each produces a tested, integrated, executable system.
+        </div>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⏱️</span> Iteration Details</h3>
+        <ul>
+          <li><strong>Time-boxed</strong> — Fixed length, don't slip date, remove tasks instead</li>
+          <li><strong>Incremental</strong> — System grows iteration by iteration</li>
+          <li>Output is NOT a prototype — it's a production-grade subset</li>
+        </ul>
+        <p><strong>Benefits:</strong> Early risk mitigation, early visible progress, early feedback, managed complexity, continuous process improvement.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📋</span> UP Phases</h3>
+        <ol>
+          <li><strong>Inception</strong> — Approximate vision, business case, scope, vague estimates</li>
+          <li><strong>Elaboration</strong> — Refined vision, iterative core architecture, resolve high risks</li>
+          <li><strong>Construction</strong> — Iterative implementation of remaining lower-risk elements</li>
+          <li><strong>Transition</strong> — Beta tests, deployment</li>
+        </ol>
+        <p><strong>Important:</strong> Inception ≠ requirements phase. Elaboration ≠ design phase. These are NOT waterfall phases.</p>
+      </div>
+    `
+  },
+  {
+    id: 'testing',
+    title: 'Testing Overview',
+    section: 'Testing & Quality',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🧪</span> Testing Overview</h3>
+        <p>Testing is a systematic process to find errors and ensure software meets requirements.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⬜</span> White Box Testing</h3>
+        <p>Tests internal structure / code logic. Also called <strong>glass box</strong> or <strong>structural testing</strong>.</p>
+        <p>Techniques include: Statement coverage, Branch coverage, Path coverage, Condition coverage.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⬛</span> Black Box Testing</h3>
+        <p>Tests functionality without looking at internal code. Based on <strong>requirements/specifications</strong>.</p>
+        <p>Techniques include: Equivalence partitioning, Boundary value analysis, Cause-effect graphing.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📊</span> Levels of Testing</h3>
+        <ul>
+          <li><strong>Unit Testing</strong> — Individual modules tested in isolation</li>
+          <li><strong>Integration Testing</strong> — Modules integrated and tested in planned steps</li>
+          <li><strong>System Testing</strong> — Complete system tested against SRS</li>
+          <li><strong>Acceptance Testing</strong> — Customer verifies the system meets their needs</li>
+        </ul>
+      </div>
+    `
+  },
+  {
+    id: 'quality',
+    title: 'Software Quality',
+    section: 'Testing & Quality',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">⭐</span> Software Quality</h3>
+        <p>Software quality encompasses various attributes that determine the value of a software product.</p>
+        <p><strong>Key quality factors:</strong> Correctness, Reliability, Efficiency, Integrity, Usability, Maintainability, Testability, Flexibility, Portability, Reusability, Interoperability.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔧</span> Maintenance Types</h3>
+        <table class="cmp-table">
+          <thead><tr><th>Type</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Corrective</strong></td><td>Fix errors not discovered during development</td></tr>
+            <tr><td><strong>Perfective</strong></td><td>Improve implementation, enhance functionality</td></tr>
+            <tr><td><strong>Adaptive</strong></td><td>Port to new environment (new OS, hardware)</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px"><em>Development effort : Maintenance effort = 40 : 60</em></p>
+      </div>
+    `
+  },
+  {
+    id: 'spm',
+    title: 'SPM & Risk Mgmt',
+    section: 'Management',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">📊</span> Software Project Management (SPM)</h3>
+        <p>Involves planning, monitoring, and controlling software projects.</p>
+        <p><strong>Key activities:</strong> Estimation, scheduling, resource allocation, risk management, quality assurance, change management.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">⚠️</span> Risk Management</h3>
+        <p><strong>Risk:</strong> Any adverse circumstance that might hamper successful completion of a project.</p>
+        <p><strong>Risk management process:</strong></p>
+        <ol>
+          <li>Risk identification</li>
+          <li>Risk analysis</li>
+          <li>Risk prioritization</li>
+          <li>Risk mitigation planning</li>
+          <li>Risk monitoring</li>
+        </ol>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🔗</span> Critical Path</h3>
+        <p>The longest path in a project network diagram. Determines the minimum project completion time. Any delay on the critical path directly delays the project.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">📋</span> Software Configuration Management (SCM)</h3>
+        <p>Controls changes to software artifacts throughout the life cycle. Includes version control, change control, and audit.</p>
+      </div>
+    `
+  },
+  {
+    id: 'casereuse',
+    title: 'CASE & Reuse',
+    section: 'Management',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">🛠️</span> CASE Tools</h3>
+        <p><strong>Computer-Aided Software Engineering</strong> — Tools that support software development activities.</p>
+        <p><strong>Types:</strong> Upper CASE (analysis/design), Lower CASE (coding/testing), Integrated CASE (all phases).</p>
+        <p>Benefits: Increased productivity, improved quality, better documentation, easier maintenance.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">♻️</span> Software Reuse</h3>
+        <p>Using existing software artifacts (code, designs, documentation) to build new systems.</p>
+        <p><strong>Benefits:</strong> Reduced development time/cost, increased reliability, standardized components.</p>
+        <p><strong>Types:</strong> Code reuse, design reuse, component reuse, application framework reuse.</p>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🧩</span> Component-Based Development (CBD)</h3>
+        <p>Build systems by assembling pre-existing, independently deployable components.</p>
+        <p>Components are reusable units with well-defined interfaces. Promotes "buy vs build" approach.</p>
+      </div>
+    `
+  },
+  {
+    id: 'agile',
+    title: 'Agile & Scrum',
+    section: 'Process Models',
+    content: `
+      <div class="content-card">
+        <h3><span class="icon">⚡</span> Agile Development</h3>
+        <p>An iterative approach to software development emphasizing:</p>
+        <ul>
+          <li><strong>Individuals and interactions</strong> over processes and tools</li>
+          <li><strong>Working software</strong> over comprehensive documentation</li>
+          <li><strong>Customer collaboration</strong> over contract negotiation</li>
+          <li><strong>Responding to change</strong> over following a plan</li>
+        </ul>
+      </div>
+      <div class="content-card">
+        <h3><span class="icon">🏏</span> Scrum Framework</h3>
+        <p>A popular Agile framework for managing complex projects.</p>
+        <p><strong>Key Roles:</strong></p>
+        <ul>
+          <li><strong>Product Owner</strong> — Defines product backlog, prioritizes features</li>
+          <li><strong>Scrum Master</strong> — Facilitates process, removes impediments</li>
+          <li><strong>Development Team</strong> — Self-organizing, cross-functional</li>
+        </ul>
+        <p><strong>Key Artifacts:</strong></p>
+        <ul>
+          <li><strong>Product Backlog</strong> — Prioritized list of requirements</li>
+          <li><strong>Sprint Backlog</strong> — Tasks selected for current sprint</li>
+          <li><strong>Increment</strong> — Potentially shippable product at sprint end</li>
+        </ul>
+        <p><strong>Key Events:</strong> Sprint Planning, Daily Scrum, Sprint Review, Sprint Retrospective.</p>
+        <p><strong>Sprint:</strong> Time-boxed iteration (1-4 weeks). Produces a working product increment.</p>
+      </div>
+    `
+  }
+];
+
+// ============================================================
+// FLASHCARD DATA
+// ============================================================
+
+const FLASHCARDS = [
+  { term: 'Software Engineering', def: 'Engineering approach to develop software using systematic techniques, methodologies, and guidelines.', topic: 'intro' },
+  { term: 'Software Crisis', def: 'Problems faced by software: fails to meet requirements, crashes, expensive, hard to debug, delivered late, uses resources non-optimally.', topic: 'intro' },
+  { term: 'Classical Waterfall Model', def: 'Sequential model: Feasibility → Requirements → Design → Coding → Testing → Maintenance. No feedback paths.', topic: 'lifecycle' },
+  { term: 'Iterative Waterfall Model', def: 'Waterfall model with feedback paths between phases. Most widely used model.', topic: 'lifecycle' },
+  { term: 'Phase Containment of Errors', def: 'Detecting errors as close to their point of introduction as possible.', topic: 'lifecycle' },
+  { term: 'Prototyping Model', def: 'Build a working prototype first, refine based on customer feedback, then develop actual system.', topic: 'lifecycle' },
+  { term: 'Evolutionary Model', def: 'Break system into modules, incrementally implement and deliver successive versions.', topic: 'lifecycle' },
+  { term: 'Spiral Model', def: 'Iterative loops with 4 quadrants: Objective Setting, Risk Assessment, Development, Review. Proposed by Boehm in 1988.', topic: 'lifecycle' },
+  { term: 'SRS Document', def: 'Software Requirements Specification — a contract document that specifies functional requirements, non-functional requirements, and constraints.', topic: 'requirements' },
+  { term: 'Functional Requirements', def: 'Describe what the system does — input, processing, output for each function.', topic: 'requirements' },
+  { term: 'Non-functional Requirements', def: 'Characteristics like maintainability, portability, usability, reliability, performance, security.', topic: 'requirements' },
+  { term: 'Black-box Specification', def: 'SRS document that documents only visible external behavior, not internal details.', topic: 'requirements' },
+  { term: 'Cohesion', def: 'Measure of functional strength of a module. High cohesion means the module performs a single task.', topic: 'design' },
+  { term: 'Coupling', def: 'Measure of interdependence between modules. Low coupling means modules are independent.', topic: 'design' },
+  { term: 'Functional Cohesion', def: 'Best type — all elements cooperate to achieve a single task. Example: managing-book-lending module.', topic: 'design' },
+  { term: 'Coincidental Cohesion', def: 'Worst type — random collection of unrelated functions placed together by coincidence.', topic: 'design' },
+  { term: 'Data Coupling', def: 'Best type — modules communicate via elementary data items passed as parameters.', topic: 'design' },
+  { term: 'Content Coupling', def: 'Worst type — modules share code, e.g., jumps from one module into another.', topic: 'design' },
+  { term: 'DFD Context Diagram', def: 'Level 0 DFD showing the entire system as a single bubble with external entities and data flows.', topic: 'dfd' },
+  { term: 'Data Dictionary', def: 'Lists all data items in a DFD with definitions using +, [], (), {}, = operators.', topic: 'dfd' },
+  { term: 'Structure Chart', def: 'Represents software architecture — modules, call dependencies, and parameters passed.', topic: 'dfd' },
+  { term: 'Balancing a DFD', def: 'Data flowing into/out of a bubble must match the data flows at the next level of DFD.', topic: 'dfd' },
+  { term: 'Object', def: 'Real-world entity with data (attributes) and functions (methods). Hides internal information.', topic: 'ood' },
+  { term: 'Class', def: 'Template for creating objects. Instances are objects.', topic: 'ood' },
+  { term: 'Inheritance', def: 'Define a new class by extending an existing class. Represents generalization-specialization.', topic: 'ood' },
+  { term: 'Polymorphism', def: 'Same message results in different actions by different objects.', topic: 'ood' },
+  { term: 'Encapsulation', def: 'Objects communicate through messages; data is encapsulated within methods.', topic: 'ood' },
+  { term: 'Dynamic Binding', def: 'Method call decided at runtime based on the object type, not at compile time.', topic: 'ood' },
+  { term: 'UML', def: 'Unified Modeling Language — a graphical modelling tool with 9 diagrams for OO analysis and design.', topic: 'ood' },
+  { term: 'Use Case Diagram', def: 'Shows actors, use cases (ellipses), and system boundary (rectangle). Factored via generalization, includes, extends.', topic: 'ood' },
+  { term: 'Sequence Diagram', def: '2D chart showing interaction among objects over time. Objects at top, lifelines, messages as arrows.', topic: 'ood' },
+  { term: 'State Chart Diagram', def: 'Based on FSM. Shows how state of an object changes with initial/final states, transitions, and guards.', topic: 'ood' },
+  { term: 'Activity Diagram', def: 'Represents processing activity with parallel activity, synchronization, and swim lanes.', topic: 'ood' },
+  { term: 'Design Pattern', def: 'Standard solution to commonly recurring problem. Examples: Expert, Creator, Controller, Facade.', topic: 'ood' },
+  { term: 'Expert Pattern', def: 'Assign responsibility to the class that has the information necessary to fulfill it.', topic: 'ood' },
+  { term: 'Creator Pattern', def: 'Assign class C1 to create class C2 if C1 aggregates, contains, or records C2.', topic: 'ood' },
+  { term: 'Controller Pattern', def: 'Create a separate controller object for each use case to handle actor requests.', topic: 'ood' },
+  { term: 'Facade Pattern', def: 'Create a class that provides a common interface to the services of a package.', topic: 'ood' },
+  { term: 'Command Language Interface', def: 'User types commands in a language. Fast but requires memorization.', topic: 'ui' },
+  { term: 'Menu-based Interface', def: 'User selects from menus. Based on recognition, not recollection.', topic: 'ui' },
+  { term: 'Direct Manipulation Interface', def: 'Visual models (icons/objects). User performs actions on representations. Language-independent.', topic: 'ui' },
+  { term: 'Coding Standards', def: 'Standard style of coding giving uniform appearance, enhancing understanding, encouraging good practices.', topic: 'coding' },
+  { term: 'Code Walkthrough', def: 'Informal code review: hand-simulate execution with test cases to find algorithmic/logical errors.', topic: 'coding' },
+  { term: 'Code Inspection', def: 'Formal code review using error checklists to find common errors and verify coding standards.', topic: 'coding' },
+  { term: 'Unified Process (UP)', def: 'Iterative process framework with 4 phases: Inception, Elaboration, Construction, Transition.', topic: 'up' },
+  { term: 'Time-boxed Iteration', def: 'Fixed-length iteration (2-6 weeks). Don\'t slip date — remove tasks instead.', topic: 'up' },
+  { term: 'White Box Testing', def: 'Tests internal structure/code logic. Techniques: statement, branch, path coverage.', topic: 'testing' },
+  { term: 'Black Box Testing', def: 'Tests functionality without looking at code. Techniques: equivalence partitioning, boundary value analysis.', topic: 'testing' },
+  { term: 'Unit Testing', def: 'Testing individual modules in isolation during implementation phase.', topic: 'testing' },
+  { term: 'Corrective Maintenance', def: 'Fix errors not discovered during development.', topic: 'quality' },
+  { term: 'Perfective Maintenance', def: 'Improve implementation and enhance functionality.', topic: 'quality' },
+  { term: 'Adaptive Maintenance', def: 'Port software to a new environment (new OS, hardware).', topic: 'quality' },
+  { term: 'Risk', def: 'Any adverse circumstance that might hamper successful completion of a software project.', topic: 'spm' },
+  { term: 'Critical Path', def: 'The longest path in a project network. Determines minimum project completion time.', topic: 'spm' },
+  { term: 'SCM', def: 'Software Configuration Management — controls changes to software artifacts throughout life cycle.', topic: 'spm' },
+  { term: 'CASE Tools', def: 'Computer-Aided Software Engineering tools that support development activities.', topic: 'casereuse' },
+  { term: 'Software Reuse', def: 'Using existing software artifacts to build new systems. Types: code, design, component, framework reuse.', topic: 'casereuse' },
+  { term: 'CBD', def: 'Component-Based Development — build systems by assembling pre-existing, independently deployable components.', topic: 'casereuse' },
+  { term: 'Agile', def: 'Iterative approach emphasizing individuals, working software, customer collaboration, and responding to change.', topic: 'agile' },
+  { term: 'Scrum', def: 'Agile framework with roles (Product Owner, Scrum Master, Team), artifacts (Backlog, Sprint Backlog, Increment), and events.', topic: 'agile' },
+  { term: 'Product Backlog', def: 'Prioritized list of requirements in Scrum, managed by Product Owner.', topic: 'agile' },
+  { term: 'Sprint', def: 'Time-boxed iteration in Scrum (1-4 weeks) that produces a potentially shippable product increment.', topic: 'agile' }
+];
+
+// ============================================================
+// QUIZ DATA
+// ============================================================
+
+const QUIZ_DATA = [
+  { q: 'What is the primary advantage of adhering to a life cycle model?', options: ['Reduces cost', 'Systematic and disciplined development', 'Increases team size', 'Eliminates testing'], answer: 1, topic: 'lifecycle' },
+  { q: 'Which model includes feedback paths between phases?', options: ['Classical Waterfall', 'Iterative Waterfall', 'Spiral', 'Prototyping'], answer: 1, topic: 'lifecycle' },
+  { q: 'What is the "phase containment of errors" principle?', options: ['Finding errors only during testing', 'Detecting errors close to their point of introduction', 'Ignoring small errors', 'Fixing errors after delivery'], answer: 1, topic: 'lifecycle' },
+  { q: 'Who proposed the Spiral model?', options: ['Royce', 'Boehm', 'Jacobson', 'Beck'], answer: 1, topic: 'lifecycle' },
+  { q: 'How many quadrants does each loop in the Spiral model have?', options: ['2', '3', '4', '5'], answer: 2, topic: 'lifecycle' },
+  { q: 'What is the typical development-to-maintenance effort ratio?', options: ['60:40', '40:60', '50:50', '30:70'], answer: 1, topic: 'quality' },
+  { q: 'Which is NOT a type of maintenance?', options: ['Corrective', 'Perfective', 'Adaptive', 'Inceptive'], answer: 3, topic: 'quality' },
+  { q: 'Which cohesion type is the BEST?', options: ['Coincidental', 'Logical', 'Functional', 'Temporal'], answer: 2, topic: 'design' },
+  { q: 'Which cohesion type is the WORST?', options: ['Functional', 'Coincidental', 'Sequential', 'Communicational'], answer: 1, topic: 'design' },
+  { q: 'Which coupling type is the BEST?', options: ['Content', 'Common', 'Control', 'Data'], answer: 3, topic: 'design' },
+  { q: 'Which coupling type is the WORST?', options: ['Data', 'Stamp', 'Content', 'Control'], answer: 2, topic: 'design' },
+  { q: 'What does DFD stand for?', options: ['Data Function Diagram', 'Data Flow Diagram', 'Design Flow Diagram', 'Dynamic Flow Design'], answer: 1, topic: 'dfd' },
+  { q: 'What is the context diagram also called?', options: ['Level 1 DFD', 'Level 0 DFD', 'Level 2 DFD', 'System DFD'], answer: 1, topic: 'dfd' },
+  { q: 'What symbol represents a process in DFD?', options: ['Rectangle', 'Circle/Bubble', 'Arrow', 'Line'], answer: 1, topic: 'dfd' },
+  { q: 'What is the recommended number of bubbles per DFD level?', options: ['1-2', '3-7', '8-12', '15+'], answer: 1, topic: 'dfd' },
+  { q: 'In data dictionary, what does + represent?', options: ['Selection', 'Composition', 'Optional', 'Iteration'], answer: 1, topic: 'dfd' },
+  { q: 'What is the purpose of the SRS document?', options: ['Implementation guide', 'Contract between team and customer', 'Testing plan', 'Code documentation'], answer: 1, topic: 'requirements' },
+  { q: 'Which is NOT a property of a good SRS?', options: ['Concise', 'Ambiguous', 'Complete', 'Verifiable'], answer: 1, topic: 'requirements' },
+  { q: 'What is overspecification in an SRS?', options: ['Too much detail', 'Addressing "how to" aspects', 'Too many requirements', 'Missing requirements'], answer: 1, topic: 'requirements' },
+  { q: 'Which view in UML shows use case diagrams?', options: ['Structural View', "User's View", 'Behavioral View', 'Implementation View'], answer: 1, topic: 'ood' },
+  { q: 'Which UML diagram shows objects over time?', options: ['Class Diagram', 'Sequence Diagram', 'Object Diagram', 'State Chart'], answer: 1, topic: 'ood' },
+  { q: 'Which UML diagram is based on finite state machines?', options: ['Activity Diagram', 'State Chart Diagram', 'Sequence Diagram', 'Collaboration Diagram'], answer: 1, topic: 'ood' },
+  { q: 'What does a filled diamond represent in a class diagram?', options: ['Aggregation', 'Composition', 'Association', 'Dependency'], answer: 1, topic: 'ood' },
+  { q: 'Which pattern assigns responsibility to the class with necessary information?', options: ['Creator', 'Facade', 'Expert', 'Controller'], answer: 2, topic: 'ood' },
+  { q: 'What is a class in OOP?', options: ['An object instance', 'A template for creating objects', 'A function', 'A variable'], answer: 1, topic: 'ood' },
+  { q: 'What is polymorphism?', options: ['Same message, different actions', 'Multiple classes', 'Data hiding', 'Code reuse'], answer: 0, topic: 'ood' },
+  { q: 'What are swimlanes used for in activity diagrams?', options: ['Parallel processes', 'Group by who performs activities', 'State changes', 'Time ordering'], answer: 1, topic: 'ood' },
+  { q: 'Which is NOT a user interface type?', options: ['Command Language', 'Menu-based', 'Direct Manipulation', 'Batch Processing'], answer: 3, topic: 'ui' },
+  { q: 'What is a good code comment-to-source-line ratio?', options: ['1:10', '1:3', '1:1', '3:1'], answer: 1, topic: 'coding' },
+  { q: 'What is the recommended maximum function length?', options: ['5 lines', '10 lines', '20 lines', '50 lines'], answer: 1, topic: 'coding' },
+  { q: 'Which is NOT a UP phase?', options: ['Inception', 'Elaboration', 'Construction', 'Validation'], answer: 3, topic: 'up' },
+  { q: 'What is the recommended UP iteration length?', options: ['1 week', '2-6 weeks', '3 months', '6 months'], answer: 1, topic: 'up' },
+  { q: 'What does "time-boxed" mean in UP?', options: ['No deadline', 'Fixed iteration length', 'Flexible schedule', 'Milestone-based'], answer: 1, topic: 'up' },
+  { q: 'What does SCM stand for?', options: ['Software Control Management', 'Software Configuration Management', 'System Configuration Model', 'Software Change Model'], answer: 1, topic: 'spm' },
+  { q: 'What is the critical path?', options: ['Shortest path', 'Longest path', 'Fastest task', 'Cheapest task'], answer: 1, topic: 'spm' },
+  { q: 'Which Agile value is correct?', options: ['Process over people', 'Documentation over working software', 'Individuals and interactions over processes and tools', 'Contract over collaboration'], answer: 2, topic: 'agile' },
+  { q: 'What is a Sprint in Scrum?', options: ['A meeting', 'Time-boxed iteration', 'A role', 'A document'], answer: 1, topic: 'agile' },
+  { q: 'Who manages the Product Backlog?', options: ['Scrum Master', 'Product Owner', 'Development Team', 'Manager'], answer: 1, topic: 'agile' },
+  { q: 'What does CBD stand for?', options: ['Code-Based Development', 'Component-Based Development', 'Class-Based Design', 'Computer-Based Design'], answer: 1, topic: 'casereuse' },
+  { q: 'What is the main purpose of CASE tools?', options: ['Testing only', 'Support software development activities', 'Replacing developers', 'Code compilation'], answer: 1, topic: 'casereuse' },
+  { q: 'What is encapsulation?', options: ['Code reuse', 'Data and methods bundled together, hidden from outside', 'Multiple inheritance', 'Method overloading'], answer: 1, topic: 'ood' },
+  { q: 'Which statement about prototypes is TRUE?', options: ['Prototype is the final product', 'Prototype has limited capabilities and low reliability', 'Prototype needs full documentation', 'Prototype cannot be evaluated by customers'], answer: 1, topic: 'lifecycle' },
+  { q: 'What is fan-out in module structure?', options: ['Number of modules controlled by a given module', 'Number of levels in hierarchy', 'Number of data flows', 'Number of lines of code'], answer: 0, topic: 'design' },
+  { q: 'What is the "divide and conquer" principle in design?', options: ['Splitting team members', 'Decomposing problems into independent modules', 'Dividing project budget', 'Separating test phases'], answer: 1, topic: 'design' },
+  { q: 'In data dictionary, what do [ ] brackets represent?', options: ['Composition', 'Selection (one of)', 'Optional', 'Iteration'], answer: 1, topic: 'dfd' },
+  { q: 'What does "balancing a DFD" mean?', options: ['Equal number of inputs/outputs', 'Data flows match between levels', 'Same number of bubbles', 'Equal data store sizes'], answer: 1, topic: 'dfd' },
+  { q: 'Which evolutionary model advantage is correct?', options: ['Cheapest model', 'Core modules get tested thoroughly', 'No customer involvement', 'Works for all project sizes'], answer: 1, topic: 'lifecycle' },
+  { q: 'What happens if two bubbles are directly connected by a data flow arrow in DFD?', options: ['They are synchronous', 'They are asynchronous', 'They are unrelated', 'Data is stored'], answer: 0, topic: 'dfd' },
+  { q: 'Which is a benefit of iterative development in UP?', options: ['Longer planning phase', 'Early risk mitigation', 'Less testing needed', 'No customer feedback'], answer: 1, topic: 'up' },
+  { q: 'What is a risk in software projects?', options: ['A guaranteed delay', 'Adverse circumstance that might hamper success', 'A completed task', 'A project requirement'], answer: 1, topic: 'spm' },
+  { q: 'What does the "extends" relationship do in use case diagrams?', options: ['Connects use cases', 'Extends base use case with optional behavior', 'Creates new actor', 'Deletes use cases'], answer: 1, topic: 'ood' },
+  { q: 'What is the purpose of the Sprint Retrospective?', options: ['Plan next sprint', 'Review completed work', 'Improve the process', 'Show product to customer'], answer: 2, topic: 'agile' },
+  { q: 'What is dynamic binding?', options: ['Binding at compile time', 'Method decided at runtime', 'Static method call', 'Early binding'], answer: 1, topic: 'ood' },
+  { q: 'Which software crisis factor is correct?', options: ['Smaller problems', 'Decreasing skill shortage', 'Larger problems', 'High productivity'], answer: 2, topic: 'intro' },
+  { q: 'What is the purpose of the Daily Scrum?', options: ['Plan the release', 'Synchronize work for the day', 'Review the sprint', 'Update the backlog'], answer: 1, topic: 'agile' },
+  { q: 'Which is an example of logical cohesion?', options: ['Boot process', 'Print functions for various reports', 'Issue-book + return-book', 'Sort → Search → Display'], answer: 1, topic: 'design' },
+  { q: 'What is a composite object?', options: ['Object with primitive types', 'Object containing other objects', 'Abstract class', 'Interface'], answer: 1, topic: 'ood' },
+  { q: 'What does adaptive maintenance involve?', options: ['Fixing bugs', 'Adding features', 'Porting to new environment', 'Optimizing code'], answer: 2, topic: 'quality' },
+  { q: 'What is the purpose of the sprint review?', options: ['Team retrospective', 'Inspect the increment and adapt backlog', 'Daily status update', 'Process improvement'], answer: 1, topic: 'agile' },
+  { q: 'Which testing level tests individual modules?', options: ['System Testing', 'Integration Testing', 'Unit Testing', 'Acceptance Testing'], answer: 2, topic: 'testing' }
+];
+
+// ============================================================
+// STATE
+// ============================================================
+
+let currentView = 'study';
+let currentTopic = 'intro';
+let isDark = localStorage.getItem('seDark') === 'true';
+let currentFlashcards = [...FLASHCARDS];
+let flashcardShuffled = false;
+let quizState = { questions: [], index: 0, score: 0, answered: [], done: false };
+
+// ============================================================
+// INIT
+// ============================================================
+
+function init() {
+  if (isDark) document.body.classList.add('dark-mode');
+  buildSidebar();
+  showTopic('intro');
+  renderFlashcards();
+  document.getElementById('topicCount').textContent = `${TOPICS.length} topics`;
+  populateFilters();
+}
+
+function populateFilters() {
+  const topics = [...new Set(FLASHCARDS.map(f => f.topic))];
+  const sel1 = document.getElementById('flashTopicFilter');
+  const sel2 = document.getElementById('quizTopicFilter');
+  [sel1, sel2].forEach(sel => {
+    const val = sel.value;
+    sel.innerHTML = '<option value="all">All Topics</option>';
+    topics.forEach(t => {
+      const topic = TOPICS.find(tp => tp.id === t);
+      if (topic) {
+        sel.innerHTML += `<option value="${t}">${topic.title}</option>`;
+      }
+    });
+    sel.value = val;
+  });
+}
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+
+function buildSidebar() {
+  const nav = document.getElementById('sidebarNav');
+  const sections = {};
+  TOPICS.forEach(t => {
+    if (!sections[t.section]) sections[t.section] = [];
+    sections[t.section].push(t);
+  });
+  let html = '';
+  Object.keys(sections).forEach((section, idx) => {
+    const items = sections[section];
+    html += `<div class="nav-section">
+      <div class="nav-section-title ${idx > 0 ? 'collapsed' : ''}" onclick="toggleSection(this)">
+        ${section} <span class="arrow">▼</span>
+      </div>
+      <div class="nav-section-items" style="max-height: ${idx === 0 ? 'none' : '0'}">`;
+    items.forEach(t => {
+      const fc = FLASHCARDS.filter(f => f.topic === t.id).length;
+      html += `<a class="nav-item" data-topic="${t.id}" onclick="showTopic('${t.id}')">
+        ${t.title} <span class="count">${fc}</span>
+      </a>`;
+    });
+    html += `</div></div>`;
+  });
+  nav.innerHTML = html;
+}
+
+function toggleSection(el) {
+  const items = el.nextElementSibling;
+  const isCollapsed = el.classList.contains('collapsed');
+
+  if (isCollapsed) {
+    // Currently collapsed → expand
+    el.classList.remove('collapsed');
+    items.style.maxHeight = items.scrollHeight + 'px';
+    setTimeout(() => { items.style.maxHeight = 'none'; }, 300);
+  } else {
+    // Currently expanded → collapse
+    el.classList.add('collapsed');
+    items.style.maxHeight = items.scrollHeight + 'px';
+    setTimeout(() => { items.style.maxHeight = '0'; }, 10);
+  }
+}
+
+// ============================================================
+// VIEW & TOPIC NAVIGATION
+// ============================================================
+
+function showView(view) {
+  currentView = view;
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(`view-${view}`).classList.add('active');
+  if (view === 'flashcards') renderFlashcards();
+  if (view === 'quiz') startQuiz();
+}
+
+function showTopic(id) {
+  currentTopic = id;
+  showView('study');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const el = document.querySelector(`.nav-item[data-topic="${id}"]`);
+  if (el) el.classList.add('active');
+
+  const container = document.getElementById('topicContent');
+  const topic = TOPICS.find(t => t.id === id);
+  if (!topic) return;
+  container.innerHTML = `
+    <h2>${topic.title}</h2>
+    <p class="subtitle">${topic.section}</p>
+    ${topic.content}
+  `;
+  container.scrollTop = 0;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // Close mobile sidebar
+  document.getElementById('sidebar').classList.remove('mobile-open');
+}
+
+// ============================================================
+// SEARCH
+// ============================================================
+
+function handleSearch(val) {
+  const container = document.getElementById('topicContent');
+  if (!val.trim()) {
+    showTopic(currentTopic);
+    return;
+  }
+  const q = val.toLowerCase();
+  const results = [];
+  const seen = new Set();
+  TOPICS.forEach(t => {
+    // Search in topic title
+    if (t.title.toLowerCase().includes(q)) {
+      results.push({ topic: t, match: t.title });
+      seen.add(t.id + '_title');
+    }
+    // Search in flashcards
+    FLASHCARDS.filter(f => f.topic === t.id).forEach(f => {
+      if (f.term.toLowerCase().includes(q) || f.def.toLowerCase().includes(q)) {
+        const key = t.id + '_fc_' + f.term;
+        if (!seen.has(key)) {
+          results.push({ topic: t, match: f.term + ' — ' + f.def.substring(0, 60) + '...' });
+          seen.add(key);
+        }
+      }
+    });
+    // Search in quiz questions
+    QUIZ_DATA.filter(qd => qd.topic === t.id).forEach(qd => {
+      if (qd.q.toLowerCase().includes(q)) {
+        const key = t.id + '_qz_' + qd.q;
+        if (!seen.has(key)) {
+          results.push({ topic: t, match: '❓ ' + qd.q.substring(0, 80) + '...' });
+          seen.add(key);
+        }
+      }
+    });
+  });
+
+  if (results.length === 0) {
+    container.innerHTML = `<div class="empty-state"><div class="emoji">🔍</div><p>No results found for "<strong>${val}</strong>"</p></div>`;
+    return;
+  }
+
+  let html = `<h2>🔍 Search Results</h2><p class="subtitle">Found ${results.length} result(s) for "${val}"</p><div class="search-results">`;
+  results.slice(0, 30).forEach(r => {
+    html += `<div class="search-result-item" onclick="showTopic('${r.topic.id}')">
+      <div class="sr-title">${r.topic.title}</div>
+      <div class="sr-preview">${r.match}</div>
+      <div class="sr-topic">${r.topic.section}</div>
+    </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+// ============================================================
+// FLASHCARDS
+// ============================================================
+
+function renderFlashcards() {
+  const filter = document.getElementById('flashTopicFilter').value;
+  // Always filter from the original FLASHCARDS, then apply shuffle
+  let cards = filter === 'all' ? [...FLASHCARDS] : FLASHCARDS.filter(f => f.topic === filter);
+  if (flashcardShuffled) {
+    for (let i = cards.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [cards[i], cards[j]] = [cards[j], cards[i]];
+    }
+  }
+  const grid = document.getElementById('flashcardGrid');
+  if (cards.length === 0) {
+    grid.innerHTML = '<div class="empty-state"><div class="emoji">🃏</div><p>No flashcards for this topic.</p></div>';
+    return;
+  }
+  grid.innerHTML = cards.map((f, i) => `
+    <div class="flashcard" onclick="flipCard(this)" data-index="${i}">
+      <div class="flashcard-inner">
+        <div class="flashcard-front">
+          <div class="term">${f.term}</div>
+          <div class="hint">Click to reveal</div>
+        </div>
+        <div class="flashcard-back">
+          <div class="def">${f.def}</div>
+          <div class="topic-tag">${TOPICS.find(t => t.id === f.topic)?.title || f.topic}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function flipCard(el) {
+  el.classList.toggle('flipped');
+}
+
+function flipAllCards() {
+  document.querySelectorAll('.flashcard').forEach(el => el.classList.add('flipped'));
+}
+
+function shuffleFlashcards() {
+  flashcardShuffled = !flashcardShuffled;
+  renderFlashcards();
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+
+function skipQuestion() {
+  const { questions, index } = quizState;
+  if (index < questions.length - 1) {
+    quizState.index = index + 1;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function startQuiz() {
+  const filter = document.getElementById('quizTopicFilter').value;
+  const count = parseInt(document.getElementById('quizCount').value);
+  let questions = filter === 'all' ? [...QUIZ_DATA] : QUIZ_DATA.filter(q => q.topic === filter);
+  if (questions.length === 0) {
+    document.getElementById('quizContent').innerHTML = '<div class="empty-state"><div class="emoji">✍️</div><p>No questions available for this topic.</p></div>';
+    return;
+  }
+  // Shuffle
+  for (let i = questions.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [questions[i], questions[j]] = [questions[j], questions[i]];
+  }
+  if (count > 0 && count < questions.length) {
+    questions = questions.slice(0, count);
+  }
+  quizState = {
+    questions,
+    index: 0,
+    score: 0,
+    answered: new Array(questions.length).fill(-1),
+    done: false
+  };
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const container = document.getElementById('quizContent');
+  const { questions, index, answered, done, score } = quizState;
+
+  if (done) {
+    const pct = Math.round((score / questions.length) * 100);
+    const stars = pct >= 90 ? '⭐⭐⭐' : pct >= 70 ? '⭐⭐' : pct >= 50 ? '⭐' : '💪';
+    container.innerHTML = `
+      <div class="quiz-result">
+        <div class="stars">${stars}</div>
+        <div class="score">${score}/${questions.length}</div>
+        <div class="score-label">${pct}% Correct</div>
+        <div class="quiz-progress" style="max-width:300px;margin:0 auto">
+          <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </div>
+        <div class="quiz-nav">
+          <button class="primary-btn" onclick="startQuiz()">🔄 Try Again</button>
+          <button onclick="showView('study')">📖 Back to Study</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const q = questions[index];
+  const pct = ((index) / questions.length) * 100;
+  const sel = answered[index];
+
+  let optsHtml = q.options.map((opt, oi) => {
+    let cls = 'quiz-option';
+    if (sel !== -1) {
+      cls += ' disabled';
+      if (oi === q.answer) cls += ' correct';
+      if (sel === oi && sel !== q.answer) cls += ' wrong';
+      if (sel === oi) cls += ' selected';
+    }
+    return `<div class="${cls}" onclick="selectAnswer(${oi})">${opt}</div>`;
+  }).join('');
+
+  container.innerHTML = `
+    <div class="quiz-progress">
+      <span class="label">${index + 1}/${questions.length}</span>
+      <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <span class="label">✅ ${score}</span>
+    </div>
+    <div class="quiz-question">
+      <div class="q-topic">${TOPICS.find(t => t.id === q.topic)?.title || q.topic}</div>
+      <div class="q-text">${q.q}</div>
+      ${optsHtml}
+      <div class="quiz-nav">
+        ${index > 0 ? `<button onclick="goQuestion(${index - 1})">⬅ Previous</button>` : '<button disabled>⬅ Previous</button>'}
+        ${sel === -1 ? `<button onclick="skipQuestion()">⏭ Skip</button>` : ''}
+        ${sel !== -1 && index < questions.length - 1 ? `<button class="primary-btn" onclick="goQuestion(${index + 1})">Next ➡</button>` : ''}
+        ${sel !== -1 && index === questions.length - 1 ? `<button class="primary-btn" onclick="finishQuiz()">🏁 Finish</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function selectAnswer(oi) {
+  const { questions, index, answered } = quizState;
+  if (answered[index] !== -1) return;
+  answered[index] = oi;
+  if (oi === questions[index].answer) quizState.score++;
+  renderQuestion();
+}
+
+function goQuestion(idx) {
+  quizState.index = idx;
+  renderQuestion();
+}
+
+function finishQuiz() {
+  quizState.done = true;
+  renderQuestion();
+}
+
+// ============================================================
+// DARK MODE
+// ============================================================
+
+function toggleDarkMode() {
+  isDark = !isDark;
+  document.body.classList.toggle('dark-mode', isDark);
+  localStorage.setItem('seDark', isDark);
+  document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+}
+
+// ============================================================
+// MOBILE
+// ============================================================
+
+function toggleMobile() {
+  document.getElementById('sidebar').classList.toggle('mobile-open');
+}
+
+// ============================================================
+// THEME BUTTON INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  init();
+  document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+});
+</script>
+</body>
+</html>
