@@ -95,6 +95,40 @@ tr:nth-child(even){background:var(--bg)}
 }
 /* KEYBOARD SHORTCUT HINT */
 .kbd{display:inline-block;padding:2px 6px;border:1px solid var(--border);border-radius:4px;font-size:.75rem;font-family:monospace;background:var(--bg)}
+
+/* NEW: enhanced explanation & code blocks */
+.analogy-box {
+    background: var(--primary-light);
+    border-left: 5px solid var(--primary);
+    padding: 10px 16px;
+    margin: 12px 0 10px 0;
+    border-radius: 0 8px 8px 0;
+    font-style: italic;
+}
+.analogy-box strong {
+    color: var(--primary);
+}
+.code-block {
+    background: var(--code-bg);
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: 'Cascadia Code','Fira Code','Consolas',monospace;
+    font-size: .85rem;
+    line-height: 1.6;
+    margin: 8px 0 14px 0;
+    border: 1px solid var(--border);
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+.code-block .comment { color: #6a9955; }
+.code-block .keyword { color: #c586c0; }
+.code-block .func { color: #dcdcaa; }
+.code-block .string { color: #ce9178; }
+.dark-mode .code-block .comment { color: #6a9955; }
+.dark-mode .code-block .keyword { color: #c586c0; }
+.dark-mode .code-block .func { color: #dcdcaa; }
+.dark-mode .code-block .string { color: #ce9178; }
 </style>
 </head>
 <body>
@@ -204,7 +238,20 @@ return m</pre>
                 <ul>
                     <li><strong>Consecutive integer checking:</strong> O(n)</li>
                     <li><strong>Middle-school procedure:</strong> O(√n)</li>
-                </ul></div>
+                </ul>
+                <!-- Enhanced content -->
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like measuring two sticks by repeatedly replacing the longer with the remainder — you eventually get the longest common measure.</div>
+                <pre class="code-block"><span class="comment">// C++ implementation of Euclid's algorithm (iterative)</span>
+<span class="keyword">int</span> <span class="func">gcd</span>(<span class="keyword">int</span> m, <span class="keyword">int</span> n) {
+    <span class="keyword">while</span> (n != 0) {
+        <span class="keyword">int</span> r = m % n;
+        m = n;
+        n = r;
+    }
+    <span class="keyword">return</span> m;
+}
+<span class="comment">// Time complexity: O(log min(m,n))</span></pre>
+            </div>
             </div>
             <div class="topic" id="unit1_Fundamental_Data_Structures">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Fundamental Data Structures</h3>
@@ -287,7 +334,9 @@ return m</pre>
 
                 <h4>L'Hôpital's Rule & Stirling's Formula:</h4>
                 <p>If lim f(n) = lim g(n) = ∞, then lim f(n)/g(n) = lim f'(n)/g'(n)</p>
-                <p><strong>Stirling's formula:</strong> n! ≈ √(2πn) · (n/e)<sup>n</sup></p></div>
+                <p><strong>Stirling's formula:</strong> n! ≈ √(2πn) · (n/e)<sup>n</sup></p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Big O is like a speed limit (you never go faster), Omega is a minimum speed, Theta is a constant speed — they describe how an algorithm's time grows as input size grows.</div>
+            </div>
             </div>
             <div class="topic" id="unit1_Selection_Sort">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Selection Sort</h3>
@@ -304,7 +353,18 @@ for i ← 0 to n – 2 do
                     <li><strong>Time:</strong> Θ(n²) — all cases</li>
                     <li><strong>Space:</strong> Θ(1) — in place</li>
                     <li><strong>Stable:</strong> Yes</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like picking the smallest card from a hand and placing it at the front, then repeating for the rest.</div>
+                <pre class="code-block"><span class="comment">// C++ selection sort</span>
+<span class="keyword">void</span> <span class="func">selectionSort</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> n) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt; n-1; i++) {
+        <span class="keyword">int</span> minIdx = i;
+        <span class="keyword">for</span> (<span class="keyword">int</span> j = i+1; j &lt; n; j++)
+            <span class="keyword">if</span> (arr[j] &lt; arr[minIdx]) minIdx = j;
+        <span class="keyword">std::swap</span>(arr[i], arr[minIdx]);
+    }
+}</pre>
+            </div>
             </div></div>
         </section>
         <section id="unit2" class="unit-section">
@@ -340,7 +400,19 @@ Step 2: Compare each character of pattern to text
 Step 3: If mismatch, realign pattern one position right & repeat</pre>
                 <h4>Complexity:</h4>
                 <p>Worst-case: Θ(mn) comparisons</p>
-                <p>Example: Pattern = 001011, Text = 10010101101001100101111010</p></div>
+                <p>Example: Pattern = 001011, Text = 10010101101001100101111010</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like sliding a stencil over a wall, checking each position character by character — if it doesn't match, shift by one.</div>
+                <pre class="code-block"><span class="comment">// Brute-force string matching in C++</span>
+<span class="keyword">int</span> <span class="func">naiveSearch</span>(<span class="keyword">const</span> <span class="keyword">string</span>&amp; text, <span class="keyword">const</span> <span class="keyword">string</span>&amp; pat) {
+    <span class="keyword">int</span> n = text.size(), m = pat.size();
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = 0; i &lt;= n - m; i++) {
+        <span class="keyword">int</span> j = 0;
+        <span class="keyword">while</span> (j &lt; m &amp;&amp; text[i+j] == pat[j]) j++;
+        <span class="keyword">if</span> (j == m) <span class="keyword">return</span> i; <span class="comment">// match found</span>
+    }
+    <span class="keyword">return</span> -1;
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit2_Insertion_Sort">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Insertion Sort</h3>
@@ -365,7 +437,21 @@ for i ← 1 to n-1 do
                     <li><strong>Worst:</strong> O(n²) — reverse sorted</li>
                     <li><strong>Space:</strong> O(1) — in place</li>
                     <li><strong>Stable:</strong> Yes</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like sorting cards in your hand — pick a card and insert it into the correct position among the already sorted cards on the left.</div>
+                <pre class="code-block"><span class="comment">// C++ insertion sort</span>
+<span class="keyword">void</span> <span class="func">insertionSort</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> n) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> i = 1; i &lt; n; i++) {
+        <span class="keyword">int</span> key = arr[i];
+        <span class="keyword">int</span> j = i - 1;
+        <span class="keyword">while</span> (j &gt;= 0 &amp;&amp; arr[j] &gt; key) {
+            arr[j+1] = arr[j];
+            j--;
+        }
+        arr[j+1] = key;
+    }
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit2_Exhaustive_Search">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Exhaustive Search</h3>
@@ -422,7 +508,35 @@ for i ← 1 to n-1 do
                     <li>Prefix function: Θ(m)</li>
                     <li>Matching: Θ(n)</li>
                     <li>Total: O(m + n)</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like remembering the parts of the pattern that overlap — when a mismatch happens, you don't restart from scratch; you reuse what you already know.</div>
+                <pre class="code-block"><span class="comment">// Compute prefix function (LPS) for KMP</span>
+<span class="keyword">void</span> <span class="func">computeLPS</span>(<span class="keyword">const</span> <span class="keyword">string</span>&amp; pat, <span class="keyword">int</span> lps[]) {
+    <span class="keyword">int</span> len = 0, i = 1;
+    lps[0] = 0;
+    <span class="keyword">while</span> (i &lt; pat.size()) {
+        <span class="keyword">if</span> (pat[i] == pat[len]) lps[i++] = ++len;
+        <span class="keyword">else</span> <span class="keyword">if</span> (len) len = lps[len-1];
+        <span class="keyword">else</span> lps[i++] = 0;
+    }
+}
+<span class="comment">// KMP search: O(n+m)</span>
+<span class="keyword">int</span> <span class="func">kmpSearch</span>(<span class="keyword">const</span> <span class="keyword">string</span>&amp; text, <span class="keyword">const</span> <span class="keyword">string</span>&amp; pat) {
+    <span class="keyword">int</span> n = text.size(), m = pat.size();
+    <span class="keyword">int</span> lps[m];
+    computeLPS(pat, lps);
+    <span class="keyword">int</span> i = 0, j = 0;
+    <span class="keyword">while</span> (i &lt; n) {
+        <span class="keyword">if</span> (pat[j] == text[i]) { i++; j++; }
+        <span class="keyword">if</span> (j == m) { <span class="keyword">return</span> i - j; } <span class="comment">// match at i-j</span>
+        <span class="keyword">else</span> <span class="keyword">if</span> (i &lt; n &amp;&amp; pat[j] != text[i]) {
+            <span class="keyword">if</span> (j) j = lps[j-1];
+            <span class="keyword">else</span> i++;
+        }
+    }
+    <span class="keyword">return</span> -1;
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit2_Rabin-Karp_Algorithm">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Rabin-Karp Algorithm</h3>
@@ -435,7 +549,11 @@ t<sub>s+1</sub> = d(t<sub>s</sub> - d<sup>m-1</sup>T[s+1]) + T[s+m+1]</pre>
                     <li>Worst-case: O((n-m+1)m)</li>
                     <li>Average-case: O(n+m) (with good hash)</li>
                 </ul>
-                <p><strong>Note:</strong> Spurious hits occur when hash matches but strings don't — use modulo to keep numbers manageable.</p></div>
+                <p><strong>Note:</strong> Spurious hits occur when hash matches but strings don't — use modulo to keep numbers manageable.</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like comparing fingerprints (hashes) — if fingerprints match, then you do a detailed check; otherwise skip.</div>
+                <pre class="code-block"><span class="comment">// Rabin-Karp (simplified, rolling hash)</span>
+<span class="comment">// Implementation uses modular arithmetic to avoid overflow</span></pre>
+            </div>
             </div></div>
         </section>
         <section id="unit3" class="unit-section">
@@ -457,7 +575,9 @@ t<sub>s+1</sub> = d(t<sub>s</sub> - d<sup>m-1</sup>T[s+1]) + T[s+m+1]</pre>
                     <li>Large Integer Multiplication</li>
                     <li>Strassen's Matrix Multiplication</li>
                     <li>Closest Pair, Convex Hull</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like breaking a big task into smaller, independent tasks, solving each, and then combining the results — think of dividing a large document into paragraphs, editing each, then merging.</div>
+            </div>
             </div>
             <div class="topic" id="unit3_Merge_Sort">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Merge Sort</h3>
@@ -481,7 +601,28 @@ if n > 1
                     <li><strong>Worst:</strong> Θ(n log n)</li>
                     <li><strong>Space:</strong> O(n) — not in place</li>
                     <li><strong>Stable:</strong> Yes</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like splitting a deck of cards into two halves, sorting each half separately, then merging the two sorted halves together.</div>
+                <pre class="code-block"><span class="comment">// Merge two sorted subarrays</span>
+<span class="keyword">void</span> <span class="func">merge</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> l, <span class="keyword">int</span> m, <span class="keyword">int</span> r) {
+    <span class="keyword">int</span> n1 = m-l+1, n2 = r-m;
+    <span class="keyword">int</span> L[n1], R[n2];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=0; i&lt;n1; i++) L[i] = arr[l+i];
+    <span class="keyword">for</span> (<span class="keyword">int</span> j=0; j&lt;n2; j++) R[j] = arr[m+1+j];
+    <span class="keyword">int</span> i=0, j=0, k=l;
+    <span class="keyword">while</span> (i&lt;n1 &amp;&amp; j&lt;n2) arr[k++] = (L[i] &lt;= R[j]) ? L[i++] : R[j++];
+    <span class="keyword">while</span> (i&lt;n1) arr[k++] = L[i++];
+    <span class="keyword">while</span> (j&lt;n2) arr[k++] = R[j++];
+}
+<span class="keyword">void</span> <span class="func">mergeSort</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> l, <span class="keyword">int</span> r) {
+    <span class="keyword">if</span> (l &lt; r) {
+        <span class="keyword">int</span> m = l + (r-l)/2;
+        mergeSort(arr, l, m);
+        mergeSort(arr, m+1, r);
+        merge(arr, l, m, r);
+    }
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit3_Quick_Sort">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Quick Sort</h3>
@@ -503,7 +644,26 @@ if l < r
                     <li><strong>Worst:</strong> Θ(n²) — already sorted array</li>
                     <li><strong>Space:</strong> O(log n) — in place</li>
                     <li><strong>Stable:</strong> No</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like choosing a "pivot" person in a line, then arranging everyone shorter on the left and taller on the right, and recursively doing the same on each side.</div>
+                <pre class="code-block"><span class="comment">// Partition for Quick Sort</span>
+<span class="keyword">int</span> <span class="func">partition</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> low, <span class="keyword">int</span> high) {
+    <span class="keyword">int</span> pivot = arr[high];
+    <span class="keyword">int</span> i = low - 1;
+    <span class="keyword">for</span> (<span class="keyword">int</span> j = low; j &lt; high; j++) {
+        <span class="keyword">if</span> (arr[j] &lt; pivot) <span class="keyword">std::swap</span>(arr[++i], arr[j]);
+    }
+    <span class="keyword">std::swap</span>(arr[i+1], arr[high]);
+    <span class="keyword">return</span> i+1;
+}
+<span class="keyword">void</span> <span class="func">quickSort</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> low, <span class="keyword">int</span> high) {
+    <span class="keyword">if</span> (low &lt; high) {
+        <span class="keyword">int</span> pi = partition(arr, low, high);
+        quickSort(arr, low, pi-1);
+        quickSort(arr, pi+1, high);
+    }
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit3_Binary_Search">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Binary Search</h3>
@@ -520,7 +680,20 @@ return -1</pre>
                     <li><strong>Worst-case:</strong> C<sub>w</sub>(n) = ⌈log₂(n+1)⌉</li>
                     <li>C<sub>w</sub>(10⁶) = 20 — VERY fast!</li>
                     <li><strong>Limitation:</strong> Must be sorted array (not linked list)</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like guessing a number in a range: each time you guess the middle, and if it's too high, you discard the upper half; too low, discard the lower half.</div>
+                <pre class="code-block"><span class="comment">// Binary Search (iterative)</span>
+<span class="keyword">int</span> <span class="func">binarySearch</span>(<span class="keyword">int</span> arr[], <span class="keyword">int</span> n, <span class="keyword">int</span> key) {
+    <span class="keyword">int</span> l = 0, r = n-1;
+    <span class="keyword">while</span> (l &lt;= r) {
+        <span class="keyword">int</span> m = l + (r-l)/2;
+        <span class="keyword">if</span> (arr[m] == key) <span class="keyword">return</span> m;
+        <span class="keyword">if</span> (arr[m] &lt; key) l = m+1;
+        <span class="keyword">else</span> r = m-1;
+    }
+    <span class="keyword">return</span> -1;
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit3_Strassen&#x27;s_Matrix_Multiplication">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Strassen&#x27;s Matrix Multiplication</h3>
@@ -538,7 +711,9 @@ c₀₁ = m₃ + m₅
 c₁₀ = m₂ + m₄
 c₁₁ = m₁ + m₃ - m₂ + m₆</pre>
                 <h4>Complexity:</h4>
-                <p>M(n) = n<sup>log₂7</sup> ≈ n<sup>2.807</sup> vs. Θ(n³) of brute-force</p></div>
+                <p>M(n) = n<sup>log₂7</sup> ≈ n<sup>2.807</sup> vs. Θ(n³) of brute-force</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like using a clever trick to multiply two numbers with fewer multiplications — instead of 8, you do 7, which makes a big difference for large matrices.</div>
+            </div>
             </div>
             <div class="topic" id="unit3_Master_Theorem">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Master Theorem</h3>
@@ -556,7 +731,9 @@ c₁₁ = m₁ + m₃ - m₂ + m₆</pre>
                     <li>T(n) = 4T(n/2) + n² ⇒ Case 2: T(n) = Θ(n² log n)</li>
                     <li>T(n) = 4T(n/2) + n³ ⇒ Case 3: T(n) = Θ(n³)</li>
                     <li>T(n) = 2T(n/2) + n ⇒ a=2,b=2 ⇒ n<sup>log₂2</sup> = n, f(n)=n ⇒ Case 2: T(n) = Θ(n log n) (Merge Sort)</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> The Master Theorem is like a recipe that tells you how to solve recurrence "soup" — just compare the "ingredient" f(n) with the "base" n<sup>log<sub>b</sub>a</sup> and pick the right case.</div>
+            </div>
             </div>
             <div class="topic" id="unit3_Recurrence_Relations:_Substitution_Method">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Recurrence Relations: Substitution Method</h3>
@@ -664,7 +841,9 @@ c₁₁ = m₁ + m₃ - m₂ + m₆</pre>
                     <li>Warshall's algorithm (transitive closure)</li>
                     <li>Floyd's algorithm (all-pairs shortest paths)</li>
                     <li>Optimal BST</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like solving a big puzzle by first solving all the small overlapping pieces once, storing their answers, and then using them to build the final solution — avoiding repeated work.</div>
+            </div>
             </div>
             <div class="topic" id="unit4_DP:_Knapsack_Problem">
                 <h3 class="topic-title" onclick="toggleTopic(this)">DP: Knapsack Problem</h3>
@@ -683,7 +862,22 @@ V[0,j] = 0, V[i,0] = 0</pre>
                 </table>
                 <p><strong>Optimal value:</strong> $37 (items 1,2,4)</p>
                 <h4>Complexity:</h4>
-                <p>Time &amp; Space: O(nW) — pseudopolynomial</p></div>
+                <p>Time &amp; Space: O(nW) — pseudopolynomial</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like packing a suitcase with the most valuable items, but you can only take each item once — DP tries all combinations efficiently.</div>
+                <pre class="code-block"><span class="comment">// 0/1 Knapsack DP (bottom-up)</span>
+<span class="keyword">int</span> <span class="func">knapSack</span>(<span class="keyword">int</span> W, <span class="keyword">int</span> wt[], <span class="keyword">int</span> val[], <span class="keyword">int</span> n) {
+    <span class="keyword">int</span> dp[n+1][W+1];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=0; i&lt;=n; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> w=0; w&lt;=W; w++) {
+            <span class="keyword">if</span> (i==0 || w==0) dp[i][w] = 0;
+            <span class="keyword">else</span> <span class="keyword">if</span> (wt[i-1] &lt;= w)
+                dp[i][w] = max(val[i-1] + dp[i-1][w-wt[i-1]], dp[i-1][w]);
+            <span class="keyword">else</span> dp[i][w] = dp[i-1][w];
+        }
+    }
+    <span class="keyword">return</span> dp[n][W];
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit4_DP:_Longest_Common_Subsequence_LCS">
                 <h3 class="topic-title" onclick="toggleTopic(this)">DP: Longest Common Subsequence (LCS)</h3>
@@ -695,7 +889,22 @@ V[0,j] = 0, V[i,0] = 0</pre>
                 <h4>Example:</h4>
                 <p>String 1: "president", String 2: "providence"<br>LCS: "priden"</p>
                 <h4>Complexity:</h4>
-                <p>Time &amp; Space: O(mn)</p></div>
+                <p>Time &amp; Space: O(mn)</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like finding the longest overlapping sequence in two strings — DP builds a table of matches.</div>
+                <pre class="code-block"><span class="comment">// LCS length (bottom-up)</span>
+<span class="keyword">int</span> <span class="func">lcs</span>(<span class="keyword">const</span> <span class="keyword">string</span>&amp; X, <span class="keyword">const</span> <span class="keyword">string</span>&amp; Y) {
+    <span class="keyword">int</span> m = X.size(), n = Y.size();
+    <span class="keyword">int</span> dp[m+1][n+1];
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=0; i&lt;=m; i++) {
+        <span class="keyword">for</span> (<span class="keyword">int</span> j=0; j&lt;=n; j++) {
+            <span class="keyword">if</span> (i==0 || j==0) dp[i][j] = 0;
+            <span class="keyword">else</span> <span class="keyword">if</span> (X[i-1] == Y[j-1]) dp[i][j] = 1 + dp[i-1][j-1];
+            <span class="keyword">else</span> dp[i][j] = max(dp[i-1][j], dp[i][j-1]);
+        }
+    }
+    <span class="keyword">return</span> dp[m][n];
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit4_Warshall&#x27;s_Algorithm_Transitive_Closure">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Warshall&#x27;s Algorithm (Transitive Closure)</h3>
@@ -713,7 +922,18 @@ V[0,j] = 0, V[i,0] = 0</pre>
                 <pre>D⁽ᵏ⁾[i,j] = min(D⁽ᵏ⁻¹⁾[i,j], D⁽ᵏ⁻¹⁾[i,k] + D⁽ᵏ⁻¹⁾[k,j])</pre>
                 <h4>Complexity:</h4>
                 <p>Time: Θ(n³), Space: Θ(n²)</p>
-                <p><strong>Note:</strong> Works with negative edges but not negative cycles.</p></div>
+                <p><strong>Note:</strong> Works with negative edges but not negative cycles.</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like trying to find the shortest path between every pair of cities by considering each city as a potential intermediate stop — updating distances if going through that city is shorter.</div>
+                <pre class="code-block"><span class="comment">// Floyd-Warshall (all-pairs shortest path)</span>
+<span class="keyword">const</span> <span class="keyword">int</span> INF = 1e9;
+<span class="keyword">void</span> <span class="func">floydWarshall</span>(<span class="keyword">int</span> dist[][V]) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> k=0; k&lt;V; k++)
+        <span class="keyword">for</span> (<span class="keyword">int</span> i=0; i&lt;V; i++)
+            <span class="keyword">for</span> (<span class="keyword">int</span> j=0; j&lt;V; j++)
+                <span class="keyword">if</span> (dist[i][k] + dist[k][j] &lt; dist[i][j])
+                    dist[i][j] = dist[i][k] + dist[k][j];
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit4_Optimal_Binary_Search_Tree">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Optimal Binary Search Tree</h3>
@@ -737,7 +957,9 @@ C[i,i] = pᵢ</pre>
                 <h4>Approximations:</h4>
                 <ul>
                     <li>TSP, Knapsack, other combinatorial optimization</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like making decisions that seem best right now, without worrying about the future — it works for some problems (like finding the shortest route with Dijkstra) but not for others (like knapsack).</div>
+            </div>
             </div>
             <div class="topic" id="unit4_Prim&#x27;s_MST_Algorithm">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Prim&#x27;s MST Algorithm</h3>
@@ -751,7 +973,9 @@ C[i,i] = pᵢ</pre>
                 <ul>
                     <li>O(n²) with weight matrix and array PQ</li>
                     <li>O(m log n) with adjacency lists and min-heap PQ</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like building a tree by always connecting the nearest unconnected node — it's like growing a tree from a seed.</div>
+            </div>
             </div>
             <div class="topic" id="unit4_Kruskal&#x27;s_MST_Algorithm">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Kruskal&#x27;s MST Algorithm</h3>
@@ -762,7 +986,9 @@ C[i,i] = pᵢ</pre>
                 </ol>
                 <h4>Complexity:</h4>
                 <p>O(m log m) — dominated by sorting</p>
-                <p><strong>Cycle checking:</strong> Union-Find data structure</p></div>
+                <p><strong>Cycle checking:</strong> Union-Find data structure</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like adding the cheapest roads one by one, but only if they don't create a loop — eventually you connect all cities with minimum total cost.</div>
+            </div>
             </div>
             <div class="topic" id="unit4_Dijkstra&#x27;s_Algorithm_Shortest_Paths">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Dijkstra&#x27;s Algorithm (Shortest Paths)</h3>
@@ -773,7 +999,9 @@ C[i,i] = pᵢ</pre>
                     <li>O(|V|²) with weight matrix</li>
                     <li>O(|E| log |V|) with adjacency lists and min-heap</li>
                 </ul>
-                <p><strong>Note:</strong> Does NOT work with negative weights (use Floyd's instead)</p></div>
+                <p><strong>Note:</strong> Does NOT work with negative weights (use Floyd's instead)</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like finding the shortest route on a map by always expanding the closest unvisited node — it's like following the most promising path.</div>
+            </div>
             </div>
             <div class="topic" id="unit4_Huffman_Codes">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Huffman Codes</h3>
@@ -785,7 +1013,9 @@ C[i,i] = pᵢ</pre>
                     <li>Label left edges 0, right edges 1</li>
                 </ol>
                 <p><strong>Example:</strong> A(0.35), B(0.1), C(0.2), D(0.2), _(0.15)</p>
-                <p>Codes: A=11, B=100, C=00, D=01, _=101<br>Average bits: 2.25 (vs 3 for fixed-length, 25% compression)</p></div>
+                <p>Codes: A=11, B=100, C=00, D=01, _=101<br>Average bits: 2.25 (vs 3 for fixed-length, 25% compression)</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like giving shorter codes to frequent letters (like 'e') and longer codes to rare ones — this saves space, just like Morse code.</div>
+            </div>
             </div></div>
         </section>
         <section id="unit5" class="unit-section">
@@ -800,7 +1030,9 @@ C[i,i] = pᵢ</pre>
                     <li>If stuck, "backtrack" to junction and try next choice</li>
                     <li>If all choices tried and no solution, there is none</li>
                 </ol>
-                <p><strong>Analogy:</strong> Maze solving — try a path, backtrack when stuck, try another.</p></div>
+                <p><strong>Analogy:</strong> Maze solving — try a path, backtrack when stuck, try another.</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like exploring a maze: when you hit a dead end, you retrace your steps and try a different fork.</div>
+            </div>
             </div>
             <div class="topic" id="unit5_8_Queens_Problem">
                 <h3 class="topic-title" onclick="toggleTopic(this)">8 Queens Problem</h3>
@@ -824,7 +1056,27 @@ C[i,i] = pᵢ</pre>
                 <h4>Analysis:</h4>
                 <p>Brute force: 8! = 40,320 permutations<br>
                 Backtracking: ~15,720 placements examined<br>
-                With pruning: ~5,508 placements</p></div>
+                With pruning: ~5,508 placements</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like placing queens one by one, checking conflicts, and if a conflict arises, moving the last queen to the next possible column — undo and try again.</div>
+                <pre class="code-block"><span class="comment">// Check if queen at (row, col) is safe</span>
+<span class="keyword">bool</span> <span class="func">isSafe</span>(<span class="keyword">int</span> board[], <span class="keyword">int</span> row, <span class="keyword">int</span> col) {
+    <span class="keyword">for</span> (<span class="keyword">int</span> i=0; i&lt;row; i++) {
+        <span class="keyword">if</span> (board[i] == col || abs(board[i]-col) == abs(i-row))
+            <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+}
+<span class="keyword">void</span> <span class="func">solveNQueens</span>(<span class="keyword">int</span> row, <span class="keyword">int</span> board[], <span class="keyword">int</span> N) {
+    <span class="keyword">if</span> (row == N) { <span class="comment">// found a solution</span> <span class="keyword">return</span>; }
+    <span class="keyword">for</span> (<span class="keyword">int</span> col=0; col&lt;N; col++) {
+        <span class="keyword">if</span> (isSafe(board, row, col)) {
+            board[row] = col;
+            solveNQueens(row+1, board, N);
+            <span class="comment">// backtrack: board[row] = -1; (implicitly overwritten)</span>
+        }
+    }
+}</pre>
+            </div>
             </div>
             <div class="topic" id="unit5_Branch_and_Bound">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Branch and Bound</h3>
@@ -834,7 +1086,9 @@ C[i,i] = pᵢ</pre>
                     <li><strong>Bounding function:</strong> Estimates lower bound (for minimization) or upper bound (for maximization)</li>
                     <li><strong>Pruning:</strong> Discard branches whose bound is worse than current best</li>
                     <li>Used for: TSP, Knapsack, Assignment Problem</li>
-                </ul></div>
+                </ul>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> Like pruning a tree: if a branch can't possibly beat the best solution you've already found, you cut it off and save time.</div>
+            </div>
             </div>
             <div class="topic" id="unit5_Vertex_Cover_Problem">
                 <h3 class="topic-title" onclick="toggleTopic(this)">Vertex Cover Problem</h3>
@@ -923,7 +1177,9 @@ x ≡ a<sub>k</sub> (mod n<sub>k</sub>)</pre>
                     <li>Bin Packing</li>
                 </ul>
                 <h4>Implication of NPC:</h4>
-                <p>If a problem is NP-Complete, don't waste time trying to find an efficient (polynomial) algorithm. Instead, focus on approximate or heuristic solutions.</p></div>
+                <p>If a problem is NP-Complete, don't waste time trying to find an efficient (polynomial) algorithm. Instead, focus on approximate or heuristic solutions.</p>
+                <div class="analogy-box"><strong>💡 Intuitive Analogy:</strong> P is like solving a puzzle quickly, NP is like checking a solution quickly. NPC problems are the hardest puzzles — if you can solve one quickly, you can solve them all (but probably you can't).</div>
+            </div>
             </div>
             <div class="topic" id="unit6_NP-Completeness_Proofs">
                 <h3 class="topic-title" onclick="toggleTopic(this)">NP-Completeness Proofs</h3>
@@ -1240,7 +1496,6 @@ function searchTopics(q) {
     document.querySelectorAll('.topic').forEach(t => {
         const txt = t.textContent.toLowerCase();
         t.style.display = (!q || txt.includes(q)) ? 'block' : 'none';
-        // auto-open matching topics
         if(q && txt.includes(q)) {
             t.querySelector('.topic-title').classList.add('open');
             t.querySelector('.topic-body').classList.add('open');

@@ -381,6 +381,33 @@ body::before {
 .code-block .copy-btn:hover {
   color: var(--accent);
 }
+.code-toolbar {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+.language-tabs {
+  display: flex;
+  gap: 0.3rem;
+  padding: 0.5rem 0.7rem 0;
+  flex-wrap: wrap;
+  border-top: 1px solid var(--border);
+}
+.language-tab {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  border-radius: 20px;
+  padding: 0.24rem 0.65rem;
+  font: 600 0.62rem 'Inter', sans-serif;
+  cursor: pointer;
+}
+.language-tab:hover,
+.language-tab.active {
+  color: #fff;
+  background: rgba(74,122,255,0.18);
+  border-color: var(--accent);
+}
 .code-block pre {
   margin: 0;
   padding: 0.7rem;
@@ -618,6 +645,42 @@ body::before {
   gap: 0.5rem;
   margin-top: 0.8rem;
   flex-wrap: wrap;
+}
+.run-modal-box {
+  width: min(900px, 94vw);
+  max-height: 90vh;
+  overflow: auto;
+}
+.run-editor,
+.run-args,
+.run-output {
+  width: 100%;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-s);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  padding: 0.75rem;
+  outline: none;
+}
+.run-editor {
+  min-height: 280px;
+  resize: vertical;
+  line-height: 1.55;
+}
+.run-args {
+  min-height: 42px;
+  resize: vertical;
+}
+.run-output {
+  min-height: 100px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.run-editor:focus,
+.run-args:focus {
+  border-color: var(--accent);
 }
 
 .random-result {
@@ -1298,6 +1361,33 @@ body.cheat-sheet-mode .approach-tabs {
     </div>
     <div class="code-viewer-body">
       <pre id="codeViewerContent"></pre>
+    </div>
+  </div>
+</div>
+
+<!-- Code Runner Modal -->
+<div class="modal-overlay" id="runModal" onclick="if(event.target===this)closeRunModal()">
+  <div class="modal-box run-modal-box" onclick="event.stopPropagation()">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+      <h3><i class="fas fa-play" style="color:var(--accent3)"></i> Run <span id="runLanguageLabel">JavaScript</span></h3>
+      <button onclick="closeRunModal()" style="background:none;border:none;color:var(--text3);cursor:pointer;font-size:1rem;"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="form-group">
+      <label>Editable code</label>
+      <textarea class="run-editor" id="runCodeEditor" spellcheck="false"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Arguments (JSON array)</label>
+      <textarea class="run-args" id="runArgsInput" spellcheck="false">[]</textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-primary" id="executeRunButton" onclick="executeRunCode()"><i class="fas fa-play"></i> Run</button>
+      <button class="btn btn-secondary" onclick="copyRunCode()"><i class="fas fa-copy"></i> Copy Code</button>
+      <button class="btn btn-secondary" onclick="closeRunModal()">Close</button>
+    </div>
+    <div class="form-group" style="margin-top:1rem">
+      <label>Output console</label>
+      <pre class="run-output" id="runOutput">Ready.</pre>
     </div>
   </div>
 </div>
@@ -3142,6 +3232,1567 @@ const PROBLEMS = [
 ];
 
 // ============================================================
+// MULTI-LANGUAGE DATA NORMALIZATION
+// Keeps every original C++ snippet intact while exposing the
+// requested { cpp, js, py, java } shape for every approach.
+// ============================================================
+// REAL_JAVASCRIPT_SOLUTIONS_START
+const REAL_JAVASCRIPT_SOLUTIONS = {
+  "p1": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < n; j++) {\n    row += \"*\";\n  }\n  console.log(row);\n}"
+    }
+  ],
+  "p2": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j <= i; j++) {\n    row += \"*\";\n  }\n  console.log(row);\n}"
+    }
+  ],
+  "p3": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 1; i <= n; i++) {\n  let row = \"\";\n  for (let j = 1; j <= i; j++) {\n    row += j + \" \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p4": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 1; i <= n; i++) {\n  let row = \"\";\n  for (let j = 1; j <= i; j++) {\n    row += i + \" \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p5": [
+    {
+      "label": "Solution",
+      "code": "for (let i = n; i > 0; i--) {\n  let row = \"\";\n  for (let j = i; j > 0; j--) {\n    row += \"* \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p6": [
+    {
+      "label": "Solution",
+      "code": "let t = 1, r = n;\nfor (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < r - 1; j++) row += \" \";\n  for (let k = 0; k < t; k++) row += \"*\";\n  for (let j = 0; j < r - 1; j++) row += \" \";\n  console.log(row);\n  t += 2; r--;\n}"
+    }
+  ],
+  "p7": [
+    {
+      "label": "Solution",
+      "code": "let space = n - 1, star = 1;\nfor (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < space; j++) row += \" \";\n  for (let t = 0; t < star; t++) row += \"*\";\n  for (let j = 0; j < space; j++) row += \" \";\n  console.log(row);\n  space--; star += 2;\n}\nspace = 0; star = 2 * n - 1;\nfor (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < space; j++) row += \" \";\n  for (let t = 0; t < star; t++) row += \"*\";\n  console.log(row);\n  space++; star -= 2;\n}"
+    }
+  ],
+  "p8": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let b = (i % 2 === 0) ? 1 : 0;\n  let row = \"\";\n  for (let j = 0; j <= i; j++) {\n    row += b + \" \";\n    b = 1 - b;\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p9": [
+    {
+      "label": "Solution",
+      "code": "let t = 2 * n;\nfor (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j <= i; j++) row += (j + 1) + \" \";\n  let space = t - 2 * (i + 1);\n  for (let j = 0; j < space; j++) row += \" \";\n  for (let j = i; j >= 0; j--) row += (j + 1) + \" \";\n  console.log(row.trimEnd());\n}"
+    }
+  ],
+  "p10": [
+    {
+      "label": "Solution",
+      "code": "let num = 1;\nfor (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j <= i; j++) {\n    row += (num++) + \" \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p11": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j <= i; j++) {\n    row += String.fromCharCode(65 + j) + \" \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p12": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < n - 1 - i; j++) row += \"  \";\n  for (let j = 0; j <= i; j++) row += String.fromCharCode(65 + j) + \" \";\n  for (let j = i - 1; j >= 0; j--) row += String.fromCharCode(65 + j) + \" \";\n  console.log(row.trimEnd());\n}"
+    }
+  ],
+  "p13": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = n - 1; j >= n - 1 - i; j--) {\n    row += String.fromCharCode(65 + j) + \" \";\n  }\n  console.log(row.trim());\n}"
+    }
+  ],
+  "p14": [
+    {
+      "label": "Solution",
+      "code": "for (let i = 0; i < n; i++) {\n  let row = \"\";\n  for (let j = 0; j < n; j++) {\n    if (i === 0 || j === 0 || j === n - 1 || i === n - 1) row += \"*\";\n    else row += \" \";\n  }\n  console.log(row);\n}"
+    }
+  ],
+  "m1": [
+    {
+      "label": "Solution",
+      "code": "function reverse(x) {\n  let ans = 0;\n  while (x !== 0) {\n    const digit = x % 10;\n    if (ans > 2147483647 / 10 || ans < -2147483648 / 10) return 0;\n    ans = ans * 10 + digit;\n    x = Math.trunc(x / 10);\n  }\n  return ans;\n}"
+    }
+  ],
+  "m2": [
+    {
+      "label": "Solution",
+      "code": "function isPalindrome(x) {\n  if (x < 0) return false;\n  let rev = 0, original = x;\n  while (x > 0) {\n    rev = rev * 10 + (x % 10);\n    x = Math.floor(x / 10);\n  }\n  return rev === original;\n}"
+    }
+  ],
+  "m3": [
+    {
+      "label": "Solution",
+      "code": "function evenlyDivides(n) {\n  const ori = n;\n  let count = 0;\n  while (n > 0) {\n    const d = n % 10;\n    if (d !== 0 && ori % d === 0) count++;\n    n = Math.floor(n / 10);\n  }\n  return count;\n}"
+    }
+  ],
+  "m4": [
+    {
+      "label": "Solution",
+      "code": "function checkArmstrong(n) {\n  let original = n, ans = 0, numDigit = 0, temp = n;\n  while (temp > 0) { numDigit++; temp = Math.floor(temp / 10); }\n  temp = original;\n  while (temp > 0) {\n    const d = temp % 10;\n    ans += Math.pow(d, numDigit);\n    temp = Math.floor(temp / 10);\n  }\n  return original === ans;\n}"
+    }
+  ],
+  "m5": [
+    {
+      "label": "Solution",
+      "code": "function sumOfDivisors(n) {\n  let ans = 0;\n  for (let i = 1; i <= n; i++) {\n    let sum = 0;\n    for (let j = 1; j <= i; j++) {\n      if (i % j === 0) sum += j;\n    }\n    ans += sum;\n  }\n  return ans;\n}"
+    }
+  ],
+  "m6": [
+    {
+      "label": "Solution",
+      "code": "function isPrime(n) {\n  if (n <= 1) return false;\n  for (let i = 2; i * i <= n; i++) {\n    if (n % i === 0) return false;\n  }\n  return true;\n}"
+    }
+  ],
+  "m7": [
+    {
+      "label": "Solution",
+      "code": "function gcd(a, b) {\n  while (b !== 0) {\n    const t = b;\n    b = a % b;\n    a = t;\n  }\n  return a;\n}"
+    }
+  ],
+  "r1": [
+    {
+      "label": "Solution",
+      "code": "function fun1(i, c) {\n  if (i > c) return;\n  console.log(\"anuj\");\n  fun1(i + 1, c);\n}"
+    }
+  ],
+  "r2": [
+    {
+      "label": "Solution",
+      "code": "function fun2(i, n) {\n  if (i > n) return;\n  console.log(i);\n  fun2(i + 1, n);\n}"
+    }
+  ],
+  "r3": [
+    {
+      "label": "Solution",
+      "code": "function fun5(i, n) {\n  if (i > n) return;\n  fun5(i + 1, n);\n  console.log(i);\n}"
+    }
+  ],
+  "r4": [
+    {
+      "label": "Solution",
+      "code": "function sum(n) {\n  if (n === 0) return 0;\n  return n + sum(n - 1);\n}"
+    }
+  ],
+  "r5": [
+    {
+      "label": "Solution",
+      "code": "function factorial(n) {\n  if (n === 1) return 1;\n  return n * factorial(n - 1);\n}"
+    }
+  ],
+  "r6": [
+    {
+      "label": "Solution",
+      "code": "function reverse(arr, l, r) {\n  if (l >= r) return;\n  [arr[l], arr[r]] = [arr[r], arr[l]];\n  reverse(arr, l + 1, r - 1);\n}"
+    }
+  ],
+  "r7": [
+    {
+      "label": "Solution",
+      "code": "function isPalindrome(s, i) {\n  if (i >= s.length / 2) return true;\n  if (s[i] !== s[s.length - i - 1]) return false;\n  return isPalindrome(s, i + 1);\n}"
+    }
+  ],
+  "r8": [
+    {
+      "label": "Solution",
+      "code": "function fib(n) {\n  if (n <= 1) return n;\n  return fib(n - 1) + fib(n - 2);\n}"
+    }
+  ],
+  "r9": [
+    {
+      "label": "Solution",
+      "code": "function myPow(x, n) {\n  let ans = 1.0;\n  let nu = Math.abs(n);\n  while (nu > 0) {\n    if (nu % 2 === 0) { x *= x; nu = Math.floor(nu / 2); }\n    else { ans *= x; nu--; }\n  }\n  return n < 0 ? 1.0 / ans : ans;\n}"
+    }
+  ],
+  "s1": [
+    {
+      "label": "Solution",
+      "code": "function selectionSort(arr) {\n  const n = arr.length;\n  for (let i = 0; i < n - 1; i++) {\n    let min = i;\n    for (let j = i; j < n; j++) {\n      if (arr[j] < arr[min]) min = j;\n    }\n    [arr[min], arr[i]] = [arr[i], arr[min]];\n  }\n  return arr;\n}"
+    }
+  ],
+  "s2": [
+    {
+      "label": "Solution",
+      "code": "function bubbleSort(arr) {\n  const n = arr.length;\n  for (let i = n - 1; i > 0; i--) {\n    let didSwap = 0;\n    for (let j = 0; j < i; j++) {\n      if (arr[j] > arr[j + 1]) {\n        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];\n        didSwap = 1;\n      }\n    }\n    if (!didSwap) break;\n  }\n  return arr;\n}"
+    }
+  ],
+  "s3": [
+    {
+      "label": "Solution",
+      "code": "function insertionSort(arr) {\n  const n = arr.length;\n  for (let i = 0; i < n; i++) {\n    let j = i;\n    while (j > 0 && arr[j - 1] > arr[j]) {\n      [arr[j - 1], arr[j]] = [arr[j], arr[j - 1]];\n      j--;\n    }\n  }\n  return arr;\n}"
+    }
+  ],
+  "s4": [
+    {
+      "label": "Solution",
+      "code": "function mergeSort(arr, low, high) {\n  if (low >= high) return;\n  const mid = Math.floor((low + high) / 2);\n  mergeSort(arr, low, mid);\n  mergeSort(arr, mid + 1, high);\n  const temp = [];\n  let left = low, right = mid + 1;\n  while (left <= mid && right <= high) {\n    if (arr[left] <= arr[right]) temp.push(arr[left++]);\n    else temp.push(arr[right++]);\n  }\n  while (left <= mid) temp.push(arr[left++]);\n  while (right <= high) temp.push(arr[right++]);\n  for (let i = low; i <= high; i++) arr[i] = temp[i - low];\n}"
+    }
+  ],
+  "s5": [
+    {
+      "label": "Solution",
+      "code": "function partition(arr, low, high) {\n  const pivot = arr[low];\n  let i = low, j = high;\n  while (i < j) {\n    while (arr[i] <= pivot && i <= high - 1) i++;\n    while (arr[j] > pivot && j >= low + 1) j--;\n    if (i < j) [arr[i], arr[j]] = [arr[j], arr[i]];\n  }\n  [arr[low], arr[j]] = [arr[j], arr[low]];\n  return j;\n}\nfunction quickSort(arr, low, high) {\n  if (low < high) {\n    const pIdx = partition(arr, low, high);\n    quickSort(arr, low, pIdx - 1);\n    quickSort(arr, pIdx + 1, high);\n  }\n}"
+    }
+  ],
+  "a1": [
+    {
+      "label": "Solution",
+      "code": "function largestElement(arr) {\n  let ans = arr[0];\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] > ans) ans = arr[i];\n  }\n  return ans;\n}"
+    }
+  ],
+  "a2": [
+    {
+      "label": "Solution",
+      "code": "function getSecondOrderElements(arr) {\n  const n = arr.length;\n  let fl = arr[0], sl = -1e9, fs = arr[0], ss = 1e9;\n  for (let i = 1; i < n; i++) {\n    if (arr[i] > fl) { sl = fl; fl = arr[i]; }\n    else if (arr[i] < fl && arr[i] > sl) sl = arr[i];\n    if (arr[i] < fs) { ss = fs; fs = arr[i]; }\n    else if (arr[i] > fs && arr[i] < ss) ss = arr[i];\n  }\n  return [sl, ss];\n}"
+    }
+  ],
+  "a3": [
+    {
+      "label": "Solution",
+      "code": "function isSorted(arr) {\n  for (let i = 1; i < arr.length; i++) {\n    if (arr[i] < arr[i - 1]) return false;\n  }\n  return true;\n}"
+    }
+  ],
+  "a4": [
+    {
+      "label": "Solution",
+      "code": "function removeDuplicates(arr) {\n  let i = 0;\n  for (let j = 1; j < arr.length; j++) {\n    if (arr[j] !== arr[i]) {\n      arr[++i] = arr[j];\n    }\n  }\n  return i + 1;\n}"
+    }
+  ],
+  "a5": [
+    {
+      "label": "Solution",
+      "code": "function rotateArray(arr) {\n  const n = arr.length;\n  const t = arr[0];\n  for (let i = 1; i < n; i++) arr[i - 1] = arr[i];\n  arr[n - 1] = t;\n  return arr;\n}"
+    }
+  ],
+  "a6": [
+    {
+      "label": "Solution",
+      "code": "function rotateArrayK(arr, k) {\n  const n = arr.length;\n  k = k % n;\n  if (k === 0) return arr;\n  const tmp = arr.slice(0, k);\n  for (let i = k; i < n; i++) arr[i - k] = arr[i];\n  for (let i = n - k; i < n; i++) arr[i] = tmp[i - (n - k)];\n  return arr;\n}"
+    }
+  ],
+  "a7": [
+    {
+      "label": "Solution",
+      "code": "function moveZeros(arr) {\n  let z = 0;\n  for (let i = 0; i < arr.length; i++) {\n    if (arr[i] !== 0) arr[z++] = arr[i];\n  }\n  while (z < arr.length) arr[z++] = 0;\n  return arr;\n}"
+    }
+  ],
+  "a8": [
+    {
+      "label": "Solution",
+      "code": "function findUnion(a, b) {\n  const ans = [];\n  let i = 0, j = 0;\n  while (i < a.length && j < b.length) {\n    if (a[i] <= b[j]) {\n      if (ans.length === 0 || ans[ans.length - 1] !== a[i]) ans.push(a[i]);\n      i++;\n    } else {\n      if (ans.length === 0 || ans[ans.length - 1] !== b[j]) ans.push(b[j]);\n      j++;\n    }\n  }\n  while (i < a.length) {\n    if (ans.length === 0 || ans[ans.length - 1] !== a[i]) ans.push(a[i]);\n    i++;\n  }\n  while (j < b.length) {\n    if (ans.length === 0 || ans[ans.length - 1] !== b[j]) ans.push(b[j]);\n    j++;\n  }\n  return ans;\n}"
+    }
+  ],
+  "a9": [
+    {
+      "label": "Solution",
+      "code": "function findIntersection(a, b) {\n  let i = 0, j = 0;\n  const ans = [];\n  while (i < a.length && j < b.length) {\n    if (a[i] < b[j]) i++;\n    else if (a[i] > b[j]) j++;\n    else { ans.push(a[i]); i++; j++; }\n  }\n  return ans;\n}"
+    }
+  ],
+  "a10": [
+    {
+      "label": "Brute",
+      "code": "function missingNumber(arr, n) {\n  for (let i = 1; i <= n; i++) {\n    let flag = 0;\n    for (let j = 0; j < arr.length; j++) {\n      if (arr[j] === i) { flag = 1; break; }\n    }\n    if (!flag) return i;\n  }\n  return -1;\n}"
+    },
+    {
+      "label": "Better",
+      "code": "function missingNumber(arr, n) {\n  const vis = new Array(n + 1).fill(0);\n  for (const x of arr) vis[x] = 1;\n  for (let i = 1; i <= n; i++) {\n    if (vis[i] === 0) return i;\n  }\n  return -1;\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function missingNumber(arr, n) {\n  const sum = n * (n + 1) / 2;\n  let sum2 = 0;\n  for (const x of arr) sum2 += x;\n  return sum - sum2;\n}"
+    }
+  ],
+  "a11": [
+    {
+      "label": "Solution",
+      "code": "function consecutiveOnes(arr) {\n  let c = 0, ans = 0;\n  for (const x of arr) {\n    if (x === 1) { c++; ans = Math.max(ans, c); }\n    else c = 0;\n  }\n  return ans;\n}"
+    }
+  ],
+  "a12": [
+    {
+      "label": "Solution",
+      "code": "function singleNumber(nums) {\n  let ans = 0;\n  for (const n of nums) ans ^= n;\n  return ans;\n}"
+    }
+  ],
+  "a13": [
+    {
+      "label": "Solution",
+      "code": "function longestSubarrayWithSumK(arr, k) {\n  const preSumMap = new Map();\n  let sum = 0, maxlen = 0;\n  for (let i = 0; i < arr.length; i++) {\n    sum += arr[i];\n    if (sum === k) maxlen = Math.max(maxlen, i + 1);\n    const rem = sum - k;\n    if (preSumMap.has(rem)) {\n      maxlen = Math.max(maxlen, i - preSumMap.get(rem));\n    }\n    if (!preSumMap.has(sum)) preSumMap.set(sum, i);\n  }\n  return maxlen;\n}"
+    }
+  ],
+  "a14": [
+    {
+      "label": "Brute",
+      "code": "function twoSum(nums, target) {\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      if (nums[i] + nums[j] === target) return [i, j];\n    }\n  }\n  return [];\n}"
+    },
+    {
+      "label": "Better",
+      "code": "function twoSum(nums, target) {\n  const mpp = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const rem = target - nums[i];\n    if (mpp.has(rem)) return [mpp.get(rem), i];\n    mpp.set(nums[i], i);\n  }\n  return [];\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function twoSum(nums, target) {\n  const mp = new Map();\n  for (let i = 0; i < nums.length; i++) {\n    const rem = target - nums[i];\n    if (mp.has(rem)) return [mp.get(rem), i];\n    mp.set(nums[i], i);\n  }\n  return [];\n}"
+    }
+  ],
+  "a15": [
+    {
+      "label": "Counting",
+      "code": "function sortColors(nums) {\n  let c0 = 0, c1 = 0, c2 = 0;\n  for (const x of nums) {\n    if (x === 0) c0++;\n    else if (x === 1) c1++;\n    else c2++;\n  }\n  let i = 0;\n  while (c0--) nums[i++] = 0;\n  while (c1--) nums[i++] = 1;\n  while (c2--) nums[i++] = 2;\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function sortColors(nums) {\n  let low = 0, mid = 0, high = nums.length - 1;\n  while (mid <= high) {\n    if (nums[mid] === 0) {\n      [nums[low], nums[mid]] = [nums[mid], nums[low]];\n      low++; mid++;\n    } else if (nums[mid] === 1) {\n      mid++;\n    } else {\n      [nums[mid], nums[high]] = [nums[high], nums[mid]];\n      high--;\n    }\n  }\n}"
+    }
+  ],
+  "a16": [
+    {
+      "label": "Better",
+      "code": "function majorityElement(nums) {\n  const mpp = new Map();\n  for (const n of nums) mpp.set(n, (mpp.get(n) || 0) + 1);\n  const n = nums.length;\n  for (const [k, v] of mpp) {\n    if (v > n / 2) return k;\n  }\n  return -1;\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function majorityElement(nums) {\n  let cand, count = 0;\n  for (const n of nums) {\n    if (count === 0) { cand = n; count = 1; }\n    else if (n === cand) count++;\n    else count--;\n  }\n  return cand;\n}"
+    }
+  ],
+  "a17": [
+    {
+      "label": "Brute",
+      "code": "function maxSubArray(nums) {\n  let maxSum = -Infinity;\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i; j < nums.length; j++) {\n      let sum = 0;\n      for (let k = i; k <= j; k++) sum += nums[k];\n      maxSum = Math.max(maxSum, sum);\n    }\n  }\n  return maxSum;\n}"
+    },
+    {
+      "label": "Better",
+      "code": "function maxSubArray(nums) {\n  let maxSum = -Infinity;\n  for (let i = 0; i < nums.length; i++) {\n    let sum = 0;\n    for (let j = i; j < nums.length; j++) {\n      sum += nums[j];\n      maxSum = Math.max(maxSum, sum);\n    }\n  }\n  return maxSum;\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function maxSubArray(nums) {\n  let sum = 0, maxSum = -Infinity;\n  for (const n of nums) {\n    sum += n;\n    maxSum = Math.max(maxSum, sum);\n    if (sum < 0) sum = 0;\n  }\n  return maxSum;\n}"
+    }
+  ],
+  "a18": [
+    {
+      "label": "Solution",
+      "code": "function nextPermutation(nums) {\n  const n = nums.length;\n  let i = n - 2;\n  while (i >= 0 && nums[i] >= nums[i + 1]) i--;\n  if (i >= 0) {\n    let j = n - 1;\n    while (nums[j] <= nums[i]) j--;\n    [nums[i], nums[j]] = [nums[j], nums[i]];\n  }\n  let l = i + 1, r = n - 1;\n  while (l < r) {\n    [nums[l], nums[r]] = [nums[r], nums[l]];\n    l++; r--;\n  }\n}"
+    }
+  ],
+  "a19": [
+    {
+      "label": "Solution",
+      "code": "function rearrangeArray(nums) {\n  const n = nums.length;\n  const ans = new Array(n);\n  let pos = 0, neg = 1;\n  for (const x of nums) {\n    if (x > 0) { ans[pos] = x; pos += 2; }\n    else { ans[neg] = x; neg += 2; }\n  }\n  return ans;\n}"
+    }
+  ],
+  "a20": [
+    {
+      "label": "Solution",
+      "code": "function generate(n) {\n  const ans = [];\n  for (let i = 0; i < n; i++) {\n    const row = new Array(i + 1).fill(1);\n    for (let j = 1; j < i; j++) {\n      row[j] = ans[i - 1][j - 1] + ans[i - 1][j];\n    }\n    ans.push(row);\n  }\n  return ans;\n}"
+    }
+  ],
+  "a21": [
+    {
+      "label": "Brute",
+      "code": "function threeSum(nums) {\n  const st = new Set();\n  for (let i = 0; i < nums.length; i++) {\n    for (let j = i + 1; j < nums.length; j++) {\n      for (let k = j + 1; k < nums.length; k++) {\n        if (nums[i] + nums[j] + nums[k] === 0) {\n          const t = [nums[i], nums[j], nums[k]].sort((a, b) => a - b);\n          st.add(JSON.stringify(t));\n        }\n      }\n    }\n  }\n  return Array.from(st).map(s => JSON.parse(s));\n}"
+    },
+    {
+      "label": "Better",
+      "code": "function threeSum(nums) {\n  const st = new Set();\n  for (let i = 0; i < nums.length; i++) {\n    const hashSet = new Set();\n    for (let j = i + 1; j < nums.length; j++) {\n      const third = -(nums[i] + nums[j]);\n      if (hashSet.has(third)) {\n        const t = [nums[i], nums[j], third].sort((a, b) => a - b);\n        st.add(JSON.stringify(t));\n      }\n      hashSet.add(nums[j]);\n    }\n  }\n  return Array.from(st).map(s => JSON.parse(s));\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function threeSum(nums) {\n  nums.sort((a, b) => a - b);\n  const ans = [];\n  for (let i = 0; i < nums.length; i++) {\n    if (i > 0 && nums[i] === nums[i - 1]) continue;\n    let j = i + 1, k = nums.length - 1;\n    while (j < k) {\n      const sum = nums[i] + nums[j] + nums[k];\n      if (sum < 0) j++;\n      else if (sum > 0) k--;\n      else {\n        ans.push([nums[i], nums[j], nums[k]]);\n        while (j < k && nums[j] === nums[j + 1]) j++;\n        while (j < k && nums[k] === nums[k - 1]) k--;\n        j++; k--;\n      }\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "a22": [
+    {
+      "label": "Solution",
+      "code": "function fourSum(nums, t) {\n  nums.sort((a, b) => a - b);\n  const ans = [];\n  for (let i = 0; i < nums.length; i++) {\n    if (i > 0 && nums[i] === nums[i - 1]) continue;\n    for (let j = i + 1; j < nums.length; j++) {\n      if (j !== i + 1 && nums[j] === nums[j - 1]) continue;\n      let k = j + 1, p = nums.length - 1;\n      while (k < p) {\n        const sum = BigInt(nums[i]) + BigInt(nums[j]) + BigInt(nums[k]) + BigInt(nums[p]);\n        if (sum < BigInt(t)) k++;\n        else if (sum > BigInt(t)) p--;\n        else {\n          ans.push([nums[i], nums[j], nums[k], nums[p]]);\n          while (k < p && nums[k] === nums[k + 1]) k++;\n          while (k < p && nums[p] === nums[p - 1]) p--;\n          k++; p--;\n        }\n      }\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "a23": [
+    {
+      "label": "Solution",
+      "code": "function merge(arr) {\n  arr.sort((a, b) => a[0] - b[0]);\n  const ans = [];\n  for (const i of arr) {\n    if (ans.length === 0 || ans[ans.length - 1][1] < i[0]) {\n      ans.push(i);\n    } else {\n      ans[ans.length - 1][1] = Math.max(ans[ans.length - 1][1], i[1]);\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "a24": [
+    {
+      "label": "Solution",
+      "code": "function subarraysWithXorK(arr, b) {\n  const mpp = new Map();\n  let preSum = 0, ans = 0;\n  mpp.set(0, 1);\n  for (const x of arr) {\n    preSum ^= x;\n    ans += mpp.get(b ^ preSum) || 0;\n    mpp.set(preSum, (mpp.get(preSum) || 0) + 1);\n  }\n  return ans;\n}"
+    }
+  ],
+  "a25": [
+    {
+      "label": "Brute",
+      "code": "function findMissingRepeatingNumbers(arr) {\n  const n = arr.length;\n  const mpp = new Map();\n  for (const x of arr) mpp.set(x, (mpp.get(x) || 0) + 1);\n  let rep = -1, miss = -1;\n  for (let i = 1; i <= n; i++) {\n    const f = mpp.get(i) || 0;\n    if (f === 2) rep = i;\n    if (f === 0) miss = i;\n  }\n  return [rep, miss];\n}"
+    },
+    {
+      "label": "Better",
+      "code": "function findMissingRepeatingNumbers(arr) {\n  const n = arr.length;\n  const freq = new Array(n + 1).fill(0);\n  for (const x of arr) freq[x]++;\n  let rep = -1, miss = -1;\n  for (let i = 1; i <= n; i++) {\n    if (freq[i] === 2) rep = i;\n    if (freq[i] === 0) miss = i;\n  }\n  return [rep, miss];\n}"
+    },
+    {
+      "label": "Optimal",
+      "code": "function findMissingRepeatingNumbers(arr) {\n  const n = arr.length;\n  const sn1 = n * (n + 1) / 2;\n  const sn2 = n * (n + 1) * (2 * n + 1) / 6;\n  let s1 = 0, s2 = 0;\n  for (const x of arr) { s1 += x; s2 += x * x; }\n  const val1 = s1 - sn1;\n  const val2 = (s2 - sn2) / val1;\n  const x = (val1 + val2) / 2;\n  const y = x - val1;\n  return [x, y];\n}"
+    }
+  ],
+  "a26": [
+    {
+      "label": "Solution",
+      "code": "function mergeInv(arr, low, mid, high) {\n  const temp = [];\n  let left = low, right = mid + 1, cnt = 0;\n  while (left <= mid && right <= high) {\n    if (arr[left] <= arr[right]) temp.push(arr[left++]);\n    else { cnt += (mid - left + 1); temp.push(arr[right++]); }\n  }\n  while (left <= mid) temp.push(arr[left++]);\n  while (right <= high) temp.push(arr[right++]);\n  for (let i = low; i <= high; i++) arr[i] = temp[i - low];\n  return cnt;\n}\nfunction mergeSortInv(arr, low, high) {\n  let cnt = 0;\n  if (high > low) {\n    const mid = Math.floor((high + low) / 2);\n    cnt += mergeSortInv(arr, low, mid);\n    cnt += mergeSortInv(arr, mid + 1, high);\n    cnt += mergeInv(arr, low, mid, high);\n  }\n  return cnt;\n}"
+    }
+  ],
+  "a27": [
+    {
+      "label": "Solution",
+      "code": "function maxProduct(nums) {\n  let ans = -Infinity, prefix = 1, suffix = 1;\n  const n = nums.length;\n  for (let i = 0; i < n; i++) {\n    if (prefix === 0) prefix = 1;\n    if (suffix === 0) suffix = 1;\n    prefix *= nums[i];\n    suffix *= nums[n - 1 - i];\n    ans = Math.max(ans, prefix, suffix);\n  }\n  return ans;\n}"
+    }
+  ],
+  "bs1": [
+    {
+      "label": "Solution",
+      "code": "function search(nums, target) {\n  let l = 0, r = nums.length - 1;\n  while (l <= r) {\n    const m = l + Math.floor((r - l) / 2);\n    if (nums[m] === target) return m;\n    if (nums[m] < target) l = m + 1;\n    else r = m - 1;\n  }\n  return -1;\n}"
+    }
+  ],
+  "bs2": [
+    {
+      "label": "Solution",
+      "code": "function findFloor(arr, x) {\n  let l = 0, r = arr.length - 1, ans = -1;\n  while (l <= r) {\n    const mid = l + Math.floor((r - l) / 2);\n    if (arr[mid] <= x) { ans = mid; l = mid + 1; }\n    else r = mid - 1;\n  }\n  return ans;\n}"
+    }
+  ],
+  "bs3": [
+    {
+      "label": "Solution",
+      "code": "function searchInsert(nums, target) {\n  let l = 0, r = nums.length - 1;\n  while (l <= r) {\n    const mid = l + Math.floor((r - l) / 2);\n    if (nums[mid] === target) return mid;\n    if (nums[mid] < target) l = mid + 1;\n    else r = mid - 1;\n  }\n  return l;\n}"
+    }
+  ],
+  "bs4": [
+    {
+      "label": "Solution",
+      "code": "function searchRange(nums, target) {\n  let l = 0, r = nums.length - 1, first = -1, last = -1;\n  while (l <= r) {\n    const m = l + Math.floor((r - l) / 2);\n    if (nums[m] >= target) { if (nums[m] === target) first = m; r = m - 1; }\n    else l = m + 1;\n  }\n  l = 0; r = nums.length - 1;\n  while (l <= r) {\n    const m = l + Math.floor((r - l) / 2);\n    if (nums[m] > target) r = m - 1;\n    else { if (nums[m] === target) last = m; l = m + 1; }\n  }\n  return [first, last];\n}"
+    }
+  ],
+  "bs5": [
+    {
+      "label": "Solution",
+      "code": "function searchRotated(arr, target) {\n  let l = 0, h = arr.length - 1;\n  while (l <= h) {\n    const m = Math.floor((l + h) / 2);\n    if (arr[m] === target) return m;\n    if (arr[l] <= arr[m]) {\n      if (arr[l] <= target && target <= arr[m]) h = m - 1;\n      else l = m + 1;\n    } else {\n      if (arr[m] <= target && target <= arr[h]) l = m + 1;\n      else h = m - 1;\n    }\n  }\n  return -1;\n}"
+    }
+  ],
+  "bs6": [
+    {
+      "label": "Solution",
+      "code": "function findMin(nums) {\n  let l = 0, h = nums.length - 1, ans = Infinity;\n  while (l <= h) {\n    const m = Math.floor((l + h) / 2);\n    if (nums[l] <= nums[m]) { ans = Math.min(ans, nums[l]); l = m + 1; }\n    else { ans = Math.min(ans, nums[m]); h = m - 1; }\n  }\n  return ans;\n}"
+    }
+  ],
+  "bs7": [
+    {
+      "label": "Solution",
+      "code": "function findPeakElement(nums) {\n  const n = nums.length;\n  if (n === 1) return 0;\n  if (nums[0] > nums[1]) return 0;\n  if (nums[n - 1] > nums[n - 2]) return n - 1;\n  let l = 1, h = n - 2;\n  while (l <= h) {\n    const m = Math.floor((l + h) / 2);\n    if (nums[m - 1] < nums[m] && nums[m] > nums[m + 1]) return m;\n    if (nums[m] < nums[m + 1]) l = m + 1;\n    else h = m - 1;\n  }\n  return -1;\n}"
+    }
+  ],
+  "bs8": [
+    {
+      "label": "Solution",
+      "code": "function singleNonDuplicate(nums) {\n  const n = nums.length;\n  if (n === 1) return nums[0];\n  if (nums[0] !== nums[1]) return nums[0];\n  if (nums[n - 1] !== nums[n - 2]) return nums[n - 1];\n  let l = 1, h = n - 2;\n  while (l <= h) {\n    const m = Math.floor((l + h) / 2);\n    if (nums[m] !== nums[m - 1] && nums[m] !== nums[m + 1]) return nums[m];\n    if ((m % 2 === 0 && nums[m] === nums[m + 1]) || (m % 2 === 1 && nums[m] === nums[m - 1])) l = m + 1;\n    else h = m - 1;\n  }\n  return -1;\n}"
+    }
+  ],
+  "bs9": [
+    {
+      "label": "Solution",
+      "code": "function minEatingSpeed(piles, h) {\n  let l = 1, r = Math.max(...piles), ans = -1;\n  while (l <= r) {\n    const m = Math.floor((l + r) / 2);\n    let time = 0;\n    for (const p of piles) time += Math.ceil(p / m);\n    if (time <= h) { ans = m; r = m - 1; }\n    else l = m + 1;\n  }\n  return ans;\n}"
+    }
+  ],
+  "bs10": [
+    {
+      "label": "Solution",
+      "code": "function aggressiveCows(stalls, k) {\n  stalls.sort((a, b) => a - b);\n  let l = 1, h = stalls[stalls.length - 1] - stalls[0], ans = -1;\n  while (l <= h) {\n    const m = Math.floor((l + h) / 2);\n    let cnt = 1, prev = stalls[0];\n    for (let i = 1; i < stalls.length; i++) {\n      if (stalls[i] - prev >= m) { cnt++; prev = stalls[i]; }\n    }\n    if (cnt >= k) { ans = m; l = m + 1; }\n    else h = m - 1;\n  }\n  return ans;\n}"
+    }
+  ],
+  "bs11": [
+    {
+      "label": "Solution",
+      "code": "function findMedianSortedArrays(a, b) {\n  if (a.length > b.length) return findMedianSortedArrays(b, a);\n  const n = a.length, m = b.length;\n  let l = 0, h = n;\n  while (l <= h) {\n    const px = Math.floor((l + h) / 2);\n    const py = Math.floor((n + m + 1) / 2) - px;\n    const l1 = px === 0 ? -Infinity : a[px - 1];\n    const r1 = px === n ? Infinity : a[px];\n    const l2 = py === 0 ? -Infinity : b[py - 1];\n    const r2 = py === m ? Infinity : b[py];\n    if (l1 <= r2 && l2 <= r1) {\n      if ((n + m) % 2 === 0) return (Math.max(l1, l2) + Math.min(r1, r2)) / 2;\n      else return Math.max(l1, l2);\n    }\n    if (l1 > r2) h = px - 1;\n    else l = px + 1;\n  }\n  return 0;\n}"
+    }
+  ],
+  "ll1": [
+    {
+      "label": "Solution",
+      "code": "function reverseList(head) {\n  let prev = null, curr = head, next = null;\n  while (curr) {\n    next = curr.next;\n    curr.next = prev;\n    prev = curr;\n    curr = next;\n  }\n  return prev;\n}"
+    }
+  ],
+  "ll2": [
+    {
+      "label": "Solution",
+      "code": "function hasCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) return true;\n  }\n  return false;\n}"
+    }
+  ],
+  "ll3": [
+    {
+      "label": "Solution",
+      "code": "function middleNode(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n  }\n  return slow;\n}"
+    }
+  ],
+  "ll4": [
+    {
+      "label": "Solution",
+      "code": "function detectCycle(head) {\n  let slow = head, fast = head;\n  while (fast && fast.next) {\n    slow = slow.next;\n    fast = fast.next.next;\n    if (slow === fast) {\n      slow = head;\n      while (slow !== fast) {\n        slow = slow.next;\n        fast = fast.next;\n      }\n      return slow;\n    }\n  }\n  return null;\n}"
+    }
+  ],
+  "ll5": [
+    {
+      "label": "Solution",
+      "code": "function deleteNode(node) {\n  node.val = node.next.val;\n  const temp = node.next;\n  node.next = node.next.next;\n  // In JS, no explicit delete needed, but we remove reference\n}"
+    }
+  ],
+  "ll6": [
+    {
+      "label": "Solution",
+      "code": "function getCount(head) {\n  let c = 0;\n  while (head) { c++; head = head.next; }\n  return c;\n}"
+    }
+  ],
+  "sw1": [
+    {
+      "label": "Solution",
+      "code": "function lengthOfLongestSubstring(s) {\n  const mp = new Map();\n  let left = 0, ans = 0;\n  for (let r = 0; r < s.length; r++) {\n    if (mp.has(s[r])) left = Math.max(left, mp.get(s[r]) + 1);\n    mp.set(s[r], r);\n    ans = Math.max(ans, r - left + 1);\n  }\n  return ans;\n}"
+    }
+  ],
+  "sw2": [
+    {
+      "label": "Solution",
+      "code": "function longestOnes(nums, k) {\n  let left = 0, zero = 0, ans = 0;\n  for (let r = 0; r < nums.length; r++) {\n    if (nums[r] === 0) zero++;\n    while (zero > k) {\n      if (nums[left] === 0) zero--;\n      left++;\n    }\n    ans = Math.max(ans, r - left + 1);\n  }\n  return ans;\n}"
+    }
+  ],
+  "sw3": [
+    {
+      "label": "Solution",
+      "code": "function totalFruit(fruits) {\n  const mpp = new Map();\n  let left = 0, ans = 0;\n  for (let r = 0; r < fruits.length; r++) {\n    mpp.set(fruits[r], (mpp.get(fruits[r]) || 0) + 1);\n    while (mpp.size > 2) {\n      const lf = fruits[left];\n      mpp.set(lf, mpp.get(lf) - 1);\n      if (mpp.get(lf) === 0) mpp.delete(lf);\n      left++;\n    }\n    ans = Math.max(ans, r - left + 1);\n  }\n  return ans;\n}"
+    }
+  ],
+  "sw4": [
+    {
+      "label": "Solution",
+      "code": "function minWindow(s, t) {\n  const need = new Map(), have = new Map();\n  for (const c of t) need.set(c, (need.get(c) || 0) + 1);\n  let left = 0, formed = 0, minLen = Infinity, start = 0;\n  for (let r = 0; r < s.length; r++) {\n    const c = s[r];\n    have.set(c, (have.get(c) || 0) + 1);\n    if (need.has(c) && have.get(c) === need.get(c)) formed++;\n    while (formed === need.size) {\n      if (r - left + 1 < minLen) { minLen = r - left + 1; start = left; }\n      const lc = s[left];\n      have.set(lc, have.get(lc) - 1);\n      if (need.has(lc) && have.get(lc) < need.get(lc)) formed--;\n      left++;\n    }\n  }\n  return minLen === Infinity ? \"\" : s.substring(start, start + minLen);\n}"
+    }
+  ],
+  "sw5": [
+    {
+      "label": "Solution",
+      "code": "function minSubArrayLen(target, nums) {\n  let ans = Infinity, sum = 0, left = 0;\n  for (let r = 0; r < nums.length; r++) {\n    sum += nums[r];\n    while (sum >= target) {\n      ans = Math.min(ans, r - left + 1);\n      sum -= nums[left++];\n    }\n  }\n  return ans === Infinity ? 0 : ans;\n}"
+    }
+  ],
+  "sw6": [
+    {
+      "label": "Solution",
+      "code": "function numSubarraysWithSum(nums, goal) {\n  const prefixCount = new Map();\n  let sum = 0, ans = 0;\n  prefixCount.set(0, 1);\n  for (const x of nums) {\n    sum += x;\n    ans += prefixCount.get(sum - goal) || 0;\n    prefixCount.set(sum, (prefixCount.get(sum) || 0) + 1);\n  }\n  return ans;\n}"
+    }
+  ],
+  "st1": [
+    {
+      "label": "Solution",
+      "code": "function isValid(s) {\n  const st = [];\n  for (const c of s) {\n    if (c === \"(\" || c === \"{\" || c === \"[\") st.push(c);\n    else {\n      if (st.length === 0) return false;\n      const t = st.pop();\n      if ((c === \")\" && t !== \"(\") || (c === \"}\" && t !== \"{\") || (c === \"]\" && t !== \"[\")) return false;\n    }\n  }\n  return st.length === 0;\n}"
+    }
+  ],
+  "st2": [
+    {
+      "label": "Solution",
+      "code": "class MinStack {\n  constructor() {\n    this.st = [];\n    this.mini = Infinity;\n  }\n  push(val) {\n    if (this.st.length === 0) { this.mini = val; this.st.push(val); }\n    else if (val > this.mini) this.st.push(val);\n    else { this.st.push(2 * val - this.mini); this.mini = val; }\n  }\n  pop() {\n    if (this.st[this.st.length - 1] < this.mini) {\n      this.mini = 2 * this.mini - this.st[this.st.length - 1];\n    }\n    this.st.pop();\n  }\n  top() {\n    return this.st[this.st.length - 1] < this.mini ? this.mini : this.st[this.st.length - 1];\n  }\n  getMin() { return this.mini; }\n}"
+    }
+  ],
+  "st3": [
+    {
+      "label": "Solution",
+      "code": "function priority(c) {\n  if (c === \"^\") return 3;\n  if (c === \"*\" || c === \"/\") return 2;\n  if (c === \"+\" || c === \"-\") return 1;\n  return -1;\n}\nfunction infixToPostfix(exp) {\n  const st = [];\n  let ans = \"\";\n  for (const c of exp) {\n    if (/[a-zA-Z0-9]/.test(c)) ans += c;\n    else if (c === \"(\") st.push(c);\n    else if (c === \")\") {\n      while (st.length && st[st.length - 1] !== \"(\") { ans += st.pop(); }\n      st.pop();\n    } else {\n      while (st.length && priority(st[st.length - 1]) >= priority(c)) { ans += st.pop(); }\n      st.push(c);\n    }\n  }\n  while (st.length) ans += st.pop();\n  return ans;\n}"
+    }
+  ],
+  "st4": [
+    {
+      "label": "Solution",
+      "code": "class MyQueue {\n  constructor() { this.s1 = []; this.s2 = []; }\n  push(x) {\n    while (this.s1.length) this.s2.push(this.s1.pop());\n    this.s1.push(x);\n    while (this.s2.length) this.s1.push(this.s2.pop());\n  }\n  pop() { return this.s1.pop(); }\n  peek() { return this.s1[this.s1.length - 1]; }\n  empty() { return this.s1.length === 0; }\n}"
+    }
+  ],
+  "st5": [
+    {
+      "label": "Solution",
+      "code": "class MyStack {\n  constructor() { this.q = []; }\n  push(x) {\n    this.q.push(x);\n    for (let i = 0; i < this.q.length - 1; i++) {\n      this.q.push(this.q.shift());\n    }\n  }\n  pop() { return this.q.shift(); }\n  top() { return this.q[0]; }\n  empty() { return this.q.length === 0; }\n}"
+    }
+  ],
+  "t1": [
+    {
+      "label": "Solution",
+      "code": "function preorder(root, ans = []) {\n  if (!root) return ans;\n  ans.push(root.val);\n  preorder(root.left, ans);\n  preorder(root.right, ans);\n  return ans;\n}"
+    }
+  ],
+  "t2": [
+    {
+      "label": "Solution",
+      "code": "function inorder(root, ans = []) {\n  if (!root) return ans;\n  inorder(root.left, ans);\n  ans.push(root.val);\n  inorder(root.right, ans);\n  return ans;\n}"
+    }
+  ],
+  "t3": [
+    {
+      "label": "Solution",
+      "code": "function postorder(root, ans = []) {\n  if (!root) return ans;\n  postorder(root.left, ans);\n  postorder(root.right, ans);\n  ans.push(root.val);\n  return ans;\n}"
+    }
+  ],
+  "t4": [
+    {
+      "label": "Solution",
+      "code": "function levelOrder(root) {\n  if (!root) return [];\n  const ans = [], q = [root];\n  while (q.length) {\n    const sz = q.length;\n    const level = [];\n    for (let i = 0; i < sz; i++) {\n      const n = q.shift();\n      level.push(n.val);\n      if (n.left) q.push(n.left);\n      if (n.right) q.push(n.right);\n    }\n    ans.push(level);\n  }\n  return ans;\n}"
+    }
+  ],
+  "t5": [
+    {
+      "label": "Solution",
+      "code": "function maxDepth(root) {\n  if (!root) return 0;\n  return Math.max(maxDepth(root.left), maxDepth(root.right)) + 1;\n}"
+    }
+  ],
+  "t6": [
+    {
+      "label": "Solution",
+      "code": "function height(root) {\n  if (!root) return 0;\n  const l = height(root.left), r = height(root.right);\n  if (l === -1 || r === -1 || Math.abs(l - r) > 1) return -1;\n  return Math.max(l, r) + 1;\n}\nfunction isBalanced(root) { return height(root) !== -1; }"
+    }
+  ],
+  "t7": [
+    {
+      "label": "Solution",
+      "code": "function diameter(root, ans = { val: 0 }) {\n  if (!root) return 0;\n  const l = diameter(root.left, ans), r = diameter(root.right, ans);\n  ans.val = Math.max(ans.val, l + r);\n  return 1 + Math.max(l, r);\n}\nfunction diameterOfBinaryTree(root) {\n  const ans = { val: 0 };\n  diameter(root, ans);\n  return ans.val;\n}"
+    }
+  ],
+  "t8": [
+    {
+      "label": "Solution",
+      "code": "function pathSum(root, ans = { val: -Infinity }) {\n  if (!root) return 0;\n  const l = Math.max(0, pathSum(root.left, ans));\n  const r = Math.max(0, pathSum(root.right, ans));\n  ans.val = Math.max(ans.val, l + r + root.val);\n  return root.val + Math.max(l, r);\n}\nfunction maxPathSum(root) {\n  const ans = { val: -Infinity };\n  pathSum(root, ans);\n  return ans.val;\n}"
+    }
+  ],
+  "t9": [
+    {
+      "label": "Solution",
+      "code": "function isSameTree(p, q) {\n  if (!p && !q) return true;\n  if (!p || !q) return false;\n  if (p.val !== q.val) return false;\n  return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);\n}"
+    }
+  ],
+  "t10": [
+    {
+      "label": "Solution",
+      "code": "function zigzagLevelOrder(root) {\n  if (!root) return [];\n  const ans = [], q = [root];\n  let l2r = true;\n  while (q.length) {\n    const sz = q.length;\n    const level = new Array(sz);\n    for (let i = 0; i < sz; i++) {\n      const n = q.shift();\n      const idx = l2r ? i : sz - 1 - i;\n      level[idx] = n.val;\n      if (n.left) q.push(n.left);\n      if (n.right) q.push(n.right);\n    }\n    l2r = !l2r;\n    ans.push(level);\n  }\n  return ans;\n}"
+    }
+  ],
+  "t11": [
+    {
+      "label": "Solution",
+      "code": "function rightSideView(root) {\n  if (!root) return [];\n  const ans = [], q = [root];\n  while (q.length) {\n    const sz = q.length;\n    for (let i = 0; i < sz; i++) {\n      const n = q.shift();\n      if (i === sz - 1) ans.push(n.val);\n      if (n.left) q.push(n.left);\n      if (n.right) q.push(n.right);\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "t12": [
+    {
+      "label": "Solution",
+      "code": "function check(l, r) {\n  if (!l && !r) return true;\n  if (!l || !r) return false;\n  if (l.val !== r.val) return false;\n  return check(l.left, r.right) && check(l.right, r.left);\n}\nfunction isSymmetric(root) { return check(root.left, root.right); }"
+    }
+  ],
+  "t13": [
+    {
+      "label": "Solution",
+      "code": "function verticalTraversal(root) {\n  const mpp = new Map();\n  function dfs(n, r, c) {\n    if (!n) return;\n    if (!mpp.has(c)) mpp.set(c, []);\n    mpp.get(c).push([r, n.val]);\n    dfs(n.left, r + 1, c - 1);\n    dfs(n.right, r + 1, c + 1);\n  }\n  dfs(root, 0, 0);\n  const ans = [];\n  const keys = [...mpp.keys()].sort((a, b) => a - b);\n  for (const col of keys) {\n    const vec = mpp.get(col);\n    vec.sort((a, b) => a[0] - b[0] || a[1] - b[1]);\n    ans.push(vec.map(v => v[1]));\n  }\n  return ans;\n}"
+    }
+  ],
+  "t14": [
+    {
+      "label": "Solution",
+      "code": "function topView(root) {\n  if (!root) return [];\n  const q = [[root, 0]];\n  const ans = new Map();\n  while (q.length) {\n    const sz = q.length;\n    for (let i = 0; i < sz; i++) {\n      const [n, line] = q.shift();\n      if (!ans.has(line)) ans.set(line, n.val);\n      if (n.left) q.push([n.left, line - 1]);\n      if (n.right) q.push([n.right, line + 1]);\n    }\n  }\n  return [...ans.entries()].sort((a, b) => a[0] - b[0]).map(e => e[1]);\n}"
+    }
+  ],
+  "t15": [
+    {
+      "label": "Solution",
+      "code": "function bottomView(root) {\n  if (!root) return [];\n  const q = [[root, 0]];\n  const ans = new Map();\n  while (q.length) {\n    const sz = q.length;\n    for (let i = 0; i < sz; i++) {\n      const [n, line] = q.shift();\n      ans.set(line, n.val);\n      if (n.left) q.push([n.left, line - 1]);\n      if (n.right) q.push([n.right, line + 1]);\n    }\n  }\n  return [...ans.entries()].sort((a, b) => a[0] - b[0]).map(e => e[1]);\n}"
+    }
+  ],
+  "t16": [
+    {
+      "label": "Solution",
+      "code": "function amountOfTime(root, start) {\n  const g = new Map();\n  function build(n, p) {\n    if (!n) return;\n    if (p) {\n      if (!g.has(n.val)) g.set(n.val, []);\n      if (!g.has(p.val)) g.set(p.val, []);\n      g.get(n.val).push(p.val);\n      g.get(p.val).push(n.val);\n    }\n    build(n.left, n);\n    build(n.right, n);\n  }\n  build(root, null);\n  const q = [start], dist = new Map();\n  dist.set(start, 0);\n  let ans = 0;\n  while (q.length) {\n    const u = q.shift();\n    for (const v of (g.get(u) || [])) {\n      if (!dist.has(v)) {\n        dist.set(v, dist.get(u) + 1);\n        ans = Math.max(ans, dist.get(v));\n        q.push(v);\n      }\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "t17": [
+    {
+      "label": "Solution",
+      "code": "function flatten(root) {\n  let prev = null;\n  function dfs(n) {\n    if (!n) return;\n    dfs(n.right);\n    dfs(n.left);\n    n.right = prev;\n    n.left = null;\n    prev = n;\n  }\n  dfs(root);\n}"
+    }
+  ],
+  "bst1": [
+    {
+      "label": "Solution",
+      "code": "function searchBST(root, val) {\n  while (root && root.val !== val) {\n    root = val < root.val ? root.left : root.right;\n  }\n  return root;\n}"
+    }
+  ],
+  "bst2": [
+    {
+      "label": "Solution",
+      "code": "function isValidBST(root, low = -Infinity, high = Infinity) {\n  if (!root) return true;\n  if (root.val <= low || root.val >= high) return false;\n  return isValidBST(root.left, low, root.val) && isValidBST(root.right, root.val, high);\n}"
+    }
+  ],
+  "bst3": [
+    {
+      "label": "Solution",
+      "code": "function kthSmallest(root, k) {\n  const st = [];\n  while (root || st.length) {\n    while (root) { st.push(root); root = root.left; }\n    root = st.pop();\n    if (--k === 0) return root.val;\n    root = root.right;\n  }\n  return -1;\n}"
+    }
+  ],
+  "bst4": [
+    {
+      "label": "Solution",
+      "code": "function lowestCommonAncestor(root, p, q) {\n  if (!root) return null;\n  if (root.val > p.val && root.val > q.val) return lowestCommonAncestor(root.left, p, q);\n  if (root.val < p.val && root.val < q.val) return lowestCommonAncestor(root.right, p, q);\n  return root;\n}"
+    }
+  ],
+  "bst5": [
+    {
+      "label": "Solution",
+      "code": "function insertIntoBST(root, val) {\n  if (!root) return new TreeNode(val);\n  let cur = root;\n  while (true) {\n    if (cur.val > val) {\n      if (cur.left) cur = cur.left;\n      else { cur.left = new TreeNode(val); break; }\n    } else {\n      if (cur.right) cur = cur.right;\n      else { cur.right = new TreeNode(val); break; }\n    }\n  }\n  return root;\n}"
+    }
+  ],
+  "bst6": [
+    {
+      "label": "Solution",
+      "code": "function deleteNode(root, key) {\n  if (!root) return null;\n  if (root.val === key) {\n    if (!root.left) return root.right;\n    if (!root.right) return root.left;\n    let succ = root.right;\n    while (succ.left) succ = succ.left;\n    root.val = succ.val;\n    root.right = deleteNode(root.right, succ.val);\n  } else if (root.val > key) {\n    root.left = deleteNode(root.left, key);\n  } else {\n    root.right = deleteNode(root.right, key);\n  }\n  return root;\n}"
+    }
+  ],
+  "bst7": [
+    {
+      "label": "Solution",
+      "code": "function recoverTree(root) {\n  let first = null, second = null, parent = null;\n  const st = [];\n  while (root || st.length) {\n    while (root) { st.push(root); root = root.left; }\n    root = st.pop();\n    if (parent && parent.val > root.val) {\n      if (!first) first = parent;\n      second = root;\n    }\n    parent = root;\n    root = root.right;\n  }\n  [first.val, second.val] = [second.val, first.val];\n}"
+    }
+  ],
+  "bst8": [
+    {
+      "label": "Solution",
+      "code": "class BSTIterator {\n  constructor(root) {\n    this.s = [];\n    this.pushAll(root);\n  }\n  pushAll(r) {\n    while (r) { this.s.push(r); r = r.left; }\n  }\n  next() {\n    const t = this.s.pop();\n    this.pushAll(t.right);\n    return t.val;\n  }\n  hasNext() { return this.s.length > 0; }\n}"
+    }
+  ],
+  "g1": [
+    {
+      "label": "Solution",
+      "code": "function bfs(adj) {\n  const n = adj.length;\n  const vis = new Array(n).fill(0), ans = [];\n  const q = []; q.push(0); vis[0] = 1;\n  while (q.length) {\n    const u = q.shift(); ans.push(u);\n    for (const v of adj[u]) {\n      if (!vis[v]) { vis[v] = 1; q.push(v); }\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "g2": [
+    {
+      "label": "Solution",
+      "code": "function dfs(u, adj, vis, ans) {\n  vis[u] = 1;\n  ans.push(u);\n  for (const v of adj[u]) {\n    if (!vis[v]) dfs(v, adj, vis, ans);\n  }\n}\nfunction dfsTraversal(adj) {\n  const vis = new Array(adj.length).fill(0), ans = [];\n  dfs(0, adj, vis, ans);\n  return ans;\n}"
+    }
+  ],
+  "g3": [
+    {
+      "label": "Solution",
+      "code": "function dfsIsland(g, i, j) {\n  if (i < 0 || j < 0 || i >= g.length || j >= g[0].length || g[i][j] !== \"1\") return;\n  g[i][j] = \"0\";\n  dfsIsland(g, i + 1, j); dfsIsland(g, i - 1, j); dfsIsland(g, i, j + 1); dfsIsland(g, i, j - 1);\n}\nfunction numIslands(grid) {\n  let ans = 0;\n  for (let i = 0; i < grid.length; i++) {\n    for (let j = 0; j < grid[0].length; j++) {\n      if (grid[i][j] === \"1\") { ans++; dfsIsland(grid, i, j); }\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "g4": [
+    {
+      "label": "Solution",
+      "code": "function orangesRotting(grid) {\n  const n = grid.length, m = grid[0].length;\n  let fresh = 0;\n  const q = [];\n  for (let i = 0; i < n; i++) {\n    for (let j = 0; j < m; j++) {\n      if (grid[i][j] === 2) q.push([i, j]);\n      if (grid[i][j] === 1) fresh++;\n    }\n  }\n  if (fresh === 0) return 0;\n  const dirs = [[0, 1], [0, -1], [1, 0], [-1, 0]];\n  let mins = -1;\n  while (q.length) {\n    const sz = q.length;\n    mins++;\n    for (let k = 0; k < sz; k++) {\n      const [r, c] = q.shift();\n      for (const d of dirs) {\n        const nr = r + d[0], nc = c + d[1];\n        if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] === 1) {\n          fresh--;\n          grid[nr][nc] = 2;\n          q.push([nr, nc]);\n        }\n      }\n    }\n  }\n  return fresh === 0 ? mins : -1;\n}"
+    }
+  ],
+  "g5": [
+    {
+      "label": "Solution",
+      "code": "function findCircleNum(isConnected) {\n  const n = isConnected.length;\n  const vis = new Array(n).fill(0);\n  let ans = 0;\n  function dfs(u) {\n    vis[u] = 1;\n    for (let v = 0; v < n; v++) {\n      if (isConnected[u][v] && !vis[v]) dfs(v);\n    }\n  }\n  for (let i = 0; i < n; i++) {\n    if (!vis[i]) { dfs(i); ans++; }\n  }\n  return ans;\n}"
+    }
+  ],
+  "g6": [
+    {
+      "label": "Solution",
+      "code": "function floodFill(image, sr, sc, color) {\n  const oc = image[sr][sc];\n  if (oc === color) return image;\n  function dfs(r, c) {\n    if (r < 0 || c < 0 || r >= image.length || c >= image[0].length || image[r][c] !== oc) return;\n    image[r][c] = color;\n    dfs(r + 1, c); dfs(r - 1, c); dfs(r, c + 1); dfs(r, c - 1);\n  }\n  dfs(sr, sc);\n  return image;\n}"
+    }
+  ],
+  "g7": [
+    {
+      "label": "Solution",
+      "code": "function dfsCycle(u, p, adj, vis) {\n  vis[u] = true;\n  for (const v of adj[u]) {\n    if (!vis[v]) { if (dfsCycle(v, u, adj, vis)) return true; }\n    else if (v !== p) return true;\n  }\n  return false;\n}\nfunction isCycle(V, edges) {\n  const adj = Array.from({ length: V }, () => []);\n  for (const e of edges) { adj[e[0]].push(e[1]); adj[e[1]].push(e[0]); }\n  const vis = new Array(V).fill(false);\n  for (let i = 0; i < V; i++) {\n    if (!vis[i] && dfsCycle(i, -1, adj, vis)) return true;\n  }\n  return false;\n}"
+    }
+  ],
+  "g8": [
+    {
+      "label": "Solution",
+      "code": "function updateMatrix(mat) {\n  const n = mat.length, m = mat[0].length;\n  const dis = Array.from({ length: n }, () => new Array(m).fill(0));\n  const q = [];\n  for (let i = 0; i < n; i++) {\n    for (let j = 0; j < m; j++) {\n      if (mat[i][j] === 0) q.push([[i, j], 0]);\n    }\n  }\n  const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];\n  while (q.length) {\n    const [[r, c], step] = q.shift();\n    dis[r][c] = step;\n    for (const d of dir) {\n      const nr = r + d[0], nc = c + d[1];\n      if (nr >= 0 && nr < n && nc >= 0 && nc < m && mat[nr][nc] === 1 && dis[nr][nc] === 0) {\n        q.push([[nr, nc], step + 1]);\n      }\n    }\n  }\n  return dis;\n}"
+    }
+  ],
+  "g9": [
+    {
+      "label": "Solution",
+      "code": "function solve(board) {\n  const n = board.length, m = board[0].length;\n  const vis = Array.from({ length: n }, () => new Array(m).fill(0));\n  const q = [];\n  for (let i = 0; i < n; i++) {\n    for (let j = 0; j < m; j++) {\n      if ((i === 0 || i === n - 1 || j === 0 || j === m - 1) && board[i][j] === \"O\") {\n        vis[i][j] = 1;\n        q.push([i, j]);\n      }\n    }\n  }\n  const dir = [[0, 1], [0, -1], [1, 0], [-1, 0]];\n  while (q.length) {\n    const [r, c] = q.shift();\n    for (const d of dir) {\n      const nr = r + d[0], nc = c + d[1];\n      if (nr >= 0 && nr < n && nc >= 0 && nc < m && !vis[nr][nc] && board[nr][nc] === \"O\") {\n        vis[nr][nc] = 1;\n        q.push([nr, nc]);\n      }\n    }\n  }\n  for (let i = 0; i < n; i++) {\n    for (let j = 0; j < m; j++) {\n      if (board[i][j] === \"O\" && !vis[i][j]) board[i][j] = \"X\";\n    }\n  }\n}"
+    }
+  ],
+  "g10": [
+    {
+      "label": "Solution",
+      "code": "function ladderLength(beginWord, endWord, wordList) {\n  const words = new Set(wordList);\n  if (!words.has(endWord)) return 0;\n  const q = [[beginWord, 1]];\n  while (q.length) {\n    const [w, step] = q.shift();\n    if (w === endWord) return step;\n    words.delete(w);\n    for (let i = 0; i < w.length; i++) {\n      const arr = w.split(\"\");\n      for (let c = 97; c <= 122; c++) {\n        arr[i] = String.fromCharCode(c);\n        const nw = arr.join(\"\");\n        if (words.has(nw)) q.push([nw, step + 1]);\n      }\n    }\n  }\n  return 0;\n}"
+    }
+  ],
+  "g11": [
+    {
+      "label": "Solution",
+      "code": "function isBipartite(graph) {\n  const n = graph.length;\n  const col = new Array(n).fill(0);\n  function dfs(u, c) {\n    col[u] = c;\n    for (const v of graph[u]) {\n      if (col[v] === 0) { if (!dfs(v, c === 1 ? 2 : 1)) return false; }\n      else if (col[v] === col[u]) return false;\n    }\n    return true;\n  }\n  for (let i = 0; i < n; i++) {\n    if (col[i] === 0 && !dfs(i, 1)) return false;\n  }\n  return true;\n}"
+    }
+  ],
+  "g12": [
+    {
+      "label": "Solution",
+      "code": "function topoSortDFS(V, edges) {\n  const adj = Array.from({ length: V }, () => []);\n  for (const e of edges) adj[e[0]].push(e[1]);\n  const vis = new Array(V).fill(0);\n  const st = [];\n  function dfs(u) {\n    vis[u] = 1;\n    for (const v of adj[u]) {\n      if (!vis[v]) dfs(v);\n    }\n    st.push(u);\n  }\n  for (let i = 0; i < V; i++) {\n    if (!vis[i]) dfs(i);\n  }\n  return st.reverse();\n}"
+    }
+  ],
+  "g13": [
+    {
+      "label": "Solution",
+      "code": "function topoSortKahn(V, edges) {\n  const adj = Array.from({ length: V }, () => []);\n  const indeg = new Array(V).fill(0);\n  for (const e of edges) { adj[e[0]].push(e[1]); indeg[e[1]]++; }\n  const q = [];\n  for (let i = 0; i < V; i++) {\n    if (indeg[i] === 0) q.push(i);\n  }\n  const ans = [];\n  while (q.length) {\n    const u = q.shift();\n    ans.push(u);\n    for (const v of adj[u]) {\n      if (--indeg[v] === 0) q.push(v);\n    }\n  }\n  return ans;\n}"
+    }
+  ],
+  "g14": [
+    {
+      "label": "Solution",
+      "code": "function findOrder(n, prereq) {\n  const adj = Array.from({ length: n }, () => []);\n  const indeg = new Array(n).fill(0);\n  for (const p of prereq) { adj[p[1]].push(p[0]); indeg[p[0]]++; }\n  const q = [];\n  for (let i = 0; i < n; i++) {\n    if (indeg[i] === 0) q.push(i);\n  }\n  const ans = [];\n  while (q.length) {\n    const u = q.shift();\n    ans.push(u);\n    for (const v of adj[u]) {\n      if (--indeg[v] === 0) q.push(v);\n    }\n  }\n  return ans.length === n ? ans : [];\n}"
+    }
+  ],
+  "g15": [
+    {
+      "label": "Solution",
+      "code": "function eventualSafeNodes(graph) {\n  const n = graph.length;\n  const state = new Array(n).fill(0); // 0=unvisited,1=visiting,2=safe\n  function dfs(u) {\n    if (state[u] !== 0) return state[u] === 2;\n    state[u] = 1;\n    for (const v of graph[u]) {\n      if (!dfs(v)) return false;\n    }\n    state[u] = 2;\n    return true;\n  }\n  const ans = [];\n  for (let i = 0; i < n; i++) {\n    if (dfs(i)) ans.push(i);\n  }\n  return ans;\n}"
+    }
+  ],
+  "g16": [
+    {
+      "label": "Solution",
+      "code": "function dijkstra(V, edges, src) {\n  const adj = Array.from({ length: V }, () => []);\n  for (const e of edges) { adj[e[0]].push([e[1], e[2]]); adj[e[1]].push([e[0], e[2]]); }\n  const pq = [];\n  const dist = new Array(V).fill(Infinity);\n  dist[src] = 0;\n  pq.push([0, src]);\n  while (pq.length) {\n    pq.sort((a, b) => a[0] - b[0]);\n    const [d, u] = pq.shift();\n    if (d > dist[u]) continue;\n    for (const [v, w] of adj[u]) {\n      if (dist[u] + w < dist[v]) {\n        dist[v] = dist[u] + w;\n        pq.push([dist[v], v]);\n      }\n    }\n  }\n  return dist;\n}"
+    }
+  ],
+  "g17": [
+    {
+      "label": "Solution",
+      "code": "function bellmanFord(V, edges, src) {\n  const dis = new Array(V).fill(1e8);\n  dis[src] = 0;\n  for (let i = 0; i < V - 1; i++) {\n    for (const e of edges) {\n      const [u, v, w] = e;\n      if (dis[u] !== 1e8 && dis[u] + w < dis[v]) dis[v] = dis[u] + w;\n    }\n  }\n  for (const e of edges) {\n    const [u, v, w] = e;\n    if (dis[u] !== 1e8 && dis[u] + w < dis[v]) return [-1];\n  }\n  return dis;\n}"
+    }
+  ],
+  "g18": [
+    {
+      "label": "Solution",
+      "code": "function floydWarshall(dist) {\n  const n = dist.length;\n  for (let k = 0; k < n; k++) {\n    for (let i = 0; i < n; i++) {\n      for (let j = 0; j < n; j++) {\n        if (dist[i][k] !== 1e8 && dist[k][j] !== 1e8) {\n          dist[i][j] = Math.min(dist[i][j], dist[i][k] + dist[k][j]);\n        }\n      }\n    }\n  }\n}"
+    }
+  ],
+  "g19": [
+    {
+      "label": "Solution",
+      "code": "function primMST(V, edges) {\n  const adj = Array.from({ length: V }, () => []);\n  for (const e of edges) { adj[e[0]].push([e[1], e[2]]); adj[e[1]].push([e[0], e[2]]); }\n  const pq = [];\n  const vis = new Array(V).fill(0);\n  pq.push([0, 0]);\n  let sum = 0;\n  while (pq.length) {\n    pq.sort((a, b) => a[0] - b[0]);\n    const [wt, u] = pq.shift();\n    if (vis[u]) continue;\n    vis[u] = 1;\n    sum += wt;\n    for (const [v, w] of adj[u]) {\n      if (!vis[v]) pq.push([w, v]);\n    }\n  }\n  return sum;\n}"
+    }
+  ],
+  "g20": [
+    {
+      "label": "Solution",
+      "code": "class DSU {\n  constructor(n) { this.parent = Array.from({ length: n }, (_, i) => i); this.size = new Array(n).fill(1); }\n  find(x) {\n    if (this.parent[x] === x) return x;\n    return this.parent[x] = this.find(this.parent[x]);\n  }\n  union(a, b) {\n    let pa = this.find(a), pb = this.find(b);\n    if (pa === pb) return false;\n    if (this.size[pa] < this.size[pb]) { [pa, pb] = [pb, pa]; }\n    this.parent[pb] = pa;\n    this.size[pa] += this.size[pb];\n    return true;\n  }\n}\nfunction kruskalMST(V, edges) {\n  edges.sort((a, b) => a[2] - b[2]);\n  const dsu = new DSU(V);\n  let sum = 0;\n  for (const e of edges) {\n    if (dsu.union(e[0], e[1])) sum += e[2];\n  }\n  return sum;\n}"
+    }
+  ],
+  "g21": [
+    {
+      "label": "Solution",
+      "code": "class DisjointSet {\n  constructor(n) {\n    this.size = new Array(n + 1).fill(1);\n    this.parent = Array.from({ length: n + 1 }, (_, i) => i);\n  }\n  findParent(node) {\n    if (node === this.parent[node]) return node;\n    return this.parent[node] = this.findParent(this.parent[node]);\n  }\n  unionBySize(u, v) {\n    const pu = this.findParent(u), pv = this.findParent(v);\n    if (pu === pv) return;\n    if (this.size[pu] < this.size[pv]) {\n      this.parent[pu] = pv;\n      this.size[pv] += this.size[pu];\n    } else {\n      this.parent[pv] = pu;\n      this.size[pu] += this.size[pv];\n    }\n  }\n}"
+    }
+  ],
+  "g22": [
+    {
+      "label": "Solution",
+      "code": "function kosaraju(adj) {\n  const n = adj.length;\n  const vis = new Array(n).fill(0);\n  const st = [];\n  function dfs1(u) {\n    vis[u] = 1;\n    for (const v of adj[u]) { if (!vis[v]) dfs1(v); }\n    st.push(u);\n  }\n  for (let i = 0; i < n; i++) { if (!vis[i]) dfs1(i); }\n  const adjT = Array.from({ length: n }, () => []);\n  for (let i = 0; i < n; i++) {\n    vis[i] = 0;\n    for (const v of adj[i]) adjT[v].push(i);\n  }\n  let scc = 0;\n  function dfs2(u) {\n    vis[u] = 1;\n    for (const v of adjT[u]) { if (!vis[v]) dfs2(v); }\n  }\n  while (st.length) {\n    const u = st.pop();\n    if (!vis[u]) { dfs2(u); scc++; }\n  }\n  return scc;\n}"
+    }
+  ],
+  "g23": [
+    {
+      "label": "Solution",
+      "code": "function criticalConnections(n, connections) {\n  const adj = Array.from({ length: n }, () => []);\n  for (const c of connections) { adj[c[0]].push(c[1]); adj[c[1]].push(c[0]); }\n  const tin = new Array(n).fill(0), low = new Array(n).fill(0);\n  const vis = new Array(n).fill(0);\n  const ans = [];\n  let timer = 0;\n  function dfs(u, p) {\n    vis[u] = 1;\n    tin[u] = low[u] = ++timer;\n    for (const v of adj[u]) {\n      if (v === p) continue;\n      if (!vis[v]) {\n        dfs(v, u);\n        low[u] = Math.min(low[u], low[v]);\n        if (low[v] > tin[u]) ans.push([u, v]);\n      } else {\n        low[u] = Math.min(low[u], tin[v]);\n      }\n    }\n  }\n  dfs(0, -1);\n  return ans;\n}"
+    }
+  ],
+  "gr1": [
+    {
+      "label": "Solution",
+      "code": "function findContentChildren(g, s) {\n  g.sort((a, b) => a - b); s.sort((a, b) => a - b);\n  let i = 0, j = 0;\n  while (i < g.length && j < s.length) {\n    if (g[i] <= s[j]) i++;\n    j++;\n  }\n  return i;\n}"
+    }
+  ],
+  "gr2": [
+    {
+      "label": "Solution",
+      "code": "function lemonadeChange(bills) {\n  let five = 0, ten = 0;\n  for (const b of bills) {\n    if (b === 5) five++;\n    else if (b === 10) { if (!five) return false; five--; ten++; }\n    else {\n      if (ten && five) { ten--; five--; }\n      else if (five >= 3) five -= 3;\n      else return false;\n    }\n  }\n  return true;\n}"
+    }
+  ],
+  "gr3": [
+    {
+      "label": "Solution",
+      "code": "function canJump(nums) {\n  let farthest = 0;\n  for (let i = 0; i < nums.length; i++) {\n    if (i > farthest) return false;\n    farthest = Math.max(farthest, i + nums[i]);\n  }\n  return true;\n}"
+    }
+  ],
+  "gr4": [
+    {
+      "label": "Solution",
+      "code": "function jump(nums) {\n  let jumps = 0, curEnd = 0, farthest = 0;\n  for (let i = 0; i < nums.length - 1; i++) {\n    farthest = Math.max(farthest, i + nums[i]);\n    if (i === curEnd) { jumps++; curEnd = farthest; }\n  }\n  return jumps;\n}"
+    }
+  ],
+  "gr5": [
+    {
+      "label": "Solution",
+      "code": "function insert(intervals, ni) {\n  const ans = [];\n  let i = 0, n = intervals.length;\n  while (i < n && intervals[i][1] < ni[0]) ans.push(intervals[i++]);\n  while (i < n && intervals[i][0] <= ni[1]) {\n    ni[0] = Math.min(ni[0], intervals[i][0]);\n    ni[1] = Math.max(ni[1], intervals[i][1]);\n    i++;\n  }\n  ans.push(ni);\n  while (i < n) ans.push(intervals[i++]);\n  return ans;\n}"
+    }
+  ],
+  "dp1": [
+    {
+      "label": "Solution",
+      "code": "function climbStairs(n) {\n  if (n <= 2) return n;\n  let a = 1, b = 2, c;\n  for (let i = 3; i <= n; i++) { c = a + b; a = b; b = c; }\n  return c;\n}"
+    }
+  ],
+  "dp2": [
+    {
+      "label": "Solution",
+      "code": "function coinChange(coins, amount) {\n  const dp = new Array(amount + 1).fill(amount + 1);\n  dp[0] = 0;\n  for (let a = 1; a <= amount; a++) {\n    for (const c of coins) {\n      if (a >= c) dp[a] = Math.min(dp[a], dp[a - c] + 1);\n    }\n  }\n  return dp[amount] === amount + 1 ? -1 : dp[amount];\n}"
+    }
+  ],
+  "dp3": [
+    {
+      "label": "Solution",
+      "code": "function minCost(height) {\n  let prev = 0, prev2 = 0;\n  for (let i = 1; i < height.length; i++) {\n    const one = prev + Math.abs(height[i] - height[i - 1]);\n    let two = Infinity;\n    if (i > 1) two = prev2 + Math.abs(height[i] - height[i - 2]);\n    const cur = Math.min(one, two);\n    prev2 = prev; prev = cur;\n  }\n  return prev;\n}"
+    }
+  ],
+  "b1": [
+    {
+      "label": "Solution",
+      "code": "function checkKthBit(n, k) {\n  return (n >> k) & 1;\n}"
+    }
+  ],
+  "b2": [
+    {
+      "label": "Solution",
+      "code": "function isPowerOfTwo(n) {\n  return n > 0 && (n & (n - 1)) === 0;\n}"
+    }
+  ],
+  "b3": [
+    {
+      "label": "Solution",
+      "code": "function setBits(n) {\n  let ans = 0;\n  while (n) { n = n & (n - 1); ans++; }\n  return ans;\n}"
+    }
+  ],
+  "b4": [
+    {
+      "label": "Solution",
+      "code": "function swapNumber(a, b) {\n  a = a ^ b;\n  b = a ^ b;\n  a = a ^ b;\n  return [a, b];\n}"
+    }
+  ],
+  "b5": [
+    {
+      "label": "Solution",
+      "code": "function divide(dividend, divisor) {\n  if (dividend === divisor) return 1;\n  const sign = (dividend < 0) === (divisor < 0);\n  let n = Math.abs(dividend), d = Math.abs(divisor);\n  let ans = 0;\n  while (n >= d) {\n    let cnt = 0;\n    while (n >= (d << (cnt + 1))) cnt++;\n    ans += (1 << cnt);\n    n -= (d << cnt);\n  }\n  if (ans === (1 << 31)) return sign ? 2147483647 : -2147483648;\n  return sign ? ans : -ans;\n}"
+    }
+  ],
+  "b6": [
+    {
+      "label": "Solution",
+      "code": "function minBitFlips(start, goal) {\n  let x = start ^ goal;\n  let ans = 0;\n  while (x) { x = x & (x - 1); ans++; }\n  return ans;\n}"
+    }
+  ],
+  "b7": [
+    {
+      "label": "Solution",
+      "code": "function subsets(nums) {\n  const n = nums.length;\n  const total = 1 << n;\n  const ans = [];\n  for (let mask = 0; mask < total; mask++) {\n    const sub = [];\n    for (let i = 0; i < n; i++) {\n      if (mask & (1 << i)) sub.push(nums[i]);\n    }\n    ans.push(sub);\n  }\n  return ans;\n}"
+    }
+  ],
+  "b8": [
+    {
+      "label": "Solution",
+      "code": "function xor1toN(n) {\n  if (n % 4 === 1) return 1;\n  if (n % 4 === 2) return n + 1;\n  if (n % 4 === 3) return 0;\n  return n;\n}\nfunction findXOR(l, r) {\n  return xor1toN(l - 1) ^ xor1toN(r);\n}"
+    }
+  ],
+  "b9": [
+    {
+      "label": "Solution",
+      "code": "function twoOddNum(Arr) {\n  let xo = 0;\n  for (const x of Arr) xo ^= x;\n  const rb = xo & -xo;\n  let b1 = 0, b2 = 0;\n  for (const x of Arr) {\n    if (x & rb) b1 ^= x;\n    else b2 ^= x;\n  }\n  return b1 > b2 ? [b1, b2] : [b2, b1];\n}"
+    }
+  ],
+  "str1": [
+    {
+      "label": "Solution",
+      "code": "function removeOuterParentheses(s) {\n  let ans = \"\", open = 0;\n  for (const c of s) {\n    if (c === \"(\") { if (open > 0) ans += c; open++; }\n    else { open--; if (open > 0) ans += c; }\n  }\n  return ans;\n}"
+    }
+  ],
+  "str2": [
+    {
+      "label": "Solution",
+      "code": "function reverseWords(s) {\n  let ans = \"\", word = \"\";\n  for (let i = 0; i < s.length; i++) {\n    if (s[i] !== \" \") word += s[i];\n    else if (word) { ans = word + (ans ? \" \" : \"\") + ans; word = \"\"; }\n  }\n  if (word) ans = word + (ans ? \" \" : \"\") + ans;\n  return ans;\n}"
+    }
+  ],
+  "str3": [
+    {
+      "label": "Solution",
+      "code": "function longestCommonPrefix(strs) {\n  if (!strs.length) return \"\";\n  let pref = strs[0];\n  for (let i = 1; i < strs.length; i++) {\n    while (strs[i].indexOf(pref) !== 0) pref = pref.slice(0, -1);\n    if (!pref) return \"\";\n  }\n  return pref;\n}"
+    }
+  ],
+  "str4": [
+    {
+      "label": "Solution",
+      "code": "function largestOddNumber(num) {\n  for (let i = num.length - 1; i >= 0; i--) {\n    if ((Number(num[i]) % 2) !== 0) return num.substring(0, i + 1);\n  }\n  return \"\";\n}"
+    }
+  ],
+  "h1": [
+    {
+      "label": "Solution",
+      "code": "function getFrequencies(v) {\n  const mpp = new Map();\n  for (const x of v) mpp.set(x, (mpp.get(x) || 0) + 1);\n  let minF = Infinity, maxF = 0, minE, maxE;\n  for (const [k, f] of mpp) {\n    if (f > maxF) { maxF = f; maxE = k; }\n    if (f < minF) { minF = f; minE = k; }\n  }\n  return [maxE, minE];\n}"
+    }
+  ],
+  "h2": [
+    {
+      "label": "Solution",
+      "code": "function frequencyCount(arr) {\n  const n = arr.length;\n  const hash = new Array(n).fill(0);\n  for (const x of arr) hash[x - 1]++;\n  return hash;\n}"
+    }
+  ],
+  "stl1": [
+    {
+      "label": "Solution",
+      "code": "// Array - dynamic array\nconst arr = []; arr.push(1); arr.unshift(0);\n// Set - unique values (unordered)\nconst set = new Set(); set.add(1); set.has(1); set.delete(1);\n// Map - key-value (ordered)\nconst mp = new Map(); mp.set(\"key\", \"value\"); mp.get(\"key\");\n// Stack (LIFO) using array\nconst st = []; st.push(1); st.pop();\n// Queue (FIFO) using array\nconst q = []; q.push(1); q.shift();\n// Priority Queue (min-heap) using array + sort\nconst pq = []; pq.push(3); pq.sort((a,b)=>a-b); pq.shift();\n// Sorting\narr.sort((a,b)=>a-b);\narr.sort((a,b)=>b-a); // descending\n// Map/Filter/Reduce\narr.map(x=>x*2); arr.filter(x=>x>0); arr.reduce((a,b)=>a+b,0);"
+    }
+  ]
+};
+// REAL_JAVASCRIPT_SOLUTIONS_END
+
+const LANGUAGE_LABELS = { js: 'JavaScript', py: 'Python', java: 'Java', cpp: 'C++' };
+
+function safeComment(text, prefix) {
+  return String(text || '').split('\n').map(line => `${prefix} ${line}`).join('\n');
+}
+
+function cppToJavaScript(cpp, problem) {
+  let code = String(cpp || '').trim();
+  code = code
+    .replace(/#include[^\n]*\n?/g, '')
+    .replace(/\bstd::/g, '')
+    .replace(/\bcout\s*<<\s*([^;]+);/g, (_, value) =>
+      `console.log(${value.replace(/\s*<<\s*endl/g, '').replace(/\s*<<\s*/g, ' + " " + ')});`)
+    .replace(/\bcin\s*>>\s*([^;]+);/g, '// Input is supplied through function arguments.')
+    .replace(/\bendl\b/g, '"\\n"')
+    .replace(/\btrue\b/g, 'true').replace(/\bfalse\b/g, 'false')
+    .replace(/\bNULL\b|\bnullptr\b/g, 'null')
+    .replace(/\bINT_MAX\b/g, 'Number.MAX_SAFE_INTEGER')
+    .replace(/\bINT_MIN\b/g, 'Number.MIN_SAFE_INTEGER')
+    .replace(/\b(vector|deque|list|set|map|unordered_map|unordered_set|stack|queue|priority_queue)\s*<[^;\n(){}]+>\s*/g, 'let ')
+    .replace(/\b(long long|unsigned long long|long|double|float|int|bool|char|string|auto)\s+(?=[A-Za-z_]\w*)/g, 'let ')
+    .replace(/\blet\s+([A-Za-z_]\w*)\s*\[\s*[^\]]+\s*\]/g, 'let $1 = []')
+    .replace(/\.size\(\)/g, '.length')
+    .replace(/\.push_back\(/g, '.push(')
+    .replace(/\.pop_back\(\)/g, '.pop()')
+    .replace(/\.empty\(\)/g, '.length === 0')
+    .replace(/\.front\(\)/g, '[0]')
+    .replace(/\.back\(\)/g, '.at(-1)')
+    .replace(/\bmin\(/g, 'Math.min(').replace(/\bmax\(/g, 'Math.max(')
+    .replace(/\babs\(/g, 'Math.abs(')
+    .replace(/\bsort\((\w+)\.begin\(\),\s*\1\.end\(\)\);/g, '$1.sort((a, b) => a - b);')
+    .replace(/\breverse\((\w+)\.begin\(\),\s*\1\.end\(\)\);/g, '$1.reverse();')
+    .replace(/for\s*\(\s*let\s+(\w+)\s*:\s*([^)]+)\)/g, 'for (const $1 of $2)')
+    .replace(/\bvector\s*<[^>]+>\s*/g, '')
+    .replace(/\bpublic:\s*/g, '')
+    .replace(/\bclass\s+Solution\s*\{/g, '');
+
+  // Function declarations need no return type in JavaScript.
+  code = code.replace(/\b(?:let|void)\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{/g, (_, name, args) => {
+    const cleanArgs = args.split(',').map(arg => arg.trim().replace(/^(?:const\s+)?(?:let\s+)?/, '').replace(/&/g, '').trim().split(/\s+/).pop()).filter(Boolean);
+    return `function ${name}(${cleanArgs.join(', ')}) {`;
+  });
+
+  if (!/\bfunction\s+\w+\s*\(/.test(code)) {
+    code = `function solve(...args) {\n  const [n = args[0], input = args[0]] = args;\n${code.split('\n').map(line => `  ${line}`).join('\n')}\n}\n`;
+  }
+  return `// ${problem.name} — generated browser-ready reference\n${code}`;
+}
+
+function splitCodeStatements(line) {
+  const parts = [];
+  let current = '', depth = 0, quote = '';
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+    if (quote) {
+      current += char;
+      if (char === quote && line[i - 1] !== '\\') quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') {
+      quote = char;
+      current += char;
+    } else if (char === '(' || char === '[') {
+      depth++;
+      current += char;
+    } else if (char === ')' || char === ']') {
+      depth--;
+      current += char;
+    } else if (char === ';' && depth === 0) {
+      if (current.trim()) parts.push(current.trim());
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function convertJsExpressionToPython(expression) {
+  let value = expression.trim()
+    .replace(/===/g, '==').replace(/!==/g, '!=')
+    .replace(/&&/g, ' and ').replace(/\|\|/g, ' or ')
+    .replace(/\btrue\b/g, 'True').replace(/\bfalse\b/g, 'False')
+    .replace(/\bnull\b/g, 'None')
+    .replace(/\bInfinity\b/g, 'float("inf")')
+    .replace(/\bNumber\.MAX_SAFE_INTEGER\b/g, 'float("inf")')
+    .replace(/\bNumber\.MIN_SAFE_INTEGER\b/g, 'float("-inf")')
+    .replace(/\bMath\.max\(/g, 'max(').replace(/\bMath\.min\(/g, 'min(')
+    .replace(/\bMath\.abs\(/g, 'abs(').replace(/\bMath\.floor\(/g, 'int(')
+    .replace(/\bMath\.ceil\(/g, 'math.ceil(').replace(/\bMath\.sqrt\(/g, 'math.sqrt(')
+    .replace(/\bMath\.pow\(/g, 'pow(')
+    .replace(/\bString\.fromCharCode\(/g, 'chr(')
+    .replace(/\.length\b/g, '.__len__()')
+    .replace(/\.push\(/g, '.append(')
+    .replace(/\.includes\(/g, '.__contains__(')
+    .replace(/\.has\(/g, '.__contains__(')
+    .replace(/\.get\(([^,)]+)\)/g, '.get($1)')
+    .replace(/\.set\(([^,]+),\s*([^)]+)\)/g, '.__setitem__($1, $2)')
+    .replace(/\.charAt\(([^)]+)\)/g, '[$1]')
+    .replace(/\.substring\(([^,]+),\s*([^)]+)\)/g, '[$1:$2]')
+    .replace(/\.substring\(([^)]+)\)/g, '[$1:]')
+    .replace(/\.slice\(([^,]+),\s*([^)]+)\)/g, '[$1:$2]')
+    .replace(/\.slice\(([^)]+)\)/g, '[$1:]')
+    .replace(/\.trim\(\)/g, '.strip()')
+    .replace(/\.toLowerCase\(\)/g, '.lower()')
+    .replace(/\.toUpperCase\(\)/g, '.upper()')
+    .replace(/\.join\(([^)]*)\)/g, '$1.join_PLACEHOLDER')
+    .replace(/([A-Za-z_$][\w$]*)\.join_PLACEHOLDER/g, '$1.join_PLACEHOLDER');
+  value = value.replace(/(["'][^"']*["'])\.join_PLACEHOLDER/g, '$1.join_PLACEHOLDER');
+  value = value.replace(/([A-Za-z_$][\w$.\[\]]*)\.join_PLACEHOLDER/g, 'str($1)');
+  value = value.replace(/new\s+Array\(([^)]+)\)\.fill\(([^)]+)\)/g, '[$2] * ($1)');
+  value = value.replace(/new\s+Array\(([^)]+)\)/g, '[None] * ($1)');
+  value = value.replace(/new\s+Map\(\)/g, '{}').replace(/new\s+Set\(\)/g, 'set()');
+  value = value.replace(/Array\(([^)]+)\)\.fill\(([^)]+)\)/g, '[$2] * ($1)');
+  value = value.replace(/Array\.from\(\{\s*length:\s*([^}]+)\},\s*\(\)\s*=>\s*([^)]+)\)/g, '[$2 for _ in range($1)]');
+  value = value.replace(/!([^=])/g, 'not $1');
+  const ternary = value.match(/^\((.+)\)\s*\?\s*(.+)\s*:\s*(.+)$/) || value.match(/^(.+)\s*\?\s*(.+)\s*:\s*(.+)$/);
+  if (ternary) value = `${ternary[2]} if ${ternary[1]} else ${ternary[3]}`;
+  return value;
+}
+
+function tokenizeJavaScript(source) {
+  const tokens = [];
+  let current = '', paren = 0, bracket = 0, quote = '', escaped = false;
+  const flush = () => {
+    if (current.trim()) tokens.push(current.trim());
+    current = '';
+  };
+  for (let i = 0; i < source.length; i++) {
+    const char = source[i];
+    if (quote) {
+      current += char;
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === quote) quote = '';
+      continue;
+    }
+    if (char === '"' || char === "'" || char === '`') {
+      quote = char;
+      current += char;
+    } else if (char === '(') {
+      paren++;
+      current += char;
+    } else if (char === ')') {
+      paren--;
+      current += char;
+    } else if (char === '[') {
+      bracket++;
+      current += char;
+    } else if (char === ']') {
+      bracket--;
+      current += char;
+    } else if (paren === 0 && bracket === 0 && (char === '{' || char === '}')) {
+      if (char === '{') {
+        current += ' {';
+        flush();
+      } else {
+        flush();
+        tokens.push('}');
+      }
+    } else if (paren === 0 && bracket === 0 && (char === ';' || char === '\n')) {
+      flush();
+    } else {
+      current += char;
+    }
+  }
+  flush();
+  return tokens;
+}
+
+function pythonAssignment(statement) {
+  const commaParts = [];
+  let item = '', itemDepth = 0, itemQuote = '';
+  for (const char of statement) {
+    if (itemQuote) {
+      item += char;
+      if (char === itemQuote) itemQuote = '';
+    } else if (char === '"' || char === "'") {
+      itemQuote = char;
+      item += char;
+    } else if ('([{'.includes(char)) {
+      itemDepth++;
+      item += char;
+    } else if (')]}'.includes(char)) {
+      itemDepth--;
+      item += char;
+    } else if (char === ',' && itemDepth === 0) {
+      commaParts.push(item.trim());
+      item = '';
+    } else item += char;
+  }
+  if (item.trim()) commaParts.push(item.trim());
+  if (commaParts.length > 1 && commaParts.every(part => /^[A-Za-z_$][\w$]*\s*=/.test(part))) {
+    const pairs = commaParts.map(part => part.match(/^([A-Za-z_$][\w$]*)\s*=\s*(.*)$/));
+    return `${pairs.map(pair => pair[1]).join(', ')} = ${pairs.map(pair => pair[2]).join(', ')}`;
+  }
+  const match = statement.match(/^([^=<>!]+)=([^=].*)$/);
+  if (!match || !match[1].includes(',')) return statement;
+  const names = match[1].split(',').map(value => value.trim());
+  const values = [];
+  let current = '', depth = 0, quote = '';
+  for (const char of match[2]) {
+    if (quote) {
+      current += char;
+      if (char === quote) quote = '';
+    } else if (char === '"' || char === "'") {
+      quote = char;
+      current += char;
+    } else if ('([{'.includes(char)) {
+      depth++;
+      current += char;
+    } else if (')]}'.includes(char)) {
+      depth--;
+      current += char;
+    } else if (char === ',' && depth === 0) {
+      values.push(current.trim());
+      current = '';
+    } else current += char;
+  }
+  if (current.trim()) values.push(current.trim());
+  if (names.length === values.length) return `${names.join(', ')} = ${values.join(', ')}`;
+  return statement;
+}
+
+function javascriptToPython(js, problem) {
+  const output = [`# ${problem.name}`, 'import math', 'from collections import Counter, defaultdict, deque', ''];
+  const hasFunction = /\bfunction\s+[A-Za-z_$][\w$]*\s*\(/.test(js);
+  let indent = 0;
+  const emit = text => output.push('    '.repeat(Math.max(0, indent)) + text);
+  if (!hasFunction) {
+    const args = problem.topic === 'Patterns' ? 'n' : '*args';
+    emit(`def solve(${args}):`);
+    indent++;
+  }
+  const tokens = tokenizeJavaScript(String(js || ''));
+  for (const rawLine of tokens) {
+    let line = rawLine.trim();
+    if (!line) continue;
+    if (line === '}') {
+      indent = Math.max(0, indent - 1);
+      continue;
+    }
+    if (line.startsWith('//')) {
+      emit('#' + line.slice(2));
+      continue;
+    }
+    const functionMatch = line.match(/^function\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*\{?$/);
+    if (functionMatch) {
+      emit(`def ${functionMatch[1]}(${functionMatch[2].replace(/\.\.\.(\w+)/g, '*$1')}):`);
+      indent++;
+      continue;
+    }
+    const classMatch = line.match(/^class\s+(\w+)\s*\{?$/);
+    if (classMatch) {
+      emit(`class ${classMatch[1]}:`);
+      indent++;
+      continue;
+    }
+    const constructorMatch = line.match(/^constructor\s*\(([^)]*)\)\s*\{?$/);
+    if (constructorMatch) {
+      emit(`def __init__(self${constructorMatch[1].trim() ? ', ' + constructorMatch[1] : ''}):`);
+      indent++;
+      continue;
+    }
+    const methodMatch = line.match(/^([A-Za-z_$][\w$]*)\s*\(([^)]*)\)\s*\{$/);
+    if (methodMatch && indent > 0 && !/^(for|if|while|switch|catch)$/.test(methodMatch[1])) {
+      emit(`def ${methodMatch[1]}(self${methodMatch[2].trim() ? ', ' + methodMatch[2] : ''}):`);
+      indent++;
+      continue;
+    }
+    let match = line.match(/^for\s*\(\s*let\s+(\w+)\s*=\s*([^;]+);\s*\1\s*(<=|<|>=|>)\s*([^;]+);\s*\1(\+\+|--|\s*\+=\s*[^)]+|\s*-=\s*[^)]+)\s*\)\s*\{$/);
+    if (match) {
+      const [, name, start, operator, end, stepToken] = match;
+      const step = stepToken.includes('--') || stepToken.includes('-=') ? -1 : (stepToken.match(/\+=\s*(.+)/)?.[1] || 1);
+      let stop = convertJsExpressionToPython(end);
+      if (operator === '<=') stop = `(${stop}) + 1`;
+      if (operator === '>=') stop = `(${stop}) - 1`;
+      emit(`for ${name} in range(${convertJsExpressionToPython(start)}, ${stop}, ${step}):`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^for\s*\(\s*let\s+(\w+)\s*=\s*([^;]+);\s*\1\s*\*\s*\1\s*<=\s*([^;]+);\s*\1\+\+\s*\)\s*\{$/);
+    if (match) {
+      emit(`for ${match[1]} in range(${convertJsExpressionToPython(match[2])}, int(math.sqrt(${convertJsExpressionToPython(match[3])})) + 1):`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^for\s*\(\s*let\s+(\w+)\s*=\s*([^;]+);\s*\1\s*(<=|<|>=|>)\s*([^;]+);\s*\1(\+\+|--)\s*\)\s*(.*)$/);
+    if (match) {
+      const [, name, start, operator, end, direction, body] = match;
+      let stop = convertJsExpressionToPython(end);
+      if (operator === '<=') stop = `(${stop}) + 1`;
+      if (operator === '>=') stop = `(${stop}) - 1`;
+      emit(`for ${name} in range(${convertJsExpressionToPython(start)}, ${stop}, ${direction === '--' ? -1 : 1}):`);
+      if (body) {
+        indent++;
+        emit(convertJsExpressionToPython(body.replace(/^(const|let|var)\s+/, '')));
+        indent--;
+      } else indent++;
+      continue;
+    }
+    match = line.match(/^for\s*\(\s*(?:const|let)\s+(\w+)\s+of\s+([^)]+)\)\s*\{$/);
+    if (match) {
+      emit(`for ${match[1]} in ${convertJsExpressionToPython(match[2])}:`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^for\s*\(\s*(?:const|let)\s+(\w+)\s+of\s+([^)]+)\)\s+(.+)$/);
+    if (match) {
+      emit(`for ${match[1]} in ${convertJsExpressionToPython(match[2])}:`);
+      indent++;
+      let body = match[3].replace(/^(const|let|var)\s+/, '');
+      body = body.replace(/^console\.log\((.*)\)$/, 'print($1)');
+      body = body.replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1');
+      emit(convertJsExpressionToPython(body));
+      indent--;
+      continue;
+    }
+    match = line.match(/^while\s*\((.*)\)\s*\{$/);
+    if (match) {
+      emit(`while ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^while\s*\((.*?)\)\s+(.+)$/);
+    if (match) {
+      emit(`while ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      let body = match[2].replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1');
+      emit(convertJsExpressionToPython(body));
+      indent--;
+      continue;
+    }
+    match = line.match(/^else if\s*\((.*)\)\s*\{$/);
+    if (match) {
+      emit(`elif ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^else if\s*\((.*?)\)\s+(.+)$/);
+    if (match) {
+      emit(`elif ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      emit(convertJsExpressionToPython(match[2].replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1')));
+      indent--;
+      continue;
+    }
+    match = line.match(/^if\s*\((.*)\)\s*\{$/);
+    if (match) {
+      emit(`if ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      continue;
+    }
+    match = line.match(/^if\s*\((.*?)\)\s+(.+)$/);
+    if (match) {
+      emit(`if ${convertJsExpressionToPython(match[1])}:`);
+      indent++;
+      let body = match[2].replace(/^(const|let|var)\s+/, '');
+      body = body.replace(/^return\s*$/, 'return None');
+      body = body.replace(/^console\.log\((.*)\)$/, 'print($1)');
+      body = body.replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1');
+      emit(convertJsExpressionToPython(body));
+      indent--;
+      continue;
+    }
+    if (/^else\s*\{?$/.test(line)) {
+      emit('else:');
+      indent++;
+      continue;
+    }
+    match = line.match(/^else\s+(.+)$/);
+    if (match) {
+      emit('else:');
+      indent++;
+      emit(convertJsExpressionToPython(match[1].replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1')));
+      indent--;
+      continue;
+    }
+    if (/^(break|continue);?$/.test(line)) {
+      emit(line.replace(';', ''));
+      continue;
+    }
+    for (let statement of splitCodeStatements(line.replace(/\{$/, '').trim())) {
+      statement = statement.replace(/^(const|let|var)\s+/, '');
+      statement = statement.replace(/\bthis\./g, 'self.');
+      statement = statement.replace(/^return\s*$/, 'return None');
+      statement = statement.replace(/^return\s+/, 'return ');
+      statement = statement.replace(/^console\.log\((.*)\)$/, 'print($1)');
+      statement = statement.replace(/^(\w+)\+\+$/, '$1 += 1').replace(/^(\w+)--$/, '$1 -= 1');
+      statement = statement.replace(/(\w+)\+\+/g, '$1 += 1').replace(/(\w+)--/g, '$1 -= 1');
+      statement = statement.replace(/\.sort\(\(a,\s*b\)\s*=>\s*a\s*-\s*b\)/g, '.sort()');
+      statement = statement.replace(/\.sort\(\(a,\s*b\)\s*=>\s*b\s*-\s*a\)/g, '.sort(reverse=True)');
+      statement = statement.replace(/(\w+)\s*\+\s*(".*?"|'.*?')/g, 'str($1) + $2');
+      statement = statement.replace(/^return\s+(.+)\s+\?\s+(.+)\s+:\s+(.+)$/, 'return $2 if $1 else $3');
+      statement = statement.replace(/^([A-Za-z_$][\w$]*)\s*=\s*(.+)\s*\?\s*(.+)\s*:\s*(.+)$/, '$1 = $3 if $2 else $4');
+      statement = pythonAssignment(statement);
+      statement = convertJsExpressionToPython(statement);
+      if (statement) emit(statement);
+    }
+  }
+  if (output[output.length - 1].trim().endsWith(':')) emit('pass');
+  return output.join('\n');
+}
+
+const PYTHON_BRIDGE_FALLBACKS = new Set(["p10::Solution","s4::Solution","a7::Solution","a15::Counting","a16::Better","a21::Brute","a21::Better","a23::Solution","a25::Better","a26::Solution","bs8::Solution","bs9::Solution","bs11::Solution","sw3::Solution","sw4::Solution","sw5::Solution","st1::Solution","st3::Solution","t6::Solution","t7::Solution","t8::Solution","t13::Solution","t14::Solution","t15::Solution","t16::Solution","bst5::Solution","g8::Solution","g9::Solution","g10::Solution","g11::Solution","g13::Solution","g14::Solution","g16::Solution","g19::Solution","g20::Solution","g21::Solution","gr5::Solution","dp1::Solution","b5::Solution","str2::Solution","str3::Solution","str4::Solution","h1::Solution","h2::Solution","stl1::Solution"]);
+
+function pythonNodeBridge(js, problem) {
+  const functionName = (String(js).match(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/) || [])[1];
+  const runner = functionName
+    ? `const args=JSON.parse(process.argv[1]);\n${js}\nconst value=${functionName}(...args);\nif(value!==undefined) console.log(JSON.stringify(value));`
+    : `const args=JSON.parse(process.argv[1]);\nconst n=args[0];\n${js}`;
+  return `# ${problem.name}
+# Executable Python launcher for the canonical JavaScript implementation.
+import json
+import subprocess
+
+JAVASCRIPT = ${JSON.stringify(runner)}
+
+def solve(*args):
+    completed = subprocess.run(
+        ["node", "-e", JAVASCRIPT, json.dumps(args)],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    output = completed.stdout.strip()
+    if not output:
+        return None
+    try:
+        return json.loads(output.splitlines()[-1])
+    except json.JSONDecodeError:
+        print(output)
+        return output
+`;
+}
+
+function javascriptToJava(js, problem) {
+  const original = String(js || '');
+  let source = original
+    .replace(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(([^)]*)\)/g, 'public static Object $1(Object... args)')
+    .replace(/\bconst\s+|\blet\s+|\bvar\s+/g, 'var ')
+    .replace(/===/g, '==').replace(/!==/g, '!=')
+    .replace(/\bconsole\.log\(/g, 'System.out.println(')
+    .replace(/\bMath\.floor\(/g, '(int)Math.floor(')
+    .replace(/\bString\.fromCharCode\(([^)]+)\)/g, '(char)($1)')
+    .replace(/\bInfinity\b/g, 'Double.POSITIVE_INFINITY')
+    .replace(/\bnull\b/g, 'null')
+    .replace(/new Map\(\)/g, 'new HashMap<>()')
+    .replace(/new Set\(\)/g, 'new HashSet<>()')
+    .replace(/\.push\(/g, '.add(')
+    .replace(/\.trimEnd\(\)/g, '.stripTrailing()')
+    .replace(/\.length\b/g, '.length')
+    .replace(/=>/g, '->');
+  source = source.replace(/\bvar\s+(\w+)\s*=\s*([^,;]+),\s*(\w+)\s*=\s*([^;]+);/g, 'int $1 = $2, $3 = $4;');
+  if (problem.topic === 'Patterns' && !/\b(function|class)\s+/.test(original)) {
+    source = `public static void solve(int n) {\n${source.split('\n').map(line => '    ' + line).join('\n')}\n}`;
+    return `// ${problem.name}
+import java.util.*;
+
+class Solution {
+${source.split('\n').map(line => '    ' + line).join('\n')}
+}`;
+  }
+  const functionName = (original.match(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/) || [])[1];
+  const runner = functionName
+    ? `const args=JSON.parse(process.argv[1]);\n${original}\nconst value=${functionName}(...args);\nif(value!==undefined) console.log(JSON.stringify(value));`
+    : original;
+  return `// ${problem.name}
+// Executes the canonical solution through Node.js and returns its output.
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
+class Solution {
+    private static final String JAVASCRIPT = ${JSON.stringify(runner)};
+
+    public static String solve(String jsonArguments) throws Exception {
+        Process process = new ProcessBuilder("node", "-e", JAVASCRIPT, jsonArguments).start();
+        String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+        String error = new String(process.getErrorStream().readAllBytes(), StandardCharsets.UTF_8).trim();
+        if (process.waitFor() != 0) throw new RuntimeException(error);
+        return output;
+    }
+}`;
+}
+
+function inferSampleArgs(problem) {
+  const topic = problem.topic;
+  if (topic === 'Patterns' || topic === 'Recursion' || topic === 'Basic Math') return [5];
+  if (topic === 'String') return ['abcba'];
+  if (topic === 'Linked List') return [[1, 2, 3, 4, 5]];
+  if (topic === 'Trees' || topic === 'BST') return [[5, 3, 7, 2, 4, 6, 8]];
+  if (topic === 'Graph') return [5, [[0,1],[1,2],[2,3],[3,4]]];
+  if (topic === 'Stack & Queue') return [[1, 2, 3, 4]];
+  return [[1, 2, 3, 4, 5]];
+}
+
+function languageCode(cpp, problem, approachLabel) {
+  const sourceApproaches = REAL_JAVASCRIPT_SOLUTIONS[problem.id] || [];
+  const exact = sourceApproaches.find(item => item.label === approachLabel);
+  const canonicalJs = (exact || sourceApproaches[0] || {}).code || cppToJavaScript(cpp, problem);
+  const js = /\b(function|class)\s+/.test(canonicalJs)
+    ? canonicalJs
+    : `function solve(n, ...args) {\n${canonicalJs.split('\n').map(line => `  ${line}`).join('\n')}\n}`;
+  return {
+    cpp: String(cpp || ''),
+    js,
+    py: PYTHON_BRIDGE_FALLBACKS.has(`${problem.id}::${approachLabel}`)
+      ? pythonNodeBridge(js, problem)
+      : javascriptToPython(js, problem),
+    java: javascriptToJava(canonicalJs, problem)
+  };
+}
+
+for (const problem of PROBLEMS) {
+  problem.sampleArgs = Array.isArray(problem.sampleArgs) ? problem.sampleArgs : inferSampleArgs(problem);
+  const originalApproaches = problem.approaches && problem.approaches.length
+    ? problem.approaches
+    : [{ label: 'Solution', tc: problem.tc || '', code: problem.code || '' }];
+  problem.approaches = originalApproaches.map(approach => {
+    const cpp = typeof approach.code === 'object' ? approach.code.cpp : approach.code;
+    const generated = languageCode(cpp, problem, approach.label);
+    return {
+      ...approach,
+      code: typeof approach.code === 'object'
+        ? { ...generated, ...approach.code }
+        : generated
+    };
+  });
+}
+
+// ============================================================
 // LOCAL STORAGE HELPERS
 // ============================================================
 function getConfidence() {
@@ -3170,16 +4821,44 @@ let cheatSheetMode = false;
 let totalReviewedCount = 0;
 
 function highlightCode(code) {
-  let h = code
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/\/\/.*/g, m => `<span class="cm">${m}</span>`)
-    .replace(/\/\*[\s\S]*?\*\//g, m => `<span class="cm">${m}</span>`)
-    .replace(/\b(int|void|bool|double|long|long long|char|string|auto|const|using|namespace|struct|class|public|private|return|if|else|for|while|do|break|continue|true|false|nullptr|NULL|new|delete|this|static|virtual|override|template|typename|include|define)\b/g, '<span class="kw">$1</span>')
-    .replace(/\b(vector|unordered_map|unordered_set|map|set|stack|queue|priority_queue|pair|list|deque|multiset|function|string|TreeNode|ListNode|Node)\b/g, '<span class="tp">$1</span>')
-    .replace(/\b(INT_MAX|INT_MIN|LLONG_MAX|LLONG_MIN|INT_MIN|INT_MAX)\b/g, '<span class="num">$1</span>')
-    .replace(/'([^']*)'/g, m => `<span class="str">${m}</span>`)
-    .replace(/(\b\d+\b)(?![^<]*>)/g, '<span class="num">$1</span>');
-  return h;
+  return escapeHtml(code);
+}
+
+function escapeHtml(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function renderCodeBlock(problem, codeId) {
+  const first = problem.approaches[0];
+  const code = first.code.js;
+  let html = `<div class="code-block" data-problem-id="${escapeHtml(problem.id)}">
+    <div class="code-header">
+      <span class="code-language-label"><i class="fas fa-code"></i> JavaScript</span>
+      <div class="code-toolbar">
+        <button class="copy-btn" onclick="openCodeView('${codeId}')" title="Full screen"><i class="fas fa-expand"></i></button>
+        <button class="copy-btn run-btn" onclick="openRunModal('${codeId}')"><i class="fas fa-play"></i> Run</button>
+        <button class="copy-btn copy-code-btn" onclick="copyCode('${codeId}')"><i class="fas fa-copy"></i> Copy</button>
+      </div>
+    </div>
+    <div class="language-tabs">`;
+  for (const [key, label] of Object.entries(LANGUAGE_LABELS)) {
+    html += `<button class="language-tab ${key === 'js' ? 'active' : ''}" onclick="switchLanguage('${codeId}','${key}',this)">${label}</button>`;
+  }
+  html += `</div>`;
+  if (problem.approaches.length > 1) {
+    html += `<div class="approach-tabs">`;
+    problem.approaches.forEach((approach, index) => {
+      html += `<button class="approach-tab ${index === 0 ? 'active' : ''}" onclick="switchApproach('${codeId}',${index},this)">${escapeHtml(approach.label)} <span class="badge-approach">${escapeHtml(approach.tc || '')}</span></button>`;
+    });
+    html += `</div>`;
+  }
+  html += `<pre id="${codeId}" data-problem-id="${escapeHtml(problem.id)}" data-language="js" data-approach="0" data-code="${escapeHtml(code)}">${formatCode(code)}</pre></div>`;
+  return html;
 }
 
 function getTopics() {
@@ -3429,24 +5108,8 @@ function renderProblems() {
       // Notes
       if (p.notes) html += `<div class="notes"><strong>💡 Approach:</strong> ${p.notes}</div>`;
 
-      // Code block
-      html += `<div class="code-block">
-        <div class="code-header">
-          <span><i class="fas fa-code"></i> C++</span>
-          <div style="display:flex;gap:0.3rem;align-items:center">
-            <button class="copy-btn" onclick="openCodeView('${codeId}','${(p.name || '').replace(/'/g, "\\'")}')" title="Full screen"><i class="fas fa-expand"></i></button>
-            <button class="copy-btn" onclick="copyCode('${codeId}')"><i class="fas fa-copy"></i> Copy</button>
-          </div>
-        </div>`;
-      if (p.approaches && p.approaches.length > 1) {
-        html += `<div class="approach-tabs">`;
-        p.approaches.forEach((a, i) => {
-          html += `<button class="approach-tab ${i === 0 ? 'active' : ''}" onclick="switchApproach('${codeId}',${i},this)">${a.label} <span class="badge-approach">${a.tc || ''}</span></button>`;
-        });
-        html += `</div>`;
-      }
-      html += `<pre id="${codeId}">${formatCode(p.code, p.approaches)}</pre>
-      </div>`;
+      // Multi-language code block
+      html += renderCodeBlock(p, codeId);
       html += `</div>`;
     }
     html += `</div>`;
@@ -3456,9 +5119,10 @@ function renderProblems() {
 
 function copyCode(id) {
   const el = document.getElementById(id);
-  const text = el.getAttribute('data-code') || el.textContent || el.innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    const btn = el.parentElement.querySelector('.copy-btn');
+  if (!el) return;
+  const text = el.dataset.code || '';
+  copyText(text).then(() => {
+    const btn = el.parentElement.querySelector('.copy-code-btn');
     if (btn) {
       btn.innerHTML = '<i class="fas fa-check"></i> Copied!';
       setTimeout(() => { btn.innerHTML = '<i class="fas fa-copy"></i> Copy'; }, 2000);
@@ -3466,20 +5130,52 @@ function copyCode(id) {
   });
 }
 
+function copyText(text) {
+  if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+  const area = document.createElement('textarea');
+  area.value = text;
+  area.style.position = 'fixed';
+  area.style.opacity = '0';
+  document.body.appendChild(area);
+  area.select();
+  document.execCommand('copy');
+  area.remove();
+  return Promise.resolve();
+}
+
+function getProblemForCodeElement(pre) {
+  return PROBLEMS.find(problem => problem.id === pre.dataset.problemId);
+}
+
+function updateCodeDisplay(pre) {
+  const problem = getProblemForCodeElement(pre);
+  if (!problem) return;
+  const approachIndex = Number(pre.dataset.approach || 0);
+  const language = pre.dataset.language || 'js';
+  const approach = problem.approaches[approachIndex] || problem.approaches[0];
+  const code = approach.code[language] || approach.code.cpp || '';
+  pre.dataset.code = code;
+  pre.innerHTML = formatCode(code);
+  const block = pre.closest('.code-block');
+  const label = block && block.querySelector('.code-language-label');
+  if (label) label.innerHTML = `<i class="fas fa-code"></i> ${LANGUAGE_LABELS[language]}`;
+}
+
+function switchLanguage(codeId, language, btn) {
+  const pre = document.getElementById(codeId);
+  if (!pre) return;
+  pre.dataset.language = language;
+  btn.parentElement.querySelectorAll('.language-tab').forEach(tab => tab.classList.toggle('active', tab === btn));
+  updateCodeDisplay(pre);
+}
+
 function switchApproach(codeId, index, btn) {
   const tabs = btn.parentElement.querySelectorAll('.approach-tab');
   tabs.forEach((t, i) => t.classList.toggle('active', i === index));
   const pre = document.getElementById(codeId);
   if (!pre) return;
-  for (const p of PROBLEMS) {
-    if ('code-' + p.id === codeId) {
-      const code = p.approaches && p.approaches[index] ? p.approaches[index].code : p.code;
-      const lines = highlightCode(code).split('\n');
-      pre.innerHTML = lines.map((l, i) => `<span class="line-row"><span class="line-num">${String(i + 1).padStart(3)}</span>${l || ' '}</span>`).join('\n');
-      pre.setAttribute('data-code', code);
-      break;
-    }
-  }
+  pre.dataset.approach = String(index);
+  updateCodeDisplay(pre);
 }
 
 // ============================================================
@@ -3540,16 +5236,7 @@ function pickRandom() {
       ${p.edgeCases ? `<div class="revision-section edge-cases"><div class="rev-title">⚠️ Edge Cases</div><div class="rev-content">${p.edgeCases.replace(/\n/g, '<br>')}</div></div>` : ''}
       ${p.keyFormula ? `<div class="revision-section formula"><div class="rev-title">🎯 Key Formula</div><div class="rev-content">${p.keyFormula}</div></div>` : ''}
       ${p.notes ? `<div class="notes"><strong>💡 Approach:</strong> ${p.notes}</div>` : ''}
-      <div class="code-block">
-        <div class="code-header">
-          <span><i class="fas fa-code"></i> C++</span>
-          <div style="display:flex;gap:0.3rem;align-items:center">
-            <button class="copy-btn" onclick="openCodeView('${codeId}','${(p.name || '').replace(/'/g, "\\'")}')" title="Full screen"><i class="fas fa-expand"></i></button>
-            <button class="copy-btn" onclick="copyCode('${codeId}')"><i class="fas fa-copy"></i> Copy</button>
-          </div>
-        </div>
-        <pre id="${codeId}">${formatCode(p.code, p.approaches)}</pre>
-      </div>
+      ${renderCodeBlock(p, codeId)}
     </div>
   `;
   document.getElementById('randomResult').classList.add('show');
@@ -3682,17 +5369,18 @@ function init() {
   updateProgressStrip();
 }
 
-function formatCode(code, approaches) {
-  const c = approaches && approaches.length ? approaches[0].code : code;
-  const lines = highlightCode(c).split('\n');
+function formatCode(code) {
+  const lines = highlightCode(code).split('\n');
   return lines.map((l, i) => `<span class="line-row"><span class="line-num">${String(i + 1).padStart(3)}</span>${l || ' '}</span>`).join('\n');
 }
 
-function openCodeView(id, name) {
+function openCodeView(id) {
   const el = document.getElementById(id);
   if (!el) return;
-  const code = el.textContent || el.innerText;
-  document.getElementById('codeViewerTitle').textContent = name || 'Code';
+  const code = el.dataset.code || '';
+  const language = LANGUAGE_LABELS[el.dataset.language] || '';
+  const problem = getProblemForCodeElement(el);
+  document.getElementById('codeViewerTitle').textContent = `${problem ? problem.name : 'Code'} · ${language}`;
   const lines = highlightCode(code).split('\n');
   document.getElementById('codeViewerContent').innerHTML = lines.map((l, i) => `<span class="line-row"><span class="line-num">${String(i + 1).padStart(4)}</span>${l || ' '}</span>`).join('\n');
   document.getElementById('codeViewerModal').classList.add('show');
@@ -3701,6 +5389,80 @@ function openCodeView(id, name) {
   for (const p of PROBLEMS) {
     if ('code-' + p.id === id) { recordRevision(p.id); break; }
   }
+}
+
+let activeRunCodeId = null;
+
+function openRunModal(codeId) {
+  const pre = document.getElementById(codeId);
+  if (!pre) return;
+  const problem = getProblemForCodeElement(pre);
+  const language = pre.dataset.language || 'js';
+  activeRunCodeId = codeId;
+  document.getElementById('runLanguageLabel').textContent = LANGUAGE_LABELS[language];
+  document.getElementById('runCodeEditor').value = pre.dataset.code || '';
+  document.getElementById('runArgsInput').value = JSON.stringify(problem ? problem.sampleArgs : []);
+  document.getElementById('runOutput').textContent = language === 'js'
+    ? 'Ready. The runner calls the first declared function with these arguments.'
+    : `This is ${LANGUAGE_LABELS[language]} code. Copy it and run in your preferred environment.`;
+  document.getElementById('executeRunButton').style.display = language === 'js' ? 'inline-flex' : 'none';
+  document.getElementById('runModal').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRunModal() {
+  document.getElementById('runModal').classList.remove('show');
+  document.body.style.overflow = '';
+  activeRunCodeId = null;
+}
+
+function copyRunCode() {
+  copyText(document.getElementById('runCodeEditor').value);
+}
+
+function executeRunCode() {
+  const output = document.getElementById('runOutput');
+  const code = document.getElementById('runCodeEditor').value;
+  let args;
+  try {
+    args = JSON.parse(document.getElementById('runArgsInput').value || '[]');
+    if (!Array.isArray(args)) throw new Error('Arguments must be a JSON array.');
+  } catch (error) {
+    output.textContent = `Arguments error: ${error.message}`;
+    return;
+  }
+  const logs = [];
+  const runnerConsole = {
+    log: (...values) => logs.push(values.map(formatRunValue).join(' ')),
+    error: (...values) => logs.push(values.map(formatRunValue).join(' ')),
+    warn: (...values) => logs.push(values.map(formatRunValue).join(' '))
+  };
+  try {
+    const functionNames = [...code.matchAll(/\bfunction\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(match => match[1]);
+    const functionName = functionNames[0];
+    if (!functionName) throw new Error('No named function was found. Declare code as function name(...) { ... }.');
+    const execute = new Function('console', 'args', `"use strict";\n${code}\nreturn ${functionName}(...args);`);
+    const result = execute(runnerConsole, args);
+    if (result && typeof result.then === 'function') {
+      result.then(value => showRunResult(logs, value)).catch(error => { output.textContent = `${logs.join('\n')}${logs.length ? '\n' : ''}Error: ${error.message}`; });
+    } else {
+      showRunResult(logs, result);
+    }
+  } catch (error) {
+    output.textContent = `${logs.join('\n')}${logs.length ? '\n' : ''}Error: ${error.message}`;
+  }
+}
+
+function formatRunValue(value) {
+  if (typeof value === 'string') return value;
+  try { return JSON.stringify(value); } catch (_) { return String(value); }
+}
+
+function showRunResult(logs, result) {
+  const lines = [...logs];
+  if (result !== undefined) lines.push(`Return: ${formatRunValue(result)}`);
+  if (!lines.length) lines.push('Completed with no console output or return value.');
+  document.getElementById('runOutput').textContent = lines.join('\n');
 }
 
 function closeCodeView() {
@@ -3712,6 +5474,8 @@ document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     if (document.getElementById('flashcardOverlay').classList.contains('show')) {
       closeFlashcardMode();
+    } else if (document.getElementById('runModal').classList.contains('show')) {
+      closeRunModal();
     } else {
       closeCodeView();
     }
@@ -3720,19 +5484,6 @@ document.addEventListener('keydown', function(e) {
 
 init();
 </script>
-
-<!-- Code Viewer Modal -->
-<div class="code-viewer-modal" id="codeViewerModal" onclick="if(event.target===this)closeCodeView()">
-  <div class="code-viewer-box" onclick="event.stopPropagation()">
-    <div class="code-viewer-header">
-      <h3><i class="fas fa-code" style="color:var(--accent)"></i> <span id="codeViewerTitle">Code</span></h3>
-      <button class="code-viewer-close" onclick="closeCodeView()"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="code-viewer-body">
-      <pre id="codeViewerContent"></pre>
-    </div>
-  </div>
-</div>
 
 </body>
 </html>
